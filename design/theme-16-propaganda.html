@@ -1,0 +1,1630 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PROPAGANDA — Style Tile</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Oswald:wght@400;500;600;700&family=Jost:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    /* ============================================
+       PROPAGANDA — YOTB Theme 16
+       Soviet constructivist meets modern rally energy
+       Build. Ship. Launch. Repeat.
+       ============================================ */
+
+    :root {
+      /* Core Palette */
+      --bg: #1A1A1A;
+      --fg: #F5F5F5;
+      --accent-primary: #CC0000;
+      --accent-secondary: #FFD700;
+      --surface: #2A2A2A;
+      --muted: #888888;
+
+      /* Typography */
+      --font-display: 'Bebas Neue', 'Oswald', Impact, sans-serif;
+      --font-heading: 'Oswald', 'Bebas Neue', sans-serif;
+      --font-body: 'Jost', 'Helvetica Neue', sans-serif;
+
+      /* Spacing */
+      --space-xs: 0.25rem;
+      --space-sm: 0.5rem;
+      --space-md: 1rem;
+      --space-lg: 2rem;
+      --space-xl: 4rem;
+
+      /* Diagonal stripe patterns */
+      --stripe-revolutionary: repeating-linear-gradient(
+        -45deg,
+        var(--accent-primary) 0px,
+        var(--accent-primary) 8px,
+        var(--bg) 8px,
+        var(--bg) 16px
+      );
+
+      --stripe-glory: repeating-linear-gradient(
+        45deg,
+        var(--accent-secondary) 0px,
+        var(--accent-secondary) 4px,
+        transparent 4px,
+        transparent 12px
+      );
+
+      /* Sunburst / Radiating lines */
+      --sunburst: conic-gradient(
+        from 0deg,
+        var(--accent-primary) 0deg,
+        var(--surface) 10deg,
+        var(--accent-primary) 20deg,
+        var(--surface) 30deg,
+        var(--accent-primary) 40deg,
+        var(--surface) 50deg,
+        var(--accent-primary) 60deg,
+        var(--surface) 70deg,
+        var(--accent-primary) 80deg,
+        var(--surface) 90deg,
+        var(--accent-primary) 100deg,
+        var(--surface) 110deg,
+        var(--accent-primary) 120deg,
+        var(--surface) 130deg,
+        var(--accent-primary) 140deg,
+        var(--surface) 150deg,
+        var(--accent-primary) 160deg,
+        var(--surface) 170deg,
+        var(--accent-primary) 180deg,
+        var(--surface) 190deg,
+        var(--accent-primary) 200deg,
+        var(--surface) 210deg,
+        var(--accent-primary) 220deg,
+        var(--surface) 230deg,
+        var(--accent-primary) 240deg,
+        var(--surface) 250deg,
+        var(--accent-primary) 260deg,
+        var(--surface) 270deg,
+        var(--accent-primary) 280deg,
+        var(--surface) 290deg,
+        var(--accent-primary) 300deg,
+        var(--surface) 310deg,
+        var(--accent-primary) 320deg,
+        var(--surface) 330deg,
+        var(--accent-primary) 340deg,
+        var(--surface) 350deg,
+        var(--accent-primary) 360deg
+      );
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+      font-size: 16px;
+      scroll-behavior: smooth;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--fg);
+      font-family: var(--font-body);
+      font-size: 1rem;
+      line-height: 1.6;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* ============================================
+       LAYOUT
+       ============================================ */
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: var(--space-lg);
+    }
+
+    .section {
+      margin-bottom: var(--space-xl);
+      padding: var(--space-lg);
+      background: var(--surface);
+      position: relative;
+      border: 4px solid var(--fg);
+    }
+
+    .section::before {
+      content: attr(data-section);
+      position: absolute;
+      top: 0;
+      right: 0;
+      background: var(--accent-primary);
+      color: var(--fg);
+      font-family: var(--font-display);
+      font-size: 1.5rem;
+      padding: var(--space-xs) var(--space-md);
+      letter-spacing: 0.05em;
+    }
+
+    .section-title {
+      font-family: var(--font-display);
+      font-size: 2.5rem;
+      color: var(--fg);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: var(--space-lg);
+      padding-bottom: var(--space-sm);
+      border-bottom: 4px solid var(--accent-primary);
+      display: inline-block;
+    }
+
+    /* ============================================
+       HEADER — THE CALL TO ACTION
+       ============================================ */
+
+    .header {
+      padding: var(--space-xl) var(--space-lg);
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+      min-height: 80vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* Radiating sunburst background */
+    .header::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 200vmax;
+      height: 200vmax;
+      transform: translate(-50%, -50%);
+      background: var(--sunburst);
+      opacity: 0.15;
+      animation: rotate-slow 60s linear infinite;
+    }
+
+    @keyframes rotate-slow {
+      from { transform: translate(-50%, -50%) rotate(0deg); }
+      to { transform: translate(-50%, -50%) rotate(360deg); }
+    }
+
+    /* Diagonal stripe border */
+    .header::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 24px;
+      background: var(--stripe-revolutionary);
+    }
+
+    .header-content {
+      position: relative;
+      z-index: 1;
+    }
+
+    .header-slogan {
+      font-family: var(--font-display);
+      font-size: clamp(1rem, 3vw, 1.5rem);
+      letter-spacing: 0.3em;
+      color: var(--accent-secondary);
+      text-transform: uppercase;
+      margin-bottom: var(--space-md);
+    }
+
+    .header-title {
+      font-family: var(--font-display);
+      font-size: clamp(4rem, 15vw, 12rem);
+      letter-spacing: 0.02em;
+      line-height: 0.85;
+      color: var(--fg);
+      text-transform: uppercase;
+      text-shadow:
+        6px 6px 0 var(--accent-primary),
+        -2px -2px 0 var(--accent-primary),
+        2px -2px 0 var(--accent-primary),
+        -2px 2px 0 var(--accent-primary);
+      transform: skewY(-2deg);
+    }
+
+    .header-subtitle {
+      font-family: var(--font-heading);
+      font-size: clamp(1.25rem, 4vw, 2rem);
+      font-weight: 600;
+      color: var(--fg);
+      text-transform: uppercase;
+      letter-spacing: 0.2em;
+      margin-top: var(--space-lg);
+      padding: var(--space-sm) var(--space-lg);
+      background: var(--accent-primary);
+      display: inline-block;
+      transform: skewX(-5deg);
+    }
+
+    .header-manifesto {
+      margin-top: var(--space-xl);
+      display: flex;
+      gap: var(--space-lg);
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .manifesto-item {
+      font-family: var(--font-display);
+      font-size: clamp(1.5rem, 4vw, 2.5rem);
+      color: var(--fg);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      position: relative;
+      padding-left: var(--space-lg);
+    }
+
+    .manifesto-item::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 20px;
+      height: 20px;
+      background: var(--accent-secondary);
+      clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+    }
+
+    /* Star burst decoration */
+    .starburst {
+      position: absolute;
+      width: 120px;
+      height: 120px;
+      background: var(--accent-secondary);
+      clip-path: polygon(
+        50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%
+      );
+      animation: pulse-star 2s ease-in-out infinite;
+    }
+
+    .starburst-1 {
+      top: 10%;
+      right: 10%;
+      transform: rotate(15deg);
+    }
+
+    .starburst-2 {
+      bottom: 15%;
+      left: 8%;
+      width: 80px;
+      height: 80px;
+      transform: rotate(-10deg);
+      animation-delay: 0.5s;
+    }
+
+    @keyframes pulse-star {
+      0%, 100% { transform: scale(1) rotate(0deg); }
+      50% { transform: scale(1.1) rotate(5deg); }
+    }
+
+    /* ============================================
+       TYPOGRAPHY
+       ============================================ */
+
+    .type-specimen {
+      display: grid;
+      gap: var(--space-lg);
+    }
+
+    .type-row {
+      display: grid;
+      grid-template-columns: 140px 1fr;
+      gap: var(--space-md);
+      align-items: baseline;
+      padding-bottom: var(--space-md);
+      border-bottom: 2px solid var(--muted);
+    }
+
+    .type-label {
+      font-family: var(--font-body);
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--accent-secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+    }
+
+    h1, .h1 {
+      font-family: var(--font-display);
+      font-size: clamp(3.5rem, 10vw, 6rem);
+      line-height: 0.9;
+      letter-spacing: 0.02em;
+      text-transform: uppercase;
+    }
+
+    h2, .h2 {
+      font-family: var(--font-display);
+      font-size: clamp(2.5rem, 6vw, 4rem);
+      line-height: 0.95;
+      letter-spacing: 0.03em;
+      text-transform: uppercase;
+    }
+
+    h3, .h3 {
+      font-family: var(--font-heading);
+      font-size: clamp(1.5rem, 4vw, 2.5rem);
+      line-height: 1;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      font-weight: 700;
+    }
+
+    h4, .h4 {
+      font-family: var(--font-heading);
+      font-size: 1.25rem;
+      line-height: 1.2;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      font-weight: 600;
+    }
+
+    .body-text {
+      font-family: var(--font-body);
+      font-size: 1.125rem;
+      line-height: 1.7;
+      font-weight: 400;
+    }
+
+    .small-text {
+      font-family: var(--font-body);
+      font-size: 0.875rem;
+      line-height: 1.6;
+      color: var(--muted);
+    }
+
+    /* Diagonal text treatment */
+    .text-diagonal {
+      transform: rotate(-5deg);
+      display: inline-block;
+    }
+
+    .text-stacked {
+      display: flex;
+      flex-direction: column;
+      line-height: 0.85;
+    }
+
+    /* ============================================
+       COLOR SWATCHES
+       ============================================ */
+
+    .swatches {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: var(--space-md);
+    }
+
+    .swatch {
+      aspect-ratio: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding: var(--space-md);
+      position: relative;
+      border: 4px solid var(--fg);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .swatch:hover {
+      transform: translate(-4px, -4px);
+      box-shadow: 8px 8px 0 var(--accent-primary);
+    }
+
+    .swatch-bg { background: var(--bg); }
+    .swatch-fg { background: var(--fg); }
+    .swatch-primary { background: var(--accent-primary); }
+    .swatch-secondary { background: var(--accent-secondary); }
+    .swatch-surface { background: var(--surface); }
+    .swatch-muted { background: var(--muted); }
+
+    .swatch-name {
+      font-family: var(--font-heading);
+      font-size: 0.875rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .swatch-value {
+      font-family: var(--font-body);
+      font-size: 0.75rem;
+      opacity: 0.8;
+      margin-top: var(--space-xs);
+    }
+
+    .swatch-fg .swatch-name,
+    .swatch-fg .swatch-value,
+    .swatch-secondary .swatch-name,
+    .swatch-secondary .swatch-value {
+      color: var(--bg);
+    }
+
+    .swatch-primary .swatch-name,
+    .swatch-primary .swatch-value {
+      color: var(--fg);
+    }
+
+    /* ============================================
+       NEWSLETTER SIGNUP — THE MAIN CTA
+       ============================================ */
+
+    .newsletter {
+      background: var(--accent-primary);
+      padding: var(--space-xl);
+      position: relative;
+      overflow: hidden;
+      border: 6px solid var(--fg);
+    }
+
+    /* Radiating lines background */
+    .newsletter::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 0;
+      width: 300%;
+      height: 300%;
+      transform: translate(-30%, -50%);
+      background: repeating-linear-gradient(
+        90deg,
+        transparent 0px,
+        transparent 20px,
+        rgba(0,0,0,0.15) 20px,
+        rgba(0,0,0,0.15) 22px
+      );
+      pointer-events: none;
+    }
+
+    .newsletter-content {
+      position: relative;
+      z-index: 1;
+    }
+
+    .newsletter-badge {
+      display: inline-block;
+      background: var(--accent-secondary);
+      color: var(--bg);
+      font-family: var(--font-display);
+      font-size: 1rem;
+      padding: var(--space-xs) var(--space-md);
+      letter-spacing: 0.15em;
+      margin-bottom: var(--space-md);
+      transform: rotate(-2deg);
+    }
+
+    .newsletter-title {
+      font-family: var(--font-display);
+      font-size: clamp(2.5rem, 8vw, 5rem);
+      color: var(--fg);
+      line-height: 0.9;
+      text-transform: uppercase;
+      margin-bottom: var(--space-md);
+      text-shadow: 4px 4px 0 rgba(0,0,0,0.3);
+    }
+
+    .newsletter-desc {
+      color: var(--fg);
+      font-size: 1.125rem;
+      margin-bottom: var(--space-lg);
+      max-width: 50ch;
+      opacity: 0.9;
+    }
+
+    .newsletter-form {
+      display: flex;
+      gap: 0;
+      flex-wrap: wrap;
+      max-width: 600px;
+    }
+
+    .newsletter-input {
+      flex: 1;
+      min-width: 250px;
+      padding: var(--space-md) var(--space-lg);
+      background: var(--fg);
+      border: 4px solid var(--bg);
+      border-right: none;
+      color: var(--bg);
+      font-family: var(--font-body);
+      font-size: 1.125rem;
+      font-weight: 500;
+    }
+
+    .newsletter-input::placeholder {
+      color: var(--muted);
+    }
+
+    .newsletter-input:focus {
+      outline: none;
+      background: var(--accent-secondary);
+    }
+
+    .newsletter-submit {
+      padding: var(--space-md) var(--space-xl);
+      background: var(--bg);
+      border: 4px solid var(--bg);
+      color: var(--fg);
+      font-family: var(--font-display);
+      font-size: 1.5rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .newsletter-submit:hover {
+      background: var(--accent-secondary);
+      color: var(--bg);
+      transform: scale(1.05);
+    }
+
+    /* ============================================
+       BUTTONS
+       ============================================ */
+
+    .buttons-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-lg);
+      align-items: flex-start;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: var(--space-md) var(--space-xl);
+      font-family: var(--font-display);
+      font-size: 1.5rem;
+      letter-spacing: 0.1em;
+      text-decoration: none;
+      text-transform: uppercase;
+      border: 4px solid var(--fg);
+      cursor: pointer;
+      position: relative;
+      transition: all 0.15s ease;
+      transform: skewX(-5deg);
+    }
+
+    .btn > span {
+      transform: skewX(5deg);
+      display: block;
+    }
+
+    .btn::after {
+      content: '';
+      position: absolute;
+      bottom: -8px;
+      right: -8px;
+      width: 100%;
+      height: 100%;
+      background: var(--accent-primary);
+      z-index: -1;
+      transition: transform 0.15s ease;
+    }
+
+    .btn:hover {
+      transform: skewX(-5deg) translate(-4px, -4px);
+    }
+
+    .btn:hover::after {
+      transform: translate(4px, 4px);
+    }
+
+    .btn:active {
+      transform: skewX(-5deg) translate(0, 0);
+    }
+
+    .btn:active::after {
+      transform: translate(0, 0);
+    }
+
+    .btn-primary {
+      background: var(--accent-primary);
+      color: var(--fg);
+      border-color: var(--fg);
+    }
+
+    .btn-primary::after {
+      background: var(--accent-secondary);
+    }
+
+    .btn-secondary {
+      background: var(--surface);
+      color: var(--fg);
+      border-color: var(--fg);
+    }
+
+    .btn-secondary::after {
+      background: var(--muted);
+    }
+
+    .btn-ghost {
+      background: transparent;
+      color: var(--fg);
+      border-color: var(--fg);
+    }
+
+    .btn-ghost::after {
+      background: var(--surface);
+    }
+
+    /* ============================================
+       CARDS
+       ============================================ */
+
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: var(--space-lg);
+    }
+
+    /* Project Card */
+    .project-card {
+      background: var(--surface);
+      position: relative;
+      border: 4px solid var(--fg);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      overflow: hidden;
+    }
+
+    .project-card:hover {
+      transform: translate(-6px, -6px);
+      box-shadow: 12px 12px 0 var(--accent-primary);
+    }
+
+    .project-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 8px;
+      background: var(--stripe-revolutionary);
+    }
+
+    .project-image {
+      width: 100%;
+      aspect-ratio: 16/10;
+      background: var(--bg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-bottom: 4px solid var(--fg);
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Diagonal overlay on image */
+    .project-image::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: repeating-linear-gradient(
+        -45deg,
+        transparent 0px,
+        transparent 10px,
+        rgba(204, 0, 0, 0.1) 10px,
+        rgba(204, 0, 0, 0.1) 12px
+      );
+    }
+
+    .project-image-placeholder {
+      font-family: var(--font-heading);
+      font-size: 0.875rem;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+    }
+
+    .project-content {
+      padding: var(--space-lg);
+      position: relative;
+    }
+
+    .project-number {
+      position: absolute;
+      top: var(--space-md);
+      right: var(--space-md);
+      font-family: var(--font-display);
+      font-size: 4rem;
+      color: var(--accent-primary);
+      line-height: 1;
+      opacity: 0.5;
+    }
+
+    .project-status {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-xs);
+      font-family: var(--font-heading);
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      padding: var(--space-xs) var(--space-sm);
+      background: var(--accent-secondary);
+      color: var(--bg);
+      margin-bottom: var(--space-sm);
+    }
+
+    .project-title {
+      font-family: var(--font-display);
+      font-size: 2rem;
+      margin-bottom: var(--space-sm);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .project-desc {
+      font-size: 1rem;
+      color: var(--muted);
+    }
+
+    /* Devlog Card */
+    .devlog-card {
+      background: var(--bg);
+      padding: var(--space-lg);
+      border: 4px solid var(--accent-primary);
+      border-left: 12px solid var(--accent-primary);
+      position: relative;
+      transition: all 0.2s ease;
+    }
+
+    .devlog-card:hover {
+      border-color: var(--accent-secondary);
+      background: var(--surface);
+    }
+
+    .devlog-meta {
+      display: flex;
+      align-items: center;
+      gap: var(--space-md);
+      margin-bottom: var(--space-md);
+    }
+
+    .devlog-week {
+      font-family: var(--font-display);
+      font-size: 1.5rem;
+      color: var(--accent-primary);
+      letter-spacing: 0.1em;
+    }
+
+    .devlog-date {
+      font-family: var(--font-body);
+      font-size: 0.875rem;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+
+    .devlog-title {
+      font-family: var(--font-display);
+      font-size: 1.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: var(--space-sm);
+    }
+
+    .devlog-excerpt {
+      font-size: 1rem;
+      color: var(--muted);
+      margin-bottom: var(--space-md);
+    }
+
+    .devlog-link {
+      font-family: var(--font-heading);
+      font-size: 0.875rem;
+      font-weight: 700;
+      color: var(--accent-secondary);
+      text-decoration: none;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-sm);
+      transition: gap 0.15s ease, color 0.15s ease;
+    }
+
+    .devlog-link:hover {
+      gap: var(--space-md);
+      color: var(--fg);
+    }
+
+    .devlog-link::after {
+      content: '>>>';
+      font-family: var(--font-body);
+    }
+
+    /* ============================================
+       CODE BLOCK
+       ============================================ */
+
+    .code-block {
+      background: var(--bg);
+      border: 4px solid var(--muted);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .code-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: var(--space-sm) var(--space-md);
+      background: var(--accent-primary);
+      border-bottom: 4px solid var(--muted);
+    }
+
+    .code-lang {
+      font-family: var(--font-heading);
+      font-size: 0.875rem;
+      font-weight: 700;
+      color: var(--fg);
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+    }
+
+    .code-copy {
+      font-family: var(--font-heading);
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--fg);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      background: var(--bg);
+      border: 2px solid var(--fg);
+      padding: var(--space-xs) var(--space-sm);
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .code-copy:hover {
+      background: var(--accent-secondary);
+      color: var(--bg);
+      border-color: var(--accent-secondary);
+    }
+
+    .code-content {
+      padding: var(--space-lg);
+      overflow-x: auto;
+    }
+
+    .code-content pre {
+      margin: 0;
+      font-family: 'JetBrains Mono', 'Fira Code', monospace;
+      font-size: 0.875rem;
+      line-height: 1.7;
+    }
+
+    .code-content code {
+      font-family: inherit;
+    }
+
+    /* Syntax highlighting */
+    .code-keyword { color: var(--accent-primary); font-weight: 600; }
+    .code-string { color: var(--accent-secondary); }
+    .code-comment { color: var(--muted); font-style: italic; }
+    .code-function { color: var(--fg); }
+
+    /* ============================================
+       CALLOUTS
+       ============================================ */
+
+    .callouts-stack {
+      display: grid;
+      gap: var(--space-md);
+    }
+
+    .callout {
+      padding: var(--space-lg);
+      position: relative;
+      display: flex;
+      align-items: flex-start;
+      gap: var(--space-md);
+      border: 4px solid;
+    }
+
+    .callout-icon {
+      flex-shrink: 0;
+      width: 48px;
+      height: 48px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-display);
+      font-size: 1.5rem;
+      font-weight: 700;
+      border: 4px solid currentColor;
+    }
+
+    .callout-content {
+      flex: 1;
+    }
+
+    .callout-title {
+      font-family: var(--font-display);
+      font-size: 1.25rem;
+      letter-spacing: 0.1em;
+      margin-bottom: var(--space-xs);
+      text-transform: uppercase;
+    }
+
+    .callout-text {
+      font-size: 1rem;
+      line-height: 1.6;
+    }
+
+    /* Note */
+    .callout-note {
+      background: var(--surface);
+      border-color: var(--muted);
+    }
+
+    .callout-note .callout-icon {
+      color: var(--muted);
+    }
+
+    .callout-note .callout-title {
+      color: var(--fg);
+    }
+
+    .callout-note .callout-text {
+      color: var(--muted);
+    }
+
+    /* Warning */
+    .callout-warning {
+      background: rgba(255, 215, 0, 0.1);
+      border-color: var(--accent-secondary);
+    }
+
+    .callout-warning .callout-icon {
+      color: var(--accent-secondary);
+      background: var(--accent-secondary);
+      color: var(--bg);
+      border-color: var(--accent-secondary);
+    }
+
+    .callout-warning .callout-title {
+      color: var(--accent-secondary);
+    }
+
+    .callout-warning .callout-text {
+      color: var(--fg);
+    }
+
+    /* Success / Victory */
+    .callout-success {
+      background: rgba(204, 0, 0, 0.1);
+      border-color: var(--accent-primary);
+    }
+
+    .callout-success .callout-icon {
+      color: var(--fg);
+      background: var(--accent-primary);
+      border-color: var(--accent-primary);
+    }
+
+    .callout-success .callout-title {
+      color: var(--accent-primary);
+    }
+
+    .callout-success .callout-text {
+      color: var(--fg);
+    }
+
+    /* ============================================
+       BLOCKQUOTE
+       ============================================ */
+
+    blockquote {
+      padding: var(--space-xl);
+      background: var(--surface);
+      border: 4px solid var(--accent-primary);
+      border-left: 16px solid var(--accent-primary);
+      position: relative;
+    }
+
+    blockquote::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 80px;
+      height: 80px;
+      background: var(--accent-secondary);
+      clip-path: polygon(100% 0, 0 0, 100% 100%);
+    }
+
+    blockquote p {
+      font-family: var(--font-heading);
+      font-size: 1.5rem;
+      font-weight: 600;
+      line-height: 1.4;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+      margin-bottom: var(--space-md);
+    }
+
+    blockquote cite {
+      display: block;
+      font-family: var(--font-body);
+      font-size: 0.875rem;
+      color: var(--accent-secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      font-style: normal;
+      font-weight: 600;
+    }
+
+    blockquote cite::before {
+      content: '// ';
+      color: var(--accent-primary);
+    }
+
+    /* ============================================
+       LISTS — MANIFESTO STYLE
+       ============================================ */
+
+    .lists-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: var(--space-lg);
+    }
+
+    .list-block {
+      background: var(--bg);
+      padding: var(--space-lg);
+      border: 4px solid var(--fg);
+    }
+
+    .list-block h4 {
+      font-family: var(--font-display);
+      font-size: 1.25rem;
+      color: var(--accent-primary);
+      letter-spacing: 0.1em;
+      margin-bottom: var(--space-md);
+      padding-bottom: var(--space-sm);
+      border-bottom: 4px solid var(--accent-primary);
+    }
+
+    ul, ol {
+      padding-left: 0;
+      list-style: none;
+    }
+
+    ul li {
+      position: relative;
+      padding: var(--space-sm) 0;
+      padding-left: var(--space-xl);
+      font-family: var(--font-body);
+      font-size: 1rem;
+    }
+
+    ul li::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 16px;
+      height: 16px;
+      background: var(--accent-primary);
+      clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+    }
+
+    ol {
+      counter-reset: manifesto-counter;
+    }
+
+    ol li {
+      position: relative;
+      padding: var(--space-sm) 0;
+      padding-left: calc(var(--space-xl) + var(--space-md));
+      font-family: var(--font-body);
+      font-size: 1rem;
+      counter-increment: manifesto-counter;
+      border-bottom: 2px solid var(--surface);
+    }
+
+    ol li::before {
+      content: counter(manifesto-counter);
+      position: absolute;
+      left: 0;
+      top: 50%;
+      transform: translateY(-50%);
+      font-family: var(--font-display);
+      font-size: 2rem;
+      color: var(--accent-secondary);
+      min-width: var(--space-xl);
+    }
+
+    /* ============================================
+       IMAGE TREATMENT
+       ============================================ */
+
+    .image-treatment {
+      position: relative;
+      background: var(--surface);
+      border: 4px solid var(--fg);
+      padding: var(--space-sm);
+    }
+
+    /* Corner decorations */
+    .image-treatment::before,
+    .image-treatment::after {
+      content: '';
+      position: absolute;
+      width: 40px;
+      height: 40px;
+      background: var(--accent-primary);
+    }
+
+    .image-treatment::before {
+      top: -4px;
+      left: -4px;
+      clip-path: polygon(0 0, 100% 0, 0 100%);
+    }
+
+    .image-treatment::after {
+      bottom: -4px;
+      right: -4px;
+      clip-path: polygon(100% 0, 100% 100%, 0 100%);
+    }
+
+    .image-placeholder {
+      aspect-ratio: 16/9;
+      background: var(--bg);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: var(--space-sm);
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Diagonal lines overlay */
+    .image-placeholder::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: repeating-linear-gradient(
+        -45deg,
+        transparent 0px,
+        transparent 20px,
+        rgba(204, 0, 0, 0.05) 20px,
+        rgba(204, 0, 0, 0.05) 22px
+      );
+    }
+
+    .image-placeholder-icon {
+      width: 80px;
+      height: 80px;
+      border: 4px solid var(--accent-primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-display);
+      font-size: 1.5rem;
+      color: var(--accent-primary);
+      position: relative;
+    }
+
+    .image-placeholder-text {
+      font-family: var(--font-heading);
+      font-size: 0.875rem;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.2em;
+    }
+
+    .image-caption {
+      padding: var(--space-md) 0 0;
+      font-family: var(--font-body);
+      font-size: 0.875rem;
+      color: var(--muted);
+    }
+
+    .image-caption::before {
+      content: 'FIG. ';
+      font-family: var(--font-heading);
+      font-weight: 700;
+      color: var(--accent-primary);
+    }
+
+    /* ============================================
+       FOOTER
+       ============================================ */
+
+    .footer {
+      padding: var(--space-xl) var(--space-lg);
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .footer::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 24px;
+      background: var(--stripe-revolutionary);
+    }
+
+    .footer-content {
+      position: relative;
+      z-index: 1;
+    }
+
+    .footer-slogan {
+      font-family: var(--font-display);
+      font-size: clamp(2rem, 6vw, 4rem);
+      color: var(--fg);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: var(--space-md);
+    }
+
+    .footer-text {
+      font-family: var(--font-body);
+      font-size: 0.875rem;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.2em;
+    }
+
+    .footer-year {
+      font-family: var(--font-display);
+      font-size: 8rem;
+      color: var(--accent-primary);
+      opacity: 0.1;
+      position: absolute;
+      bottom: 0;
+      right: var(--space-lg);
+      line-height: 1;
+      pointer-events: none;
+    }
+
+    /* ============================================
+       RAISED FIST DECORATION
+       ============================================ */
+
+    .fist-icon {
+      width: 60px;
+      height: 80px;
+      display: inline-block;
+      position: relative;
+    }
+
+    .fist-icon::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: var(--accent-primary);
+      clip-path: polygon(
+        30% 100%, 30% 60%, 20% 55%, 20% 45%, 25% 40%,
+        25% 20%, 30% 15%, 35% 20%, 35% 10%, 42% 5%,
+        50% 10%, 50% 5%, 58% 0%, 65% 5%, 65% 10%,
+        72% 8%, 80% 15%, 80% 45%, 75% 50%, 75% 60%,
+        70% 100%
+      );
+    }
+
+    /* ============================================
+       UTILITY CLASSES
+       ============================================ */
+
+    .text-primary { color: var(--accent-primary); }
+    .text-secondary { color: var(--accent-secondary); }
+    .text-muted { color: var(--muted); }
+    .bg-surface { background: var(--surface); }
+    .bg-primary { background: var(--accent-primary); }
+    .border-primary { border-color: var(--accent-primary); }
+    .border-secondary { border-color: var(--accent-secondary); }
+
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+      .type-row {
+        grid-template-columns: 1fr;
+        gap: var(--space-sm);
+      }
+
+      .newsletter-form {
+        flex-direction: column;
+      }
+
+      .newsletter-input {
+        border-right: 4px solid var(--bg);
+        border-bottom: none;
+      }
+
+      .btn {
+        width: 100%;
+        justify-content: center;
+      }
+
+      .header-manifesto {
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .starburst {
+        display: none;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER — THE CALL -->
+  <header class="header">
+    <div class="starburst starburst-1"></div>
+    <div class="starburst starburst-2"></div>
+    <div class="header-content">
+      <p class="header-slogan">Year of the Build</p>
+      <h1 class="header-title">PROPAGANDA</h1>
+      <p class="header-subtitle">Theme 16 // Style Tile</p>
+      <div class="header-manifesto">
+        <span class="manifesto-item">Build</span>
+        <span class="manifesto-item">Ship</span>
+        <span class="manifesto-item">Launch</span>
+        <span class="manifesto-item">Repeat</span>
+      </div>
+    </div>
+  </header>
+
+  <main class="container">
+
+    <!-- TYPOGRAPHY -->
+    <section class="section" data-section="01">
+      <h2 class="section-title">Typography</h2>
+      <div class="type-specimen">
+        <div class="type-row">
+          <span class="type-label">H1 / Slogan</span>
+          <h1>WORKERS OF THE BUILD, UNITE</h1>
+        </div>
+        <div class="type-row">
+          <span class="type-label">H2 / Rally Cry</span>
+          <h2>THE REVOLUTION SHIPS ON FRIDAY</h2>
+        </div>
+        <div class="type-row">
+          <span class="type-label">H3 / Directive</span>
+          <h3>Forward March Into Production</h3>
+        </div>
+        <div class="type-row">
+          <span class="type-label">H4 / Decree</span>
+          <h4>All Commits Serve the Collective</h4>
+        </div>
+        <div class="type-row">
+          <span class="type-label">Body</span>
+          <p class="body-text">The masses demand software that works. Not tomorrow, not next quarter, but now. Every line of code is a brick in the foundation of progress. Every commit, a step toward liberation from the tyranny of vapor and vaporware. We do not ship features. We ship revolutions.</p>
+        </div>
+        <div class="type-row">
+          <span class="type-label">Small</span>
+          <p class="small-text">Technical specifications. Version numbers. The fine print of progress. Even the smallest detail serves the greater purpose of the build.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- COLORS -->
+    <section class="section" data-section="02">
+      <h2 class="section-title">Color Palette</h2>
+      <div class="swatches">
+        <div class="swatch swatch-bg">
+          <span class="swatch-name">Background</span>
+          <span class="swatch-value">#1A1A1A</span>
+        </div>
+        <div class="swatch swatch-fg">
+          <span class="swatch-name">Foreground</span>
+          <span class="swatch-value">#F5F5F5</span>
+        </div>
+        <div class="swatch swatch-primary">
+          <span class="swatch-name">Revolutionary Red</span>
+          <span class="swatch-value">#CC0000</span>
+        </div>
+        <div class="swatch swatch-secondary">
+          <span class="swatch-name">Glory Gold</span>
+          <span class="swatch-value">#FFD700</span>
+        </div>
+        <div class="swatch swatch-surface">
+          <span class="swatch-name">Surface</span>
+          <span class="swatch-value">#2A2A2A</span>
+        </div>
+        <div class="swatch swatch-muted">
+          <span class="swatch-name">Muted</span>
+          <span class="swatch-value">#888888</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- NEWSLETTER — MAIN CTA -->
+    <section class="section" data-section="03">
+      <h2 class="section-title">Newsletter Signup</h2>
+      <div class="newsletter">
+        <div class="newsletter-content">
+          <span class="newsletter-badge">Join the Movement</span>
+          <h3 class="newsletter-title">Receive Your Orders</h3>
+          <p class="newsletter-desc">Weekly dispatches from the front lines. Build reports, launch announcements, and the occasional call to arms. The revolution will be documented.</p>
+          <form class="newsletter-form">
+            <input type="email" class="newsletter-input" placeholder="your@email.address">
+            <button type="submit" class="newsletter-submit">Enlist Now</button>
+          </form>
+        </div>
+      </div>
+    </section>
+
+    <!-- BUTTONS -->
+    <section class="section" data-section="04">
+      <h2 class="section-title">Buttons</h2>
+      <div class="buttons-grid">
+        <button class="btn btn-primary"><span>Deploy Now</span></button>
+        <button class="btn btn-secondary"><span>View Mission</span></button>
+        <button class="btn btn-ghost"><span>Learn More</span></button>
+      </div>
+    </section>
+
+    <!-- CARDS -->
+    <section class="section" data-section="05">
+      <h2 class="section-title">Cards</h2>
+      <div class="cards-grid">
+
+        <!-- Project Card -->
+        <article class="project-card">
+          <div class="project-image">
+            <span class="project-image-placeholder">Project Screenshot</span>
+          </div>
+          <div class="project-content">
+            <span class="project-number">01</span>
+            <span class="project-status">In Progress</span>
+            <h3 class="project-title">Mythical</h3>
+            <p class="project-desc">The creative brief tool that actually gets used. Built for the way teams actually work.</p>
+          </div>
+        </article>
+
+        <!-- Devlog Card -->
+        <article class="devlog-card">
+          <div class="devlog-meta">
+            <span class="devlog-week">Week 03</span>
+            <span class="devlog-date">Dec 15, 2024</span>
+          </div>
+          <h3 class="devlog-title">The Foundation is Laid</h3>
+          <p class="devlog-excerpt">First lines of code shipped. The structure rises from nothing. Here is the progress report from the front lines...</p>
+          <a href="#" class="devlog-link">Read Dispatch</a>
+        </article>
+
+      </div>
+    </section>
+
+    <!-- CODE BLOCK -->
+    <section class="section" data-section="06">
+      <h2 class="section-title">Code Block</h2>
+      <div class="code-block">
+        <div class="code-header">
+          <span class="code-lang">TypeScript</span>
+          <button class="code-copy">Copy</button>
+        </div>
+        <div class="code-content">
+<pre><code><span class="code-comment">// The people's configuration</span>
+<span class="code-keyword">const</span> <span class="code-function">manifesto</span> = {
+  <span class="code-function">theme</span>: <span class="code-string">'propaganda'</span>,
+  <span class="code-function">objective</span>: <span class="code-string">'ship or die'</span>,
+  <span class="code-function">velocity</span>: <span class="code-string">'maximum'</span>,
+  <span class="code-function">excuses</span>: <span class="code-keyword">null</span>
+};</code></pre>
+        </div>
+      </div>
+    </section>
+
+    <!-- CALLOUTS -->
+    <section class="section" data-section="07">
+      <h2 class="section-title">Callouts</h2>
+      <div class="callouts-stack">
+
+        <div class="callout callout-note">
+          <span class="callout-icon">i</span>
+          <div class="callout-content">
+            <h4 class="callout-title">Intelligence Report</h4>
+            <p class="callout-text">Standard information callout. Context for the mission. Read carefully, comrade, for knowledge is power.</p>
+          </div>
+        </div>
+
+        <div class="callout callout-warning">
+          <span class="callout-icon">!</span>
+          <div class="callout-content">
+            <h4 class="callout-title">Critical Alert</h4>
+            <p class="callout-text">Breaking changes ahead. Proceed with caution. The path to victory is paved with careful attention to warnings.</p>
+          </div>
+        </div>
+
+        <div class="callout callout-success">
+          <span class="callout-icon">+</span>
+          <div class="callout-content">
+            <h4 class="callout-title">Victory Achieved</h4>
+            <p class="callout-text">Deploy successful. Tests pass. The build is complete. Glory to the collective effort.</p>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- BLOCKQUOTE -->
+    <section class="section" data-section="08">
+      <h2 class="section-title">Blockquote</h2>
+      <blockquote>
+        <p>Move fast and ship things. The perfect is the enemy of the deployed. Let the people judge your work in production.</p>
+        <cite>The Builder's Manifesto</cite>
+      </blockquote>
+    </section>
+
+    <!-- LISTS -->
+    <section class="section" data-section="09">
+      <h2 class="section-title">Lists</h2>
+      <div class="lists-grid">
+
+        <div class="list-block">
+          <h4>Directives</h4>
+          <ul>
+            <li>Build in public, hide nothing</li>
+            <li>Ship weekly without exception</li>
+            <li>Document the journey</li>
+            <li>Embrace the uncomfortable</li>
+            <li>Celebrate small victories</li>
+          </ul>
+        </div>
+
+        <div class="list-block">
+          <h4>The Five Year Plan</h4>
+          <ol>
+            <li>Identify the problem worth solving</li>
+            <li>Build the minimum viable revolution</li>
+            <li>Deploy to the masses</li>
+            <li>Gather intelligence from the field</li>
+            <li>Iterate until victory is achieved</li>
+          </ol>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- IMAGE TREATMENT -->
+    <section class="section" data-section="10">
+      <h2 class="section-title">Image Treatment</h2>
+      <div class="image-treatment">
+        <div class="image-placeholder">
+          <div class="image-placeholder-icon">IMG</div>
+          <span class="image-placeholder-text">Documentation / Screenshot / Diagram</span>
+        </div>
+        <p class="image-caption">01 // Project screenshot demonstrating the interface in its full revolutionary glory.</p>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="footer-content">
+      <p class="footer-slogan">The Build Never Stops</p>
+      <p class="footer-text">Year of the Build // 12 Projects in 12 Months</p>
+    </div>
+    <span class="footer-year">2025</span>
+  </footer>
+
+</body>
+</html>

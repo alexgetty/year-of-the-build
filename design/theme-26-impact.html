@@ -1,0 +1,1916 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IMPACT — Style Tile | YOTB</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        /* ============================================
+           IMPACT — High-Contrast Brutalist Theme
+           Maximum impact. Billboard typography.
+           ============================================ */
+
+        /* CSS Custom Properties - Design Tokens */
+        :root {
+            /* Grid System - 8px base */
+            --grid-unit: 8px;
+            --grid-2: 16px;
+            --grid-3: 24px;
+            --grid-4: 32px;
+            --grid-5: 40px;
+            --grid-6: 48px;
+            --grid-8: 64px;
+            --grid-10: 80px;
+            --grid-12: 96px;
+            --grid-16: 128px;
+            --grid-20: 160px;
+            --grid-24: 192px;
+
+            /* Colors - Inverted High-Contrast */
+            --color-background: #000000;
+            --color-foreground: #FFFFFF;
+            --color-accent-primary: #FFFF00;
+            --color-accent-secondary: #00FF00;
+            --color-surface: #1A1A1A;
+            --color-muted: #888888;
+            --color-error: #FF0000;
+
+            /* Typography Scale - Architectural */
+            --font-display: 'Bebas Neue', Impact, sans-serif;
+            --font-mono: 'JetBrains Mono', monospace;
+
+            /* Type Sizes - Billboard Scale */
+            --text-xs: 0.75rem;      /* 12px */
+            --text-sm: 0.875rem;     /* 14px */
+            --text-base: 1rem;       /* 16px */
+            --text-lg: 1.25rem;      /* 20px */
+            --text-xl: 1.5rem;       /* 24px */
+            --text-2xl: 2rem;        /* 32px */
+            --text-3xl: 3rem;        /* 48px */
+            --text-4xl: 4rem;        /* 64px */
+            --text-5xl: 6rem;        /* 96px */
+            --text-6xl: 8rem;        /* 128px */
+            --text-7xl: 12rem;       /* 192px */
+            --text-8xl: 16rem;       /* 256px */
+
+            /* Line Heights */
+            --leading-none: 1;
+            --leading-tight: 1.1;
+            --leading-normal: 1.5;
+            --leading-relaxed: 1.75;
+
+            /* Letter Spacing */
+            --tracking-tight: -0.02em;
+            --tracking-normal: 0;
+            --tracking-wide: 0.05em;
+            --tracking-wider: 0.1em;
+
+            /* Timing - Instant/Brutal */
+            --duration-instant: 0ms;
+            --duration-flash: 50ms;
+        }
+
+        /* Reset */
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Base */
+        html {
+            font-size: 16px;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        body {
+            font-family: var(--font-mono);
+            font-size: var(--text-base);
+            line-height: var(--leading-normal);
+            color: var(--color-foreground);
+            background-color: var(--color-background);
+        }
+
+        /* Grid Overlay Toggle */
+        .grid-toggle {
+            position: fixed;
+            bottom: var(--grid-3);
+            right: var(--grid-3);
+            z-index: 9999;
+            padding: var(--grid-unit) var(--grid-2);
+            font-family: var(--font-mono);
+            font-size: var(--text-xs);
+            text-transform: uppercase;
+            letter-spacing: var(--tracking-wider);
+            color: var(--color-background);
+            background: var(--color-accent-primary);
+            border: none;
+            cursor: pointer;
+        }
+
+        .grid-toggle:hover {
+            background: var(--color-foreground);
+            color: var(--color-background);
+        }
+
+        .grid-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            z-index: 9998;
+            pointer-events: none;
+            background-image:
+                linear-gradient(to right, rgba(255, 255, 0, 0.1) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(255, 255, 0, 0.1) 1px, transparent 1px);
+            background-size: var(--grid-unit) var(--grid-unit);
+        }
+
+        .grid-overlay.visible {
+            display: block;
+        }
+
+        /* Container */
+        .container {
+            width: 100%;
+            max-width: 1440px;
+            margin: 0 auto;
+            padding: 0 var(--grid-4);
+        }
+
+        .container--full {
+            max-width: none;
+            padding: 0;
+        }
+
+        /* Section */
+        .section {
+            padding: var(--grid-12) 0;
+            border-bottom: 1px solid var(--color-surface);
+        }
+
+        .section:last-child {
+            border-bottom: none;
+        }
+
+        .section__header {
+            margin-bottom: var(--grid-8);
+        }
+
+        .section__label {
+            font-family: var(--font-mono);
+            font-size: var(--text-xs);
+            text-transform: uppercase;
+            letter-spacing: var(--tracking-wider);
+            color: var(--color-accent-primary);
+            margin-bottom: var(--grid-unit);
+        }
+
+        .section__title {
+            font-family: var(--font-display);
+            font-size: var(--text-4xl);
+            line-height: var(--leading-none);
+            text-transform: uppercase;
+            color: var(--color-foreground);
+        }
+
+        /* ============================================
+           HERO - Maximum Impact
+           ============================================ */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: var(--grid-8) 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero__title {
+            font-family: var(--font-display);
+            font-size: var(--text-8xl);
+            line-height: var(--leading-none);
+            text-transform: uppercase;
+            color: var(--color-foreground);
+            margin-left: -0.05em;
+        }
+
+        .hero__title--accent {
+            color: var(--color-accent-primary);
+        }
+
+        .hero__subtitle {
+            font-family: var(--font-mono);
+            font-size: var(--text-lg);
+            color: var(--color-muted);
+            margin-top: var(--grid-4);
+            max-width: 600px;
+        }
+
+        .hero__meta {
+            position: absolute;
+            bottom: var(--grid-8);
+            left: var(--grid-4);
+            font-family: var(--font-mono);
+            font-size: var(--text-xs);
+            text-transform: uppercase;
+            letter-spacing: var(--tracking-wider);
+            color: var(--color-accent-secondary);
+        }
+
+        .hero__version {
+            position: absolute;
+            bottom: var(--grid-8);
+            right: var(--grid-4);
+            font-family: var(--font-mono);
+            font-size: var(--text-xs);
+            text-transform: uppercase;
+            letter-spacing: var(--tracking-wider);
+            color: var(--color-muted);
+        }
+
+        /* ============================================
+           COLOR SYSTEM
+           ============================================ */
+        .color-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: var(--grid-3);
+        }
+
+        .color-swatch {
+            aspect-ratio: 16 / 9;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            padding: var(--grid-2);
+            border: 1px solid var(--color-surface);
+        }
+
+        .color-swatch--background { background: var(--color-background); border-color: var(--color-foreground); }
+        .color-swatch--foreground { background: var(--color-foreground); }
+        .color-swatch--accent-primary { background: var(--color-accent-primary); }
+        .color-swatch--accent-secondary { background: var(--color-accent-secondary); }
+        .color-swatch--surface { background: var(--color-surface); }
+        .color-swatch--muted { background: var(--color-muted); }
+        .color-swatch--error { background: var(--color-error); }
+
+        .color-swatch__name {
+            font-family: var(--font-mono);
+            font-size: var(--text-xs);
+            text-transform: uppercase;
+            letter-spacing: var(--tracking-wide);
+            color: var(--color-foreground);
+        }
+
+        .color-swatch--foreground .color-swatch__name,
+        .color-swatch--accent-primary .color-swatch__name,
+        .color-swatch--accent-secondary .color-swatch__name {
+            color: var(--color-background);
+        }
+
+        .color-swatch__value {
+            font-family: var(--font-mono);
+            font-size: var(--text-xs);
+            color: var(--color-muted);
+            margin-top: var(--grid-unit);
+        }
+
+        .color-swatch--foreground .color-swatch__value,
+        .color-swatch--accent-primary .color-swatch__value,
+        .color-swatch--accent-secondary .color-swatch__value {
+            color: rgba(0, 0, 0, 0.6);
+        }
+
+        /* ============================================
+           TYPOGRAPHY - Billboard Scale
+           ============================================ */
+        .type-display {
+            font-family: var(--font-display);
+            text-transform: uppercase;
+            line-height: var(--leading-none);
+        }
+
+        .type-display--8xl { font-size: var(--text-8xl); }
+        .type-display--7xl { font-size: var(--text-7xl); }
+        .type-display--6xl { font-size: var(--text-6xl); }
+        .type-display--5xl { font-size: var(--text-5xl); }
+        .type-display--4xl { font-size: var(--text-4xl); }
+        .type-display--3xl { font-size: var(--text-3xl); }
+
+        .type-specimen {
+            margin-bottom: var(--grid-8);
+            padding-bottom: var(--grid-8);
+            border-bottom: 1px solid var(--color-surface);
+        }
+
+        .type-specimen:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+
+        .type-specimen__label {
+            font-family: var(--font-mono);
+            font-size: var(--text-xs);
+            text-transform: uppercase;
+            letter-spacing: var(--tracking-wider);
+            color: var(--color-accent-primary);
+            margin-bottom: var(--grid-2);
+        }
+
+        .type-specimen__sample {
+            overflow-wrap: break-word;
+            word-break: break-word;
+        }
+
+        .type-specimen__sample--overflow {
+            white-space: nowrap;
+            overflow: hidden;
+        }
+
+        /* Body Type */
+        .type-body {
+            font-family: var(--font-mono);
+            line-height: var(--leading-normal);
+        }
+
+        .type-body--lg { font-size: var(--text-lg); }
+        .type-body--base { font-size: var(--text-base); }
+        .type-body--sm { font-size: var(--text-sm); }
+        .type-body--xs { font-size: var(--text-xs); }
+
+        /* Type Demo Grid */
+        .type-demo-grid {
+            display: grid;
+            grid-template-columns: repeat(12, 1fr);
+            gap: var(--grid-3);
+        }
+
+        .type-demo-grid__item {
+            grid-column: span 12;
+        }
+
+        @media (min-width: 768px) {
+            .type-demo-grid__item--6 { grid-column: span 6; }
+            .type-demo-grid__item--4 { grid-column: span 4; }
+        }
+
+        /* ============================================
+           SPACING SYSTEM - 8px Grid
+           ============================================ */
+        .spacing-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: var(--grid-4);
+        }
+
+        .spacing-item {
+            display: flex;
+            align-items: flex-end;
+            gap: var(--grid-2);
+        }
+
+        .spacing-block {
+            background: var(--color-accent-primary);
+            width: var(--grid-4);
+        }
+
+        .spacing-block--1 { height: var(--grid-unit); }
+        .spacing-block--2 { height: var(--grid-2); }
+        .spacing-block--3 { height: var(--grid-3); }
+        .spacing-block--4 { height: var(--grid-4); }
+        .spacing-block--6 { height: var(--grid-6); }
+        .spacing-block--8 { height: var(--grid-8); }
+        .spacing-block--12 { height: var(--grid-12); }
+        .spacing-block--16 { height: var(--grid-16); }
+
+        .spacing-label {
+            font-family: var(--font-mono);
+            font-size: var(--text-xs);
+            color: var(--color-muted);
+        }
+
+        /* ============================================
+           BUTTONS - Instant State Changes
+           ============================================ */
+        .button-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: var(--grid-3);
+            align-items: flex-start;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: var(--grid-2) var(--grid-4);
+            font-family: var(--font-mono);
+            font-size: var(--text-sm);
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: var(--tracking-wide);
+            text-decoration: none;
+            border: none;
+            cursor: pointer;
+            transition: none;
+        }
+
+        /* Primary - Yellow */
+        .btn--primary {
+            background: var(--color-accent-primary);
+            color: var(--color-background);
+        }
+
+        .btn--primary:hover {
+            background: var(--color-foreground);
+            color: var(--color-background);
+        }
+
+        .btn--primary:active {
+            background: var(--color-accent-secondary);
+        }
+
+        /* Secondary - Green */
+        .btn--secondary {
+            background: var(--color-accent-secondary);
+            color: var(--color-background);
+        }
+
+        .btn--secondary:hover {
+            background: var(--color-foreground);
+            color: var(--color-background);
+        }
+
+        .btn--secondary:active {
+            background: var(--color-accent-primary);
+        }
+
+        /* Outline */
+        .btn--outline {
+            background: transparent;
+            color: var(--color-foreground);
+            border: 2px solid var(--color-foreground);
+        }
+
+        .btn--outline:hover {
+            background: var(--color-foreground);
+            color: var(--color-background);
+        }
+
+        .btn--outline:active {
+            background: var(--color-accent-primary);
+            border-color: var(--color-accent-primary);
+            color: var(--color-background);
+        }
+
+        /* Ghost */
+        .btn--ghost {
+            background: transparent;
+            color: var(--color-foreground);
+        }
+
+        .btn--ghost:hover {
+            background: var(--color-surface);
+        }
+
+        .btn--ghost:active {
+            background: var(--color-accent-primary);
+            color: var(--color-background);
+        }
+
+        /* Sizes */
+        .btn--lg {
+            padding: var(--grid-3) var(--grid-6);
+            font-size: var(--text-base);
+        }
+
+        .btn--sm {
+            padding: var(--grid-unit) var(--grid-2);
+            font-size: var(--text-xs);
+        }
+
+        /* Disabled */
+        .btn:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+
+        .btn:disabled:hover {
+            background: inherit;
+            color: inherit;
+        }
+
+        /* ============================================
+           FORM ELEMENTS
+           ============================================ */
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: var(--grid-4);
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: var(--grid-unit);
+        }
+
+        .form-label {
+            font-family: var(--font-mono);
+            font-size: var(--text-xs);
+            text-transform: uppercase;
+            letter-spacing: var(--tracking-wider);
+            color: var(--color-accent-primary);
+        }
+
+        .form-input,
+        .form-textarea,
+        .form-select {
+            padding: var(--grid-2);
+            font-family: var(--font-mono);
+            font-size: var(--text-base);
+            color: var(--color-foreground);
+            background: var(--color-surface);
+            border: 2px solid var(--color-surface);
+            outline: none;
+            transition: none;
+        }
+
+        .form-input:focus,
+        .form-textarea:focus,
+        .form-select:focus {
+            border-color: var(--color-accent-primary);
+            background: var(--color-background);
+        }
+
+        .form-input::placeholder,
+        .form-textarea::placeholder {
+            color: var(--color-muted);
+        }
+
+        .form-textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        .form-select {
+            cursor: pointer;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%23888888'%3E%3Cpath d='M4 6l4 4 4-4'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right var(--grid-2) center;
+            padding-right: var(--grid-6);
+        }
+
+        /* Checkbox/Radio */
+        .form-check {
+            display: flex;
+            align-items: center;
+            gap: var(--grid-2);
+            cursor: pointer;
+        }
+
+        .form-check__input {
+            width: var(--grid-3);
+            height: var(--grid-3);
+            appearance: none;
+            background: var(--color-surface);
+            border: 2px solid var(--color-muted);
+            cursor: pointer;
+        }
+
+        .form-check__input:checked {
+            background: var(--color-accent-primary);
+            border-color: var(--color-accent-primary);
+        }
+
+        .form-check__input[type="radio"] {
+            border-radius: 50%;
+        }
+
+        .form-check__label {
+            font-family: var(--font-mono);
+            font-size: var(--text-sm);
+            color: var(--color-foreground);
+        }
+
+        /* Error State */
+        .form-input--error {
+            border-color: var(--color-error);
+        }
+
+        .form-error {
+            font-family: var(--font-mono);
+            font-size: var(--text-xs);
+            color: var(--color-error);
+        }
+
+        /* ============================================
+           CARDS
+           ============================================ */
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: var(--grid-4);
+        }
+
+        .card {
+            background: var(--color-surface);
+            border: 1px solid var(--color-surface);
+            padding: var(--grid-4);
+            display: flex;
+            flex-direction: column;
+            gap: var(--grid-3);
+            transition: none;
+        }
+
+        .card:hover {
+            border-color: var(--color-accent-primary);
+        }
+
+        .card__tag {
+            font-family: var(--font-mono);
+            font-size: var(--text-xs);
+            text-transform: uppercase;
+            letter-spacing: var(--tracking-wider);
+            color: var(--color-accent-secondary);
+        }
+
+        .card__title {
+            font-family: var(--font-display);
+            font-size: var(--text-3xl);
+            line-height: var(--leading-tight);
+            text-transform: uppercase;
+        }
+
+        .card__description {
+            font-family: var(--font-mono);
+            font-size: var(--text-sm);
+            color: var(--color-muted);
+            line-height: var(--leading-relaxed);
+        }
+
+        .card__meta {
+            font-family: var(--font-mono);
+            font-size: var(--text-xs);
+            color: var(--color-muted);
+            margin-top: auto;
+        }
+
+        /* Card Variants */
+        .card--highlight {
+            background: var(--color-accent-primary);
+            border-color: var(--color-accent-primary);
+        }
+
+        .card--highlight .card__tag { color: var(--color-background); }
+        .card--highlight .card__title { color: var(--color-background); }
+        .card--highlight .card__description { color: rgba(0, 0, 0, 0.7); }
+        .card--highlight .card__meta { color: rgba(0, 0, 0, 0.5); }
+
+        .card--highlight:hover {
+            background: var(--color-foreground);
+        }
+
+        /* ============================================
+           NAVIGATION
+           ============================================ */
+        .nav {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: var(--grid-3) 0;
+            border-bottom: 1px solid var(--color-surface);
+        }
+
+        .nav__logo {
+            font-family: var(--font-display);
+            font-size: var(--text-2xl);
+            text-transform: uppercase;
+            color: var(--color-foreground);
+            text-decoration: none;
+        }
+
+        .nav__logo:hover {
+            color: var(--color-accent-primary);
+        }
+
+        .nav__links {
+            display: flex;
+            gap: var(--grid-4);
+            list-style: none;
+        }
+
+        .nav__link {
+            font-family: var(--font-mono);
+            font-size: var(--text-xs);
+            text-transform: uppercase;
+            letter-spacing: var(--tracking-wider);
+            color: var(--color-muted);
+            text-decoration: none;
+            padding: var(--grid-unit) 0;
+            border-bottom: 2px solid transparent;
+        }
+
+        .nav__link:hover {
+            color: var(--color-foreground);
+        }
+
+        .nav__link--active {
+            color: var(--color-foreground);
+            border-bottom-color: var(--color-accent-primary);
+        }
+
+        /* ============================================
+           TABLES
+           ============================================ */
+        .table-wrapper {
+            overflow-x: auto;
+        }
+
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+            font-family: var(--font-mono);
+            font-size: var(--text-sm);
+        }
+
+        .table th,
+        .table td {
+            padding: var(--grid-2) var(--grid-3);
+            text-align: left;
+            border-bottom: 1px solid var(--color-surface);
+        }
+
+        .table th {
+            font-size: var(--text-xs);
+            text-transform: uppercase;
+            letter-spacing: var(--tracking-wider);
+            color: var(--color-accent-primary);
+            background: var(--color-surface);
+        }
+
+        .table tr:hover td {
+            background: var(--color-surface);
+        }
+
+        .table td {
+            color: var(--color-foreground);
+        }
+
+        /* ============================================
+           BADGES & TAGS
+           ============================================ */
+        .badge-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: var(--grid-2);
+        }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            padding: var(--grid-unit) var(--grid-2);
+            font-family: var(--font-mono);
+            font-size: var(--text-xs);
+            text-transform: uppercase;
+            letter-spacing: var(--tracking-wide);
+        }
+
+        .badge--default {
+            background: var(--color-surface);
+            color: var(--color-foreground);
+        }
+
+        .badge--primary {
+            background: var(--color-accent-primary);
+            color: var(--color-background);
+        }
+
+        .badge--secondary {
+            background: var(--color-accent-secondary);
+            color: var(--color-background);
+        }
+
+        .badge--outline {
+            background: transparent;
+            border: 1px solid var(--color-foreground);
+            color: var(--color-foreground);
+        }
+
+        .badge--error {
+            background: var(--color-error);
+            color: var(--color-foreground);
+        }
+
+        /* ============================================
+           ALERTS
+           ============================================ */
+        .alert {
+            padding: var(--grid-3);
+            font-family: var(--font-mono);
+            font-size: var(--text-sm);
+            display: flex;
+            gap: var(--grid-2);
+            align-items: flex-start;
+        }
+
+        .alert__icon {
+            flex-shrink: 0;
+            font-size: var(--text-lg);
+        }
+
+        .alert--info {
+            background: var(--color-surface);
+            border-left: 4px solid var(--color-foreground);
+        }
+
+        .alert--success {
+            background: rgba(0, 255, 0, 0.1);
+            border-left: 4px solid var(--color-accent-secondary);
+            color: var(--color-accent-secondary);
+        }
+
+        .alert--warning {
+            background: rgba(255, 255, 0, 0.1);
+            border-left: 4px solid var(--color-accent-primary);
+            color: var(--color-accent-primary);
+        }
+
+        .alert--error {
+            background: rgba(255, 0, 0, 0.1);
+            border-left: 4px solid var(--color-error);
+            color: var(--color-error);
+        }
+
+        /* ============================================
+           CODE BLOCKS
+           ============================================ */
+        .code-block {
+            background: var(--color-surface);
+            border: 1px solid var(--color-surface);
+            padding: var(--grid-3);
+            font-family: var(--font-mono);
+            font-size: var(--text-sm);
+            line-height: var(--leading-relaxed);
+            overflow-x: auto;
+        }
+
+        .code-block__header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: var(--grid-2);
+            margin-bottom: var(--grid-2);
+            border-bottom: 1px solid var(--color-background);
+        }
+
+        .code-block__lang {
+            font-size: var(--text-xs);
+            text-transform: uppercase;
+            letter-spacing: var(--tracking-wider);
+            color: var(--color-accent-primary);
+        }
+
+        .code-block code {
+            color: var(--color-foreground);
+        }
+
+        .code-inline {
+            font-family: var(--font-mono);
+            font-size: 0.875em;
+            padding: 0.125em 0.375em;
+            background: var(--color-surface);
+            color: var(--color-accent-primary);
+        }
+
+        /* Syntax Highlighting */
+        .token-keyword { color: var(--color-accent-primary); }
+        .token-string { color: var(--color-accent-secondary); }
+        .token-comment { color: var(--color-muted); }
+        .token-number { color: var(--color-error); }
+        .token-function { color: var(--color-foreground); }
+
+        /* ============================================
+           DIVIDERS
+           ============================================ */
+        .divider {
+            border: none;
+            height: 1px;
+            background: var(--color-surface);
+            margin: var(--grid-6) 0;
+        }
+
+        .divider--accent {
+            background: var(--color-accent-primary);
+        }
+
+        .divider--thick {
+            height: 4px;
+        }
+
+        /* ============================================
+           GRID DEMO
+           ============================================ */
+        .grid-demo {
+            display: grid;
+            grid-template-columns: repeat(12, 1fr);
+            gap: var(--grid-2);
+        }
+
+        .grid-demo__cell {
+            background: var(--color-surface);
+            padding: var(--grid-2);
+            font-family: var(--font-mono);
+            font-size: var(--text-xs);
+            text-align: center;
+            color: var(--color-muted);
+        }
+
+        .grid-demo__cell--span-1 { grid-column: span 1; }
+        .grid-demo__cell--span-2 { grid-column: span 2; }
+        .grid-demo__cell--span-3 { grid-column: span 3; }
+        .grid-demo__cell--span-4 { grid-column: span 4; }
+        .grid-demo__cell--span-6 { grid-column: span 6; }
+        .grid-demo__cell--span-12 { grid-column: span 12; }
+
+        .grid-demo__cell--highlight {
+            background: var(--color-accent-primary);
+            color: var(--color-background);
+        }
+
+        /* ============================================
+           INTERACTIVE DEMO
+           ============================================ */
+        .interaction-demo {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: var(--grid-4);
+        }
+
+        .interaction-box {
+            aspect-ratio: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: var(--font-display);
+            font-size: var(--text-2xl);
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: none;
+        }
+
+        .interaction-box--invert {
+            background: var(--color-foreground);
+            color: var(--color-background);
+        }
+
+        .interaction-box--invert:hover {
+            background: var(--color-background);
+            color: var(--color-foreground);
+            outline: 2px solid var(--color-foreground);
+        }
+
+        .interaction-box--flash-yellow {
+            background: var(--color-surface);
+            color: var(--color-foreground);
+        }
+
+        .interaction-box--flash-yellow:hover {
+            background: var(--color-accent-primary);
+            color: var(--color-background);
+        }
+
+        .interaction-box--flash-green {
+            background: var(--color-surface);
+            color: var(--color-foreground);
+        }
+
+        .interaction-box--flash-green:hover {
+            background: var(--color-accent-secondary);
+            color: var(--color-background);
+        }
+
+        .interaction-box--scale {
+            background: var(--color-accent-primary);
+            color: var(--color-background);
+        }
+
+        .interaction-box--scale:active {
+            transform: scale(0.95);
+        }
+
+        /* ============================================
+           LIST STYLES
+           ============================================ */
+        .list {
+            font-family: var(--font-mono);
+            font-size: var(--text-sm);
+            line-height: var(--leading-relaxed);
+        }
+
+        .list--unordered {
+            list-style: none;
+        }
+
+        .list--unordered li {
+            padding-left: var(--grid-3);
+            position: relative;
+        }
+
+        .list--unordered li::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0.7em;
+            width: 8px;
+            height: 2px;
+            background: var(--color-accent-primary);
+        }
+
+        .list--ordered {
+            list-style: none;
+            counter-reset: list-counter;
+        }
+
+        .list--ordered li {
+            counter-increment: list-counter;
+            padding-left: var(--grid-4);
+            position: relative;
+        }
+
+        .list--ordered li::before {
+            content: counter(list-counter);
+            position: absolute;
+            left: 0;
+            font-size: var(--text-xs);
+            color: var(--color-accent-primary);
+            font-weight: 700;
+        }
+
+        /* ============================================
+           BLOCKQUOTE
+           ============================================ */
+        .blockquote {
+            font-family: var(--font-display);
+            font-size: var(--text-3xl);
+            line-height: var(--leading-tight);
+            text-transform: uppercase;
+            padding-left: var(--grid-4);
+            border-left: 4px solid var(--color-accent-primary);
+        }
+
+        .blockquote__cite {
+            display: block;
+            margin-top: var(--grid-2);
+            font-family: var(--font-mono);
+            font-size: var(--text-sm);
+            text-transform: none;
+            color: var(--color-muted);
+        }
+
+        /* ============================================
+           AVATAR
+           ============================================ */
+        .avatar-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: var(--grid-3);
+            align-items: flex-end;
+        }
+
+        .avatar {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--color-surface);
+            font-family: var(--font-display);
+            text-transform: uppercase;
+            color: var(--color-foreground);
+        }
+
+        .avatar--sm { width: var(--grid-5); height: var(--grid-5); font-size: var(--text-sm); }
+        .avatar--md { width: var(--grid-8); height: var(--grid-8); font-size: var(--text-xl); }
+        .avatar--lg { width: var(--grid-12); height: var(--grid-12); font-size: var(--text-3xl); }
+
+        .avatar--accent {
+            background: var(--color-accent-primary);
+            color: var(--color-background);
+        }
+
+        /* ============================================
+           PROGRESS
+           ============================================ */
+        .progress {
+            height: var(--grid-unit);
+            background: var(--color-surface);
+            overflow: hidden;
+        }
+
+        .progress__bar {
+            height: 100%;
+            background: var(--color-accent-primary);
+        }
+
+        .progress--thick {
+            height: var(--grid-2);
+        }
+
+        /* ============================================
+           TABS
+           ============================================ */
+        .tabs {
+            display: flex;
+            gap: 0;
+            border-bottom: 2px solid var(--color-surface);
+        }
+
+        .tab {
+            padding: var(--grid-2) var(--grid-4);
+            font-family: var(--font-mono);
+            font-size: var(--text-xs);
+            text-transform: uppercase;
+            letter-spacing: var(--tracking-wider);
+            color: var(--color-muted);
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            margin-bottom: -2px;
+        }
+
+        .tab:hover {
+            color: var(--color-foreground);
+        }
+
+        .tab--active {
+            color: var(--color-foreground);
+            border-bottom-color: var(--color-accent-primary);
+        }
+
+        /* ============================================
+           FOOTER
+           ============================================ */
+        .footer {
+            padding: var(--grid-8) 0;
+            border-top: 1px solid var(--color-surface);
+        }
+
+        .footer__grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: var(--grid-6);
+        }
+
+        .footer__title {
+            font-family: var(--font-display);
+            font-size: var(--text-xl);
+            text-transform: uppercase;
+            margin-bottom: var(--grid-3);
+        }
+
+        .footer__links {
+            list-style: none;
+        }
+
+        .footer__link {
+            font-family: var(--font-mono);
+            font-size: var(--text-sm);
+            color: var(--color-muted);
+            text-decoration: none;
+            display: block;
+            padding: var(--grid-unit) 0;
+        }
+
+        .footer__link:hover {
+            color: var(--color-accent-primary);
+        }
+
+        .footer__bottom {
+            margin-top: var(--grid-8);
+            padding-top: var(--grid-4);
+            border-top: 1px solid var(--color-surface);
+            font-family: var(--font-mono);
+            font-size: var(--text-xs);
+            color: var(--color-muted);
+        }
+
+        /* ============================================
+           UTILITIES
+           ============================================ */
+        .text-accent-primary { color: var(--color-accent-primary); }
+        .text-accent-secondary { color: var(--color-accent-secondary); }
+        .text-muted { color: var(--color-muted); }
+        .text-error { color: var(--color-error); }
+
+        .bg-surface { background: var(--color-surface); }
+        .bg-accent-primary { background: var(--color-accent-primary); }
+        .bg-accent-secondary { background: var(--color-accent-secondary); }
+
+        .uppercase { text-transform: uppercase; }
+        .tracking-wide { letter-spacing: var(--tracking-wide); }
+        .tracking-wider { letter-spacing: var(--tracking-wider); }
+
+        /* ============================================
+           RESPONSIVE
+           ============================================ */
+        @media (max-width: 1024px) {
+            .hero__title {
+                font-size: var(--text-7xl);
+            }
+            .type-display--8xl {
+                font-size: var(--text-7xl);
+            }
+            .type-display--7xl {
+                font-size: var(--text-6xl);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 0 var(--grid-3);
+            }
+            .hero__title {
+                font-size: var(--text-5xl);
+            }
+            .type-display--8xl {
+                font-size: var(--text-5xl);
+            }
+            .type-display--7xl {
+                font-size: var(--text-5xl);
+            }
+            .type-display--6xl {
+                font-size: var(--text-4xl);
+            }
+            .section__title {
+                font-size: var(--text-3xl);
+            }
+            .nav {
+                flex-direction: column;
+                gap: var(--grid-3);
+            }
+            .nav__links {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero__title {
+                font-size: var(--text-4xl);
+            }
+            .type-display--8xl,
+            .type-display--7xl,
+            .type-display--6xl {
+                font-size: var(--text-4xl);
+            }
+            .blockquote {
+                font-size: var(--text-2xl);
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Grid Overlay -->
+    <div class="grid-overlay" id="gridOverlay"></div>
+    <button class="grid-toggle" id="gridToggle">Grid</button>
+
+    <!-- Navigation -->
+    <div class="container">
+        <nav class="nav">
+            <a href="#" class="nav__logo">YOTB</a>
+            <ul class="nav__links">
+                <li><a href="#colors" class="nav__link nav__link--active">Colors</a></li>
+                <li><a href="#typography" class="nav__link">Type</a></li>
+                <li><a href="#components" class="nav__link">Components</a></li>
+                <li><a href="#forms" class="nav__link">Forms</a></li>
+                <li><a href="#grid" class="nav__link">Grid</a></li>
+            </ul>
+        </nav>
+    </div>
+
+    <!-- Hero -->
+    <section class="hero">
+        <div class="container">
+            <h1 class="hero__title">
+                <span class="hero__title--accent">IMPACT</span><br>
+                STYLE TILE
+            </h1>
+            <p class="hero__subtitle">
+                Maximum impact. Every element demands attention. Type so large it becomes environment. Grid so strict it becomes invisible.
+            </p>
+        </div>
+        <span class="hero__meta">Theme 26 / Brutalist</span>
+        <span class="hero__version">v1.0.0</span>
+    </section>
+
+    <!-- Colors -->
+    <section class="section" id="colors">
+        <div class="container">
+            <div class="section__header">
+                <span class="section__label">01 / Color System</span>
+                <h2 class="section__title">High-Contrast Palette</h2>
+            </div>
+            <div class="color-grid">
+                <div class="color-swatch color-swatch--background">
+                    <span class="color-swatch__name">Background</span>
+                    <span class="color-swatch__value">#000000</span>
+                </div>
+                <div class="color-swatch color-swatch--foreground">
+                    <span class="color-swatch__name">Foreground</span>
+                    <span class="color-swatch__value">#FFFFFF</span>
+                </div>
+                <div class="color-swatch color-swatch--accent-primary">
+                    <span class="color-swatch__name">Accent Primary</span>
+                    <span class="color-swatch__value">#FFFF00</span>
+                </div>
+                <div class="color-swatch color-swatch--accent-secondary">
+                    <span class="color-swatch__name">Accent Secondary</span>
+                    <span class="color-swatch__value">#00FF00</span>
+                </div>
+                <div class="color-swatch color-swatch--surface">
+                    <span class="color-swatch__name">Surface</span>
+                    <span class="color-swatch__value">#1A1A1A</span>
+                </div>
+                <div class="color-swatch color-swatch--muted">
+                    <span class="color-swatch__name">Muted</span>
+                    <span class="color-swatch__value">#888888</span>
+                </div>
+                <div class="color-swatch color-swatch--error">
+                    <span class="color-swatch__name">Error</span>
+                    <span class="color-swatch__value">#FF0000</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Typography -->
+    <section class="section" id="typography">
+        <div class="container">
+            <div class="section__header">
+                <span class="section__label">02 / Typography</span>
+                <h2 class="section__title">Billboard Scale</h2>
+            </div>
+
+            <!-- Display Type -->
+            <div class="type-specimen">
+                <span class="type-specimen__label">Display 8XL / 16rem / Bebas Neue</span>
+                <div class="type-specimen__sample type-specimen__sample--overflow">
+                    <span class="type-display type-display--8xl">BUILD</span>
+                </div>
+            </div>
+
+            <div class="type-specimen">
+                <span class="type-specimen__label">Display 7XL / 12rem</span>
+                <div class="type-specimen__sample">
+                    <span class="type-display type-display--7xl">LAUNCH</span>
+                </div>
+            </div>
+
+            <div class="type-specimen">
+                <span class="type-specimen__label">Display 6XL / 8rem</span>
+                <div class="type-specimen__sample">
+                    <span class="type-display type-display--6xl">ITERATE</span>
+                </div>
+            </div>
+
+            <div class="type-specimen">
+                <span class="type-specimen__label">Display 5XL / 6rem</span>
+                <div class="type-specimen__sample">
+                    <span class="type-display type-display--5xl">Ship Fast</span>
+                </div>
+            </div>
+
+            <div class="type-specimen">
+                <span class="type-specimen__label">Display 4XL / 4rem</span>
+                <div class="type-specimen__sample">
+                    <span class="type-display type-display--4xl">Break Things</span>
+                </div>
+            </div>
+
+            <div class="type-specimen">
+                <span class="type-specimen__label">Display 3XL / 3rem</span>
+                <div class="type-specimen__sample">
+                    <span class="type-display type-display--3xl">Learn Everything</span>
+                </div>
+            </div>
+
+            <hr class="divider divider--accent">
+
+            <!-- Body Type -->
+            <div class="type-demo-grid">
+                <div class="type-demo-grid__item type-demo-grid__item--6">
+                    <div class="type-specimen">
+                        <span class="type-specimen__label">Body Large / 1.25rem / JetBrains Mono</span>
+                        <p class="type-body type-body--lg">
+                            12 projects. 12 months. No excuses. This is Year of the Build - a public accountability experiment in shipping at speed.
+                        </p>
+                    </div>
+                </div>
+                <div class="type-demo-grid__item type-demo-grid__item--6">
+                    <div class="type-specimen">
+                        <span class="type-specimen__label">Body Base / 1rem</span>
+                        <p class="type-body type-body--base">
+                            Every week documented. Every failure analyzed. Every success celebrated. The goal isn't perfection - it's momentum.
+                        </p>
+                    </div>
+                </div>
+                <div class="type-demo-grid__item type-demo-grid__item--6">
+                    <div class="type-specimen">
+                        <span class="type-specimen__label">Body Small / 0.875rem</span>
+                        <p class="type-body type-body--sm">
+                            Built with Astro, React, and MDX. Powered by late nights and caffeine. Motivated by deadlines and public accountability.
+                        </p>
+                    </div>
+                </div>
+                <div class="type-demo-grid__item type-demo-grid__item--6">
+                    <div class="type-specimen">
+                        <span class="type-specimen__label">Body XS / 0.75rem</span>
+                        <p class="type-body type-body--xs">
+                            META / TIMESTAMP / VERSION / STATUS / CATEGORY / TAGS / AUTHOR / DATE / READING TIME
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Spacing -->
+    <section class="section">
+        <div class="container">
+            <div class="section__header">
+                <span class="section__label">03 / Spacing System</span>
+                <h2 class="section__title">8px Base Grid</h2>
+            </div>
+            <div class="spacing-grid">
+                <div class="spacing-item">
+                    <div class="spacing-block spacing-block--1"></div>
+                    <span class="spacing-label">8px</span>
+                </div>
+                <div class="spacing-item">
+                    <div class="spacing-block spacing-block--2"></div>
+                    <span class="spacing-label">16px</span>
+                </div>
+                <div class="spacing-item">
+                    <div class="spacing-block spacing-block--3"></div>
+                    <span class="spacing-label">24px</span>
+                </div>
+                <div class="spacing-item">
+                    <div class="spacing-block spacing-block--4"></div>
+                    <span class="spacing-label">32px</span>
+                </div>
+                <div class="spacing-item">
+                    <div class="spacing-block spacing-block--6"></div>
+                    <span class="spacing-label">48px</span>
+                </div>
+                <div class="spacing-item">
+                    <div class="spacing-block spacing-block--8"></div>
+                    <span class="spacing-label">64px</span>
+                </div>
+                <div class="spacing-item">
+                    <div class="spacing-block spacing-block--12"></div>
+                    <span class="spacing-label">96px</span>
+                </div>
+                <div class="spacing-item">
+                    <div class="spacing-block spacing-block--16"></div>
+                    <span class="spacing-label">128px</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Buttons -->
+    <section class="section" id="components">
+        <div class="container">
+            <div class="section__header">
+                <span class="section__label">04 / Buttons</span>
+                <h2 class="section__title">Instant State Changes</h2>
+            </div>
+            <div class="button-grid">
+                <button class="btn btn--primary btn--lg">Primary Large</button>
+                <button class="btn btn--primary">Primary</button>
+                <button class="btn btn--primary btn--sm">Primary Small</button>
+            </div>
+            <br><br>
+            <div class="button-grid">
+                <button class="btn btn--secondary">Secondary</button>
+                <button class="btn btn--outline">Outline</button>
+                <button class="btn btn--ghost">Ghost</button>
+                <button class="btn btn--primary" disabled>Disabled</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Cards -->
+    <section class="section">
+        <div class="container">
+            <div class="section__header">
+                <span class="section__label">05 / Cards</span>
+                <h2 class="section__title">Content Containers</h2>
+            </div>
+            <div class="card-grid">
+                <article class="card">
+                    <span class="card__tag">Project 01</span>
+                    <h3 class="card__title">Mythical</h3>
+                    <p class="card__description">A CLI tool for generating fake data with personality. Built with Go, ships everywhere.</p>
+                    <span class="card__meta">Week 1-4 / In Progress</span>
+                </article>
+                <article class="card card--highlight">
+                    <span class="card__tag">Featured</span>
+                    <h3 class="card__title">Devlog</h3>
+                    <p class="card__description">Weekly updates on everything built, broken, and learned. No filters, no polish.</p>
+                    <span class="card__meta">Every Sunday</span>
+                </article>
+                <article class="card">
+                    <span class="card__tag">Project 02</span>
+                    <h3 class="card__title">Coming Soon</h3>
+                    <p class="card__description">February's project. Still in ideation. Could be anything. That's the fun part.</p>
+                    <span class="card__meta">Week 5-8 / Planned</span>
+                </article>
+            </div>
+        </div>
+    </section>
+
+    <!-- Forms -->
+    <section class="section" id="forms">
+        <div class="container">
+            <div class="section__header">
+                <span class="section__label">06 / Forms</span>
+                <h2 class="section__title">Input Elements</h2>
+            </div>
+            <div class="form-grid">
+                <div class="form-group">
+                    <label class="form-label">Email Address</label>
+                    <input type="email" class="form-input" placeholder="you@example.com">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Project Name</label>
+                    <input type="text" class="form-input" value="Mythical">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Error State</label>
+                    <input type="text" class="form-input form-input--error" value="invalid@">
+                    <span class="form-error">Please enter a valid email address</span>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Category</label>
+                    <select class="form-select">
+                        <option>Select a category</option>
+                        <option>Developer Tools</option>
+                        <option>Productivity</option>
+                        <option>Design</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Description</label>
+                    <textarea class="form-textarea" placeholder="Describe your project..."></textarea>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Options</label>
+                    <label class="form-check">
+                        <input type="checkbox" class="form-check__input" checked>
+                        <span class="form-check__label">Subscribe to devlog</span>
+                    </label>
+                    <label class="form-check">
+                        <input type="checkbox" class="form-check__input">
+                        <span class="form-check__label">Enable notifications</span>
+                    </label>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Badges & Tags -->
+    <section class="section">
+        <div class="container">
+            <div class="section__header">
+                <span class="section__label">07 / Badges</span>
+                <h2 class="section__title">Status Indicators</h2>
+            </div>
+            <div class="badge-grid">
+                <span class="badge badge--default">Default</span>
+                <span class="badge badge--primary">Active</span>
+                <span class="badge badge--secondary">Complete</span>
+                <span class="badge badge--outline">Draft</span>
+                <span class="badge badge--error">Failed</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Alerts -->
+    <section class="section">
+        <div class="container">
+            <div class="section__header">
+                <span class="section__label">08 / Alerts</span>
+                <h2 class="section__title">System Messages</h2>
+            </div>
+            <div style="display: flex; flex-direction: column; gap: var(--grid-3);">
+                <div class="alert alert--info">
+                    <span class="alert__icon">//</span>
+                    <span>Neutral information about the current state or recent activity.</span>
+                </div>
+                <div class="alert alert--success">
+                    <span class="alert__icon">[+]</span>
+                    <span>Build deployed successfully. All 47 tests passed.</span>
+                </div>
+                <div class="alert alert--warning">
+                    <span class="alert__icon">[!]</span>
+                    <span>Deadline approaching. 3 days remaining until launch.</span>
+                </div>
+                <div class="alert alert--error">
+                    <span class="alert__icon">[X]</span>
+                    <span>Build failed. Check console for error details.</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Tabs -->
+    <section class="section">
+        <div class="container">
+            <div class="section__header">
+                <span class="section__label">09 / Tabs</span>
+                <h2 class="section__title">Navigation Tabs</h2>
+            </div>
+            <div class="tabs">
+                <button class="tab tab--active">Overview</button>
+                <button class="tab">Timeline</button>
+                <button class="tab">Updates</button>
+                <button class="tab">Archive</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Code Block -->
+    <section class="section">
+        <div class="container">
+            <div class="section__header">
+                <span class="section__label">10 / Code</span>
+                <h2 class="section__title">Code Blocks</h2>
+            </div>
+            <div class="code-block">
+                <div class="code-block__header">
+                    <span class="code-block__lang">typescript</span>
+                </div>
+                <pre><code><span class="token-keyword">const</span> <span class="token-function">launchProject</span> = <span class="token-keyword">async</span> (project: Project) => {
+  <span class="token-comment">// Ship it. Ship it now.</span>
+  <span class="token-keyword">const</span> result = <span class="token-keyword">await</span> deploy(project);
+
+  <span class="token-keyword">if</span> (result.success) {
+    notify(<span class="token-string">`${project.name} is LIVE`</span>);
+    celebrate();
+  }
+
+  <span class="token-keyword">return</span> result;
+};</code></pre>
+            </div>
+            <br>
+            <p class="type-body type-body--base">
+                Inline code example: Use <code class="code-inline">npm run build</code> to generate the static site.
+            </p>
+        </div>
+    </section>
+
+    <!-- Table -->
+    <section class="section">
+        <div class="container">
+            <div class="section__header">
+                <span class="section__label">11 / Tables</span>
+                <h2 class="section__title">Data Display</h2>
+            </div>
+            <div class="table-wrapper">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Project</th>
+                            <th>Status</th>
+                            <th>Launch</th>
+                            <th>Stack</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Mythical</td>
+                            <td><span class="badge badge--secondary">Complete</span></td>
+                            <td>Jan 31</td>
+                            <td>Go, CLI</td>
+                        </tr>
+                        <tr>
+                            <td>Project 02</td>
+                            <td><span class="badge badge--primary">Active</span></td>
+                            <td>Feb 28</td>
+                            <td>TBD</td>
+                        </tr>
+                        <tr>
+                            <td>Project 03</td>
+                            <td><span class="badge badge--outline">Planned</span></td>
+                            <td>Mar 31</td>
+                            <td>TBD</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+
+    <!-- Avatars & Progress -->
+    <section class="section">
+        <div class="container">
+            <div class="section__header">
+                <span class="section__label">12 / Misc</span>
+                <h2 class="section__title">Additional Elements</h2>
+            </div>
+
+            <h4 class="type-body type-body--sm uppercase tracking-wider text-accent-primary" style="margin-bottom: var(--grid-2);">Avatars</h4>
+            <div class="avatar-grid" style="margin-bottom: var(--grid-6);">
+                <div class="avatar avatar--sm">A</div>
+                <div class="avatar avatar--md">AG</div>
+                <div class="avatar avatar--lg avatar--accent">YB</div>
+            </div>
+
+            <h4 class="type-body type-body--sm uppercase tracking-wider text-accent-primary" style="margin-bottom: var(--grid-2);">Progress</h4>
+            <div style="display: flex; flex-direction: column; gap: var(--grid-2); max-width: 400px;">
+                <div class="progress">
+                    <div class="progress__bar" style="width: 25%;"></div>
+                </div>
+                <div class="progress progress--thick">
+                    <div class="progress__bar" style="width: 67%;"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Lists & Blockquote -->
+    <section class="section">
+        <div class="container">
+            <div class="section__header">
+                <span class="section__label">13 / Content</span>
+                <h2 class="section__title">Lists & Quotes</h2>
+            </div>
+            <div class="type-demo-grid">
+                <div class="type-demo-grid__item type-demo-grid__item--4">
+                    <h4 class="type-body type-body--sm uppercase tracking-wider text-accent-primary" style="margin-bottom: var(--grid-2);">Unordered</h4>
+                    <ul class="list list--unordered">
+                        <li>Ship weekly, no exceptions</li>
+                        <li>Document everything</li>
+                        <li>Learn in public</li>
+                        <li>Embrace the chaos</li>
+                    </ul>
+                </div>
+                <div class="type-demo-grid__item type-demo-grid__item--4">
+                    <h4 class="type-body type-body--sm uppercase tracking-wider text-accent-primary" style="margin-bottom: var(--grid-2);">Ordered</h4>
+                    <ol class="list list--ordered">
+                        <li>Define the scope</li>
+                        <li>Build the MVP</li>
+                        <li>Launch publicly</li>
+                        <li>Iterate based on feedback</li>
+                    </ol>
+                </div>
+                <div class="type-demo-grid__item type-demo-grid__item--4">
+                    <blockquote class="blockquote">
+                        Done is better than perfect.
+                        <cite class="blockquote__cite">- Every deadline ever</cite>
+                    </blockquote>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Grid Demo -->
+    <section class="section" id="grid">
+        <div class="container">
+            <div class="section__header">
+                <span class="section__label">14 / Grid System</span>
+                <h2 class="section__title">12 Column Layout</h2>
+            </div>
+            <div class="grid-demo">
+                <div class="grid-demo__cell grid-demo__cell--span-12">12</div>
+                <div class="grid-demo__cell grid-demo__cell--span-6 grid-demo__cell--highlight">6</div>
+                <div class="grid-demo__cell grid-demo__cell--span-6">6</div>
+                <div class="grid-demo__cell grid-demo__cell--span-4">4</div>
+                <div class="grid-demo__cell grid-demo__cell--span-4 grid-demo__cell--highlight">4</div>
+                <div class="grid-demo__cell grid-demo__cell--span-4">4</div>
+                <div class="grid-demo__cell grid-demo__cell--span-3">3</div>
+                <div class="grid-demo__cell grid-demo__cell--span-3">3</div>
+                <div class="grid-demo__cell grid-demo__cell--span-3">3</div>
+                <div class="grid-demo__cell grid-demo__cell--span-3">3</div>
+                <div class="grid-demo__cell grid-demo__cell--span-2 grid-demo__cell--highlight">2</div>
+                <div class="grid-demo__cell grid-demo__cell--span-2">2</div>
+                <div class="grid-demo__cell grid-demo__cell--span-2 grid-demo__cell--highlight">2</div>
+                <div class="grid-demo__cell grid-demo__cell--span-2">2</div>
+                <div class="grid-demo__cell grid-demo__cell--span-2 grid-demo__cell--highlight">2</div>
+                <div class="grid-demo__cell grid-demo__cell--span-2">2</div>
+                <div class="grid-demo__cell grid-demo__cell--span-1">1</div>
+                <div class="grid-demo__cell grid-demo__cell--span-1">1</div>
+                <div class="grid-demo__cell grid-demo__cell--span-1">1</div>
+                <div class="grid-demo__cell grid-demo__cell--span-1">1</div>
+                <div class="grid-demo__cell grid-demo__cell--span-1">1</div>
+                <div class="grid-demo__cell grid-demo__cell--span-1">1</div>
+                <div class="grid-demo__cell grid-demo__cell--span-1">1</div>
+                <div class="grid-demo__cell grid-demo__cell--span-1">1</div>
+                <div class="grid-demo__cell grid-demo__cell--span-1">1</div>
+                <div class="grid-demo__cell grid-demo__cell--span-1">1</div>
+                <div class="grid-demo__cell grid-demo__cell--span-1">1</div>
+                <div class="grid-demo__cell grid-demo__cell--span-1">1</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Interactions Demo -->
+    <section class="section">
+        <div class="container">
+            <div class="section__header">
+                <span class="section__label">15 / Interactions</span>
+                <h2 class="section__title">Hover States</h2>
+            </div>
+            <div class="interaction-demo">
+                <div class="interaction-box interaction-box--invert">
+                    Invert
+                </div>
+                <div class="interaction-box interaction-box--flash-yellow">
+                    Flash Y
+                </div>
+                <div class="interaction-box interaction-box--flash-green">
+                    Flash G
+                </div>
+                <div class="interaction-box interaction-box--scale">
+                    Press
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer__grid">
+                <div>
+                    <h4 class="footer__title">YOTB</h4>
+                    <ul class="footer__links">
+                        <li><a href="#" class="footer__link">About</a></li>
+                        <li><a href="#" class="footer__link">Devlog</a></li>
+                        <li><a href="#" class="footer__link">Projects</a></li>
+                        <li><a href="#" class="footer__link">Newsletter</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="footer__title">Projects</h4>
+                    <ul class="footer__links">
+                        <li><a href="#" class="footer__link">Mythical</a></li>
+                        <li><a href="#" class="footer__link">Project 02</a></li>
+                        <li><a href="#" class="footer__link">Project 03</a></li>
+                        <li><a href="#" class="footer__link">Archive</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="footer__title">Connect</h4>
+                    <ul class="footer__links">
+                        <li><a href="#" class="footer__link">GitHub</a></li>
+                        <li><a href="#" class="footer__link">Twitter</a></li>
+                        <li><a href="#" class="footer__link">Buttondown</a></li>
+                        <li><a href="#" class="footer__link">RSS</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="footer__title">Legal</h4>
+                    <ul class="footer__links">
+                        <li><a href="#" class="footer__link">Privacy</a></li>
+                        <li><a href="#" class="footer__link">Terms</a></li>
+                        <li><a href="#" class="footer__link">Getty Made LLC</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer__bottom">
+                <p>Year of the Build / 2025 / Getty Made LLC / Theme: IMPACT v1.0.0</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Grid toggle
+        const gridToggle = document.getElementById('gridToggle');
+        const gridOverlay = document.getElementById('gridOverlay');
+
+        gridToggle.addEventListener('click', () => {
+            gridOverlay.classList.toggle('visible');
+        });
+
+        // Smooth scroll for nav (but keeping instant interactions everywhere else)
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth' });
+                }
+            });
+        });
+    </script>
+</body>
+</html>

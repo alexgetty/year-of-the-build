@@ -1,0 +1,1472 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MONOLITH — Style Tile</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* ========================================
+           MONOLITH — GEOMETRIC BRUTALISM
+           Pure form. No ornament. Uncompromising.
+           ======================================== */
+
+        :root {
+            --white: #FFFFFF;
+            --black: #000000;
+            --blue: #0000FF;
+            --red: #FF0000;
+            --surface: #F0F0F0;
+            --muted: #808080;
+
+            --font: 'Space Grotesk', sans-serif;
+
+            /* Mathematical type scale — 1.414 (√2) */
+            --text-xs: 0.707rem;
+            --text-sm: 0.875rem;
+            --text-base: 1rem;
+            --text-lg: 1.414rem;
+            --text-xl: 2rem;
+            --text-2xl: 2.828rem;
+            --text-3xl: 4rem;
+            --text-4xl: 5.657rem;
+            --text-5xl: 8rem;
+
+            --space-unit: 8px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            font-size: 16px;
+            scroll-behavior: auto; /* No smooth scroll. Immediate. */
+        }
+
+        body {
+            font-family: var(--font);
+            background: var(--white);
+            color: var(--black);
+            line-height: 1.5;
+            letter-spacing: -0.02em;
+        }
+
+        /* ========================================
+           HEADER — MONOLITHIC
+           ======================================== */
+
+        .header {
+            padding: calc(var(--space-unit) * 8) calc(var(--space-unit) * 4);
+            border-bottom: 4px solid var(--black);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 200px;
+            height: 200px;
+            background: var(--blue);
+            clip-path: polygon(100% 0, 100% 100%, 0 0);
+        }
+
+        .header::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: calc(var(--space-unit) * 4);
+            width: 80px;
+            height: 80px;
+            background: var(--red);
+            border-radius: 50%;
+            transform: translateY(50%);
+        }
+
+        .header h1 {
+            font-size: var(--text-5xl);
+            font-weight: 700;
+            letter-spacing: -0.06em;
+            line-height: 0.85;
+            text-transform: uppercase;
+        }
+
+        .header p {
+            font-size: var(--text-lg);
+            color: var(--muted);
+            margin-top: calc(var(--space-unit) * 2);
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        /* ========================================
+           SECTIONS
+           ======================================== */
+
+        .section {
+            padding: calc(var(--space-unit) * 8) calc(var(--space-unit) * 4);
+            border-bottom: 2px solid var(--black);
+        }
+
+        .section-title {
+            font-size: var(--text-xs);
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.2em;
+            color: var(--muted);
+            margin-bottom: calc(var(--space-unit) * 4);
+            display: flex;
+            align-items: center;
+            gap: calc(var(--space-unit) * 2);
+        }
+
+        .section-title::before {
+            content: '';
+            width: 24px;
+            height: 2px;
+            background: var(--black);
+        }
+
+        /* ========================================
+           COLOR SWATCHES
+           ======================================== */
+
+        .swatches {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 2px;
+            background: var(--black);
+            border: 2px solid var(--black);
+        }
+
+        .swatch {
+            aspect-ratio: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            padding: calc(var(--space-unit) * 2);
+            position: relative;
+            transition: transform 0s;
+        }
+
+        .swatch:hover {
+            transform: scale(1.05);
+            z-index: 10;
+        }
+
+        .swatch-white { background: var(--white); color: var(--black); }
+        .swatch-black { background: var(--black); color: var(--white); }
+        .swatch-blue { background: var(--blue); color: var(--white); }
+        .swatch-red { background: var(--red); color: var(--white); }
+        .swatch-surface { background: var(--surface); color: var(--black); }
+        .swatch-muted { background: var(--muted); color: var(--white); }
+
+        .swatch-name {
+            font-size: var(--text-xs);
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        .swatch-value {
+            font-size: var(--text-xs);
+            font-weight: 400;
+            opacity: 0.7;
+            font-family: monospace;
+        }
+
+        /* ========================================
+           TYPOGRAPHY
+           ======================================== */
+
+        .type-scale {
+            display: flex;
+            flex-direction: column;
+            gap: calc(var(--space-unit) * 4);
+        }
+
+        .type-specimen {
+            display: grid;
+            grid-template-columns: 80px 1fr;
+            align-items: baseline;
+            gap: calc(var(--space-unit) * 4);
+            padding-bottom: calc(var(--space-unit) * 4);
+            border-bottom: 1px solid var(--surface);
+        }
+
+        .type-specimen:last-child {
+            border-bottom: none;
+        }
+
+        .type-size {
+            font-size: var(--text-xs);
+            color: var(--muted);
+            font-weight: 500;
+            font-family: monospace;
+        }
+
+        .type-5xl { font-size: var(--text-5xl); font-weight: 700; line-height: 0.9; letter-spacing: -0.06em; }
+        .type-4xl { font-size: var(--text-4xl); font-weight: 700; line-height: 0.9; letter-spacing: -0.05em; }
+        .type-3xl { font-size: var(--text-3xl); font-weight: 700; line-height: 0.95; letter-spacing: -0.04em; }
+        .type-2xl { font-size: var(--text-2xl); font-weight: 700; line-height: 1; letter-spacing: -0.03em; }
+        .type-xl { font-size: var(--text-xl); font-weight: 600; line-height: 1.1; letter-spacing: -0.02em; }
+        .type-lg { font-size: var(--text-lg); font-weight: 500; line-height: 1.2; }
+        .type-base { font-size: var(--text-base); font-weight: 400; line-height: 1.5; }
+        .type-sm { font-size: var(--text-sm); font-weight: 400; line-height: 1.5; color: var(--muted); }
+
+        /* ========================================
+           BUTTONS — GEOMETRIC, IMMEDIATE
+           ======================================== */
+
+        .buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: calc(var(--space-unit) * 2);
+            align-items: flex-start;
+        }
+
+        .btn {
+            font-family: var(--font);
+            font-size: var(--text-sm);
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            padding: calc(var(--space-unit) * 2) calc(var(--space-unit) * 4);
+            border: 3px solid var(--black);
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            transition: none;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            transform: translateY(100%);
+            transition: transform 0s;
+        }
+
+        .btn:hover::before {
+            transform: translateY(0);
+        }
+
+        .btn span {
+            position: relative;
+            z-index: 1;
+        }
+
+        .btn-primary {
+            background: var(--black);
+            color: var(--white);
+        }
+
+        .btn-primary::before {
+            background: var(--blue);
+        }
+
+        .btn-secondary {
+            background: var(--white);
+            color: var(--black);
+        }
+
+        .btn-secondary::before {
+            background: var(--black);
+        }
+
+        .btn-secondary:hover {
+            color: var(--white);
+        }
+
+        .btn-accent {
+            background: var(--blue);
+            color: var(--white);
+            border-color: var(--blue);
+        }
+
+        .btn-accent::before {
+            background: var(--black);
+        }
+
+        .btn-danger {
+            background: var(--red);
+            color: var(--white);
+            border-color: var(--red);
+        }
+
+        .btn-danger::before {
+            background: var(--black);
+        }
+
+        .btn-large {
+            padding: calc(var(--space-unit) * 3) calc(var(--space-unit) * 6);
+            font-size: var(--text-base);
+        }
+
+        .btn-icon {
+            width: 48px;
+            height: 48px;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* ========================================
+           NEWSLETTER FORM — BOLD GEOMETRY
+           ======================================== */
+
+        .newsletter {
+            background: var(--black);
+            color: var(--white);
+            padding: calc(var(--space-unit) * 8);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .newsletter::before {
+            content: '';
+            position: absolute;
+            top: -100px;
+            right: -100px;
+            width: 300px;
+            height: 300px;
+            border: 40px solid var(--blue);
+            border-radius: 50%;
+            opacity: 0.3;
+        }
+
+        .newsletter::after {
+            content: '';
+            position: absolute;
+            bottom: -50px;
+            left: 50%;
+            width: 200px;
+            height: 200px;
+            background: var(--red);
+            transform: rotate(45deg);
+            opacity: 0.2;
+        }
+
+        .newsletter-content {
+            position: relative;
+            z-index: 1;
+            max-width: 600px;
+        }
+
+        .newsletter h3 {
+            font-size: var(--text-3xl);
+            font-weight: 700;
+            letter-spacing: -0.04em;
+            line-height: 0.95;
+            margin-bottom: calc(var(--space-unit) * 2);
+        }
+
+        .newsletter p {
+            font-size: var(--text-base);
+            color: var(--muted);
+            margin-bottom: calc(var(--space-unit) * 4);
+        }
+
+        .newsletter-form {
+            display: flex;
+            gap: 0;
+            flex-wrap: wrap;
+        }
+
+        .newsletter-input {
+            flex: 1;
+            min-width: 200px;
+            padding: calc(var(--space-unit) * 2) calc(var(--space-unit) * 3);
+            font-family: var(--font);
+            font-size: var(--text-base);
+            border: 3px solid var(--white);
+            background: transparent;
+            color: var(--white);
+            outline: none;
+        }
+
+        .newsletter-input::placeholder {
+            color: var(--muted);
+        }
+
+        .newsletter-input:focus {
+            border-color: var(--blue);
+        }
+
+        .newsletter-btn {
+            background: var(--white);
+            color: var(--black);
+            border: 3px solid var(--white);
+            padding: calc(var(--space-unit) * 2) calc(var(--space-unit) * 4);
+            font-family: var(--font);
+            font-size: var(--text-sm);
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            cursor: pointer;
+            transition: none;
+        }
+
+        .newsletter-btn:hover {
+            background: var(--blue);
+            border-color: var(--blue);
+            color: var(--white);
+        }
+
+        /* ========================================
+           PROJECT CARD — STRUCTURAL
+           ======================================== */
+
+        .project-card {
+            border: 3px solid var(--black);
+            background: var(--white);
+            display: grid;
+            grid-template-columns: 1fr;
+            overflow: hidden;
+        }
+
+        @media (min-width: 600px) {
+            .project-card {
+                grid-template-columns: 200px 1fr;
+            }
+        }
+
+        .project-visual {
+            background: var(--surface);
+            aspect-ratio: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .project-visual::before {
+            content: '';
+            width: 60%;
+            height: 60%;
+            background: var(--blue);
+            transition: transform 0s;
+        }
+
+        .project-card:hover .project-visual::before {
+            transform: rotate(45deg) scale(1.2);
+        }
+
+        .project-visual::after {
+            content: '';
+            position: absolute;
+            width: 30%;
+            height: 30%;
+            background: var(--red);
+            border-radius: 50%;
+            bottom: 10%;
+            right: 10%;
+        }
+
+        .project-info {
+            padding: calc(var(--space-unit) * 4);
+            display: flex;
+            flex-direction: column;
+            gap: calc(var(--space-unit) * 2);
+        }
+
+        .project-meta {
+            display: flex;
+            gap: calc(var(--space-unit) * 2);
+            align-items: center;
+        }
+
+        .project-number {
+            font-size: var(--text-2xl);
+            font-weight: 700;
+            color: var(--muted);
+            letter-spacing: -0.02em;
+        }
+
+        .project-status {
+            font-size: var(--text-xs);
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            padding: calc(var(--space-unit) * 0.5) calc(var(--space-unit) * 1.5);
+            background: var(--black);
+            color: var(--white);
+        }
+
+        .project-status.live {
+            background: var(--blue);
+        }
+
+        .project-title {
+            font-size: var(--text-xl);
+            font-weight: 700;
+            letter-spacing: -0.02em;
+        }
+
+        .project-desc {
+            font-size: var(--text-sm);
+            color: var(--muted);
+            line-height: 1.6;
+        }
+
+        .project-tags {
+            display: flex;
+            gap: calc(var(--space-unit) * 1);
+            flex-wrap: wrap;
+            margin-top: auto;
+        }
+
+        .tag {
+            font-size: var(--text-xs);
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            padding: calc(var(--space-unit) * 0.5) calc(var(--space-unit) * 1.5);
+            border: 2px solid var(--black);
+        }
+
+        /* ========================================
+           DEVLOG CARD — TEMPORAL STRUCTURE
+           ======================================== */
+
+        .devlog-card {
+            display: grid;
+            grid-template-columns: auto 1fr;
+            gap: calc(var(--space-unit) * 4);
+            padding: calc(var(--space-unit) * 4) 0;
+            border-bottom: 2px solid var(--black);
+            position: relative;
+        }
+
+        .devlog-card::before {
+            content: '';
+            position: absolute;
+            left: 36px;
+            top: 80px;
+            bottom: 0;
+            width: 2px;
+            background: var(--surface);
+        }
+
+        .devlog-card:last-child::before {
+            display: none;
+        }
+
+        .devlog-marker {
+            width: 72px;
+            height: 72px;
+            background: var(--black);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            color: var(--white);
+            position: relative;
+            z-index: 1;
+        }
+
+        .devlog-week {
+            font-size: var(--text-2xl);
+            font-weight: 700;
+            line-height: 1;
+        }
+
+        .devlog-label {
+            font-size: var(--text-xs);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            opacity: 0.5;
+        }
+
+        .devlog-content {
+            padding-top: calc(var(--space-unit) * 1);
+        }
+
+        .devlog-date {
+            font-size: var(--text-xs);
+            color: var(--muted);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: calc(var(--space-unit) * 1);
+        }
+
+        .devlog-title {
+            font-size: var(--text-xl);
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            margin-bottom: calc(var(--space-unit) * 2);
+        }
+
+        .devlog-title a {
+            color: inherit;
+            text-decoration: none;
+            position: relative;
+        }
+
+        .devlog-title a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 3px;
+            background: var(--blue);
+            transition: width 0s;
+        }
+
+        .devlog-title a:hover::after {
+            width: 100%;
+        }
+
+        .devlog-excerpt {
+            font-size: var(--text-base);
+            color: var(--muted);
+            line-height: 1.6;
+        }
+
+        /* ========================================
+           CODE BLOCK — MONOSPACE MONUMENT
+           ======================================== */
+
+        .code-block {
+            background: var(--black);
+            color: var(--white);
+            border: 3px solid var(--black);
+            overflow: hidden;
+        }
+
+        .code-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: calc(var(--space-unit) * 1.5) calc(var(--space-unit) * 3);
+            background: var(--surface);
+            color: var(--black);
+            border-bottom: 3px solid var(--black);
+        }
+
+        .code-lang {
+            font-size: var(--text-xs);
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        .code-copy {
+            font-size: var(--text-xs);
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            background: transparent;
+            border: 2px solid var(--black);
+            padding: calc(var(--space-unit) * 0.5) calc(var(--space-unit) * 1.5);
+            cursor: pointer;
+            font-family: var(--font);
+            transition: none;
+        }
+
+        .code-copy:hover {
+            background: var(--black);
+            color: var(--white);
+        }
+
+        .code-content {
+            padding: calc(var(--space-unit) * 3);
+            overflow-x: auto;
+        }
+
+        .code-content pre {
+            font-family: 'SF Mono', 'Fira Code', monospace;
+            font-size: var(--text-sm);
+            line-height: 1.7;
+            margin: 0;
+        }
+
+        .code-content .comment { color: var(--muted); }
+        .code-content .keyword { color: var(--blue); }
+        .code-content .string { color: var(--red); }
+        .code-content .function { color: var(--white); }
+
+        /* ========================================
+           CALLOUTS — SIGNAL BLOCKS
+           ======================================== */
+
+        .callouts {
+            display: flex;
+            flex-direction: column;
+            gap: calc(var(--space-unit) * 3);
+        }
+
+        .callout {
+            display: grid;
+            grid-template-columns: 4px 1fr;
+            gap: calc(var(--space-unit) * 3);
+            background: var(--surface);
+            padding: calc(var(--space-unit) * 3);
+            position: relative;
+        }
+
+        .callout-bar {
+            background: var(--black);
+            width: 4px;
+        }
+
+        .callout-info .callout-bar { background: var(--blue); }
+        .callout-warning .callout-bar { background: var(--muted); }
+        .callout-error .callout-bar { background: var(--red); }
+        .callout-success .callout-bar { background: var(--black); }
+
+        .callout-content h4 {
+            font-size: var(--text-sm);
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: calc(var(--space-unit) * 1);
+        }
+
+        .callout-info h4 { color: var(--blue); }
+        .callout-warning h4 { color: var(--muted); }
+        .callout-error h4 { color: var(--red); }
+        .callout-success h4 { color: var(--black); }
+
+        .callout-content p {
+            font-size: var(--text-sm);
+            line-height: 1.6;
+        }
+
+        /* ========================================
+           BLOCKQUOTE — CARVED STATEMENT
+           ======================================== */
+
+        .blockquote {
+            position: relative;
+            padding: calc(var(--space-unit) * 6) calc(var(--space-unit) * 8);
+            margin: calc(var(--space-unit) * 4) 0;
+        }
+
+        .blockquote::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100px;
+            height: 100px;
+            border-top: 6px solid var(--black);
+            border-left: 6px solid var(--black);
+        }
+
+        .blockquote::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            width: 100px;
+            height: 100px;
+            border-bottom: 6px solid var(--black);
+            border-right: 6px solid var(--black);
+        }
+
+        .blockquote p {
+            font-size: var(--text-2xl);
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            line-height: 1.2;
+            margin-bottom: calc(var(--space-unit) * 3);
+        }
+
+        .blockquote cite {
+            font-size: var(--text-sm);
+            font-style: normal;
+            color: var(--muted);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            display: flex;
+            align-items: center;
+            gap: calc(var(--space-unit) * 2);
+        }
+
+        .blockquote cite::before {
+            content: '';
+            width: 32px;
+            height: 2px;
+            background: var(--blue);
+        }
+
+        /* ========================================
+           LISTS — STRUCTURAL HIERARCHY
+           ======================================== */
+
+        .lists-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: calc(var(--space-unit) * 6);
+        }
+
+        .list-section h4 {
+            font-size: var(--text-sm);
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: calc(var(--space-unit) * 3);
+            padding-bottom: calc(var(--space-unit) * 2);
+            border-bottom: 2px solid var(--black);
+        }
+
+        .list-unordered,
+        .list-ordered {
+            list-style: none;
+        }
+
+        .list-unordered li,
+        .list-ordered li {
+            font-size: var(--text-base);
+            padding: calc(var(--space-unit) * 1.5) 0;
+            padding-left: calc(var(--space-unit) * 4);
+            position: relative;
+            border-bottom: 1px solid var(--surface);
+        }
+
+        .list-unordered li::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 12px;
+            height: 12px;
+            background: var(--black);
+        }
+
+        .list-ordered {
+            counter-reset: list-counter;
+        }
+
+        .list-ordered li {
+            counter-increment: list-counter;
+        }
+
+        .list-ordered li::before {
+            content: counter(list-counter);
+            position: absolute;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: var(--text-sm);
+            font-weight: 700;
+            color: var(--blue);
+        }
+
+        /* ========================================
+           IMAGE TREATMENT — FRAMED ARTIFACT
+           ======================================== */
+
+        .image-treatment {
+            border: 3px solid var(--black);
+            background: var(--surface);
+            padding: calc(var(--space-unit) * 2);
+        }
+
+        .image-frame {
+            aspect-ratio: 16/9;
+            background: linear-gradient(135deg, var(--surface) 0%, #E0E0E0 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .image-frame::before {
+            content: '';
+            position: absolute;
+            width: 40%;
+            height: 60%;
+            background: var(--blue);
+            transform: rotate(-12deg);
+        }
+
+        .image-frame::after {
+            content: '';
+            position: absolute;
+            width: 120px;
+            height: 120px;
+            background: var(--red);
+            border-radius: 50%;
+            bottom: -40px;
+            right: 20%;
+        }
+
+        .image-shape {
+            width: 30%;
+            height: 50%;
+            background: var(--black);
+            position: relative;
+            z-index: 1;
+        }
+
+        .image-caption {
+            padding: calc(var(--space-unit) * 2) 0 0 0;
+            font-size: var(--text-sm);
+            color: var(--muted);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .image-caption span:last-child {
+            font-size: var(--text-xs);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        /* ========================================
+           GEOMETRIC DIVIDER
+           ======================================== */
+
+        .divider {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: calc(var(--space-unit) * 2);
+            padding: calc(var(--space-unit) * 6) 0;
+        }
+
+        .divider-line {
+            flex: 1;
+            height: 2px;
+            background: var(--black);
+        }
+
+        .divider-shape {
+            width: 16px;
+            height: 16px;
+            background: var(--blue);
+        }
+
+        .divider-shape:nth-child(3) {
+            border-radius: 50%;
+            background: var(--red);
+        }
+
+        .divider-shape:nth-child(5) {
+            transform: rotate(45deg);
+            background: var(--black);
+        }
+
+        /* ========================================
+           LINK STYLES
+           ======================================== */
+
+        .links-demo {
+            display: flex;
+            flex-direction: column;
+            gap: calc(var(--space-unit) * 3);
+        }
+
+        .link-row {
+            display: flex;
+            align-items: center;
+            gap: calc(var(--space-unit) * 3);
+        }
+
+        .link-label {
+            font-size: var(--text-xs);
+            color: var(--muted);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            width: 100px;
+        }
+
+        .link-default {
+            color: var(--black);
+            text-decoration: none;
+            font-weight: 600;
+            position: relative;
+            padding-bottom: 2px;
+            border-bottom: 2px solid var(--blue);
+        }
+
+        .link-default:hover {
+            color: var(--blue);
+        }
+
+        .link-nav {
+            color: var(--black);
+            text-decoration: none;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            font-size: var(--text-sm);
+            position: relative;
+        }
+
+        .link-nav::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 0;
+            height: 3px;
+            background: var(--black);
+            transition: width 0s;
+        }
+
+        .link-nav:hover::after {
+            width: 100%;
+        }
+
+        .link-external {
+            color: var(--blue);
+            text-decoration: none;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: calc(var(--space-unit) * 1);
+        }
+
+        .link-external:hover {
+            color: var(--black);
+        }
+
+        /* ========================================
+           FOOTER — FOUNDATIONAL
+           ======================================== */
+
+        .footer {
+            background: var(--black);
+            color: var(--white);
+            padding: calc(var(--space-unit) * 8) calc(var(--space-unit) * 4);
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .footer::before {
+            content: 'YOTB';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 20vw;
+            font-weight: 700;
+            opacity: 0.03;
+            letter-spacing: -0.05em;
+            white-space: nowrap;
+        }
+
+        .footer-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .footer-logo {
+            font-size: var(--text-2xl);
+            font-weight: 700;
+            letter-spacing: -0.04em;
+            margin-bottom: calc(var(--space-unit) * 2);
+        }
+
+        .footer-tagline {
+            font-size: var(--text-sm);
+            color: var(--muted);
+            margin-bottom: calc(var(--space-unit) * 4);
+        }
+
+        .footer-shapes {
+            display: flex;
+            justify-content: center;
+            gap: calc(var(--space-unit) * 2);
+        }
+
+        .footer-shape {
+            width: 32px;
+            height: 32px;
+            background: var(--white);
+            opacity: 0.1;
+        }
+
+        .footer-shape:nth-child(2) {
+            border-radius: 50%;
+            background: var(--blue);
+            opacity: 0.3;
+        }
+
+        .footer-shape:nth-child(3) {
+            transform: rotate(45deg);
+            background: var(--red);
+            opacity: 0.3;
+        }
+
+        /* ========================================
+           RESPONSIVE
+           ======================================== */
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: var(--text-4xl);
+            }
+
+            .type-5xl {
+                font-size: var(--text-4xl);
+            }
+
+            .type-4xl {
+                font-size: var(--text-3xl);
+            }
+
+            .blockquote p {
+                font-size: var(--text-xl);
+            }
+
+            .newsletter {
+                padding: calc(var(--space-unit) * 4);
+            }
+
+            .newsletter h3 {
+                font-size: var(--text-2xl);
+            }
+        }
+
+        /* ========================================
+           INTERACTIVE STATES — IMMEDIATE, BOLD
+           ======================================== */
+
+        ::selection {
+            background: var(--blue);
+            color: var(--white);
+        }
+
+        :focus-visible {
+            outline: 3px solid var(--blue);
+            outline-offset: 2px;
+        }
+
+        /* No transitions anywhere. State changes are immediate. */
+
+    </style>
+</head>
+<body>
+
+    <!-- HEADER -->
+    <header class="header">
+        <h1>MONOLITH</h1>
+        <p>Geometric Brutalism for YOTB</p>
+    </header>
+
+    <!-- COLORS -->
+    <section class="section">
+        <div class="section-title">Color Palette</div>
+        <div class="swatches">
+            <div class="swatch swatch-white">
+                <span class="swatch-name">White</span>
+                <span class="swatch-value">#FFFFFF</span>
+            </div>
+            <div class="swatch swatch-black">
+                <span class="swatch-name">Black</span>
+                <span class="swatch-value">#000000</span>
+            </div>
+            <div class="swatch swatch-blue">
+                <span class="swatch-name">Blue</span>
+                <span class="swatch-value">#0000FF</span>
+            </div>
+            <div class="swatch swatch-red">
+                <span class="swatch-name">Red</span>
+                <span class="swatch-value">#FF0000</span>
+            </div>
+            <div class="swatch swatch-surface">
+                <span class="swatch-name">Surface</span>
+                <span class="swatch-value">#F0F0F0</span>
+            </div>
+            <div class="swatch swatch-muted">
+                <span class="swatch-name">Muted</span>
+                <span class="swatch-value">#808080</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- TYPOGRAPHY -->
+    <section class="section">
+        <div class="section-title">Typography Scale</div>
+        <div class="type-scale">
+            <div class="type-specimen">
+                <span class="type-size">8rem</span>
+                <span class="type-5xl">MONOLITH</span>
+            </div>
+            <div class="type-specimen">
+                <span class="type-size">5.657rem</span>
+                <span class="type-4xl">Build Bold</span>
+            </div>
+            <div class="type-specimen">
+                <span class="type-size">4rem</span>
+                <span class="type-3xl">Pure Geometry</span>
+            </div>
+            <div class="type-specimen">
+                <span class="type-size">2.828rem</span>
+                <span class="type-2xl">Uncompromising Form</span>
+            </div>
+            <div class="type-specimen">
+                <span class="type-size">2rem</span>
+                <span class="type-xl">Mathematical Precision</span>
+            </div>
+            <div class="type-specimen">
+                <span class="type-size">1.414rem</span>
+                <span class="type-lg">Every element is a deliberate shape in space.</span>
+            </div>
+            <div class="type-specimen">
+                <span class="type-size">1rem</span>
+                <span class="type-base">Hard edges, bold shapes, mathematical precision. The confidence of reduction. No decoration, only form. This is the way we build.</span>
+            </div>
+            <div class="type-specimen">
+                <span class="type-size">0.875rem</span>
+                <span class="type-sm">Metadata, captions, and supporting text. Secondary but never invisible.</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- BUTTONS -->
+    <section class="section">
+        <div class="section-title">Buttons</div>
+        <div class="buttons">
+            <button class="btn btn-primary"><span>Primary Action</span></button>
+            <button class="btn btn-secondary"><span>Secondary</span></button>
+            <button class="btn btn-accent"><span>Accent</span></button>
+            <button class="btn btn-danger"><span>Danger</span></button>
+            <button class="btn btn-primary btn-large"><span>Large Button</span></button>
+            <button class="btn btn-icon btn-primary"><span>+</span></button>
+        </div>
+    </section>
+
+    <!-- NEWSLETTER -->
+    <section class="section" style="padding: 0; border: none;">
+        <div class="newsletter">
+            <div class="newsletter-content">
+                <h3>SUBSCRIBE TO THE BUILD</h3>
+                <p>Weekly devlogs. 12 projects in 12 months. No fluff.</p>
+                <form class="newsletter-form">
+                    <input type="email" class="newsletter-input" placeholder="your@email.com" required>
+                    <button type="submit" class="newsletter-btn">Subscribe</button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- PROJECT CARD -->
+    <section class="section">
+        <div class="section-title">Project Card</div>
+        <div class="project-card">
+            <div class="project-visual"></div>
+            <div class="project-info">
+                <div class="project-meta">
+                    <span class="project-number">01</span>
+                    <span class="project-status live">Live</span>
+                </div>
+                <h3 class="project-title">MYTHICAL</h3>
+                <p class="project-desc">Design system generator that creates cohesive component libraries from a single configuration file. Built with Astro and React.</p>
+                <div class="project-tags">
+                    <span class="tag">Astro</span>
+                    <span class="tag">React</span>
+                    <span class="tag">TypeScript</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- DEVLOG CARDS -->
+    <section class="section">
+        <div class="section-title">Devlog Cards</div>
+        <div class="devlog-card">
+            <div class="devlog-marker">
+                <span class="devlog-week">01</span>
+                <span class="devlog-label">Week</span>
+            </div>
+            <div class="devlog-content">
+                <div class="devlog-date">January 15, 2025</div>
+                <h3 class="devlog-title"><a href="#">Mythical Begins: Building the Foundation</a></h3>
+                <p class="devlog-excerpt">Setting up the architecture, making hard decisions about the tech stack, and establishing the patterns that will carry this project forward.</p>
+            </div>
+        </div>
+        <div class="devlog-card">
+            <div class="devlog-marker">
+                <span class="devlog-week">02</span>
+                <span class="devlog-label">Week</span>
+            </div>
+            <div class="devlog-content">
+                <div class="devlog-date">January 22, 2025</div>
+                <h3 class="devlog-title"><a href="#">Component Architecture Decisions</a></h3>
+                <p class="devlog-excerpt">Why atomic design matters, how we structure components for maximum reusability, and the tools that make it all work together.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- CODE BLOCK -->
+    <section class="section">
+        <div class="section-title">Code Block</div>
+        <div class="code-block">
+            <div class="code-header">
+                <span class="code-lang">TypeScript</span>
+                <button class="code-copy">Copy</button>
+            </div>
+            <div class="code-content">
+<pre><span class="comment">// Monolithic configuration</span>
+<span class="keyword">const</span> <span class="function">theme</span> = {
+  colors: {
+    primary: <span class="string">'#000000'</span>,
+    accent: <span class="string">'#0000FF'</span>,
+    danger: <span class="string">'#FF0000'</span>,
+  },
+  typography: {
+    scale: <span class="keyword">1.414</span>, <span class="comment">// √2 ratio</span>
+    baseSize: <span class="string">'16px'</span>,
+  },
+  spacing: {
+    unit: <span class="keyword">8</span>,
+  }
+};</pre>
+            </div>
+        </div>
+    </section>
+
+    <!-- CALLOUTS -->
+    <section class="section">
+        <div class="section-title">Callouts</div>
+        <div class="callouts">
+            <div class="callout callout-info">
+                <div class="callout-bar"></div>
+                <div class="callout-content">
+                    <h4>Information</h4>
+                    <p>This is an informational callout. Use it for tips, notes, or additional context that helps the reader understand something better.</p>
+                </div>
+            </div>
+            <div class="callout callout-warning">
+                <div class="callout-bar"></div>
+                <div class="callout-content">
+                    <h4>Warning</h4>
+                    <p>This is a warning callout. Use it when something requires attention but is not critical. Proceed with awareness.</p>
+                </div>
+            </div>
+            <div class="callout callout-error">
+                <div class="callout-bar"></div>
+                <div class="callout-content">
+                    <h4>Error</h4>
+                    <p>This is an error callout. Use it for critical information that could cause problems if ignored. Stop and read.</p>
+                </div>
+            </div>
+            <div class="callout callout-success">
+                <div class="callout-bar"></div>
+                <div class="callout-content">
+                    <h4>Success</h4>
+                    <p>This is a success callout. Use it to confirm that something worked correctly. The user can proceed with confidence.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- BLOCKQUOTE -->
+    <section class="section">
+        <div class="section-title">Blockquote</div>
+        <blockquote class="blockquote">
+            <p>Form follows function, but function without form is brutality. We seek the unity of both.</p>
+            <cite>YOTB Design Philosophy</cite>
+        </blockquote>
+    </section>
+
+    <!-- LISTS -->
+    <section class="section">
+        <div class="section-title">Lists</div>
+        <div class="lists-grid">
+            <div class="list-section">
+                <h4>Unordered List</h4>
+                <ul class="list-unordered">
+                    <li>Pure geometric forms</li>
+                    <li>Mathematical precision</li>
+                    <li>Negative space as element</li>
+                    <li>No decoration, only function</li>
+                    <li>Immediate state changes</li>
+                </ul>
+            </div>
+            <div class="list-section">
+                <h4>Ordered List</h4>
+                <ol class="list-ordered">
+                    <li>Define the constraint</li>
+                    <li>Reduce to essential form</li>
+                    <li>Build with precision</li>
+                    <li>Test ruthlessly</li>
+                    <li>Ship with confidence</li>
+                </ol>
+            </div>
+        </div>
+    </section>
+
+    <!-- IMAGE TREATMENT -->
+    <section class="section">
+        <div class="section-title">Image Treatment</div>
+        <div class="image-treatment">
+            <div class="image-frame">
+                <div class="image-shape"></div>
+            </div>
+            <div class="image-caption">
+                <span>Geometric composition study</span>
+                <span>Fig. 01</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- LINKS -->
+    <section class="section">
+        <div class="section-title">Links</div>
+        <div class="links-demo">
+            <div class="link-row">
+                <span class="link-label">Default</span>
+                <a href="#" class="link-default">Inline text link</a>
+            </div>
+            <div class="link-row">
+                <span class="link-label">Navigation</span>
+                <a href="#" class="link-nav">Nav Link</a>
+            </div>
+            <div class="link-row">
+                <span class="link-label">External</span>
+                <a href="#" class="link-external">External resource <span>↗</span></a>
+            </div>
+        </div>
+    </section>
+
+    <!-- DIVIDER -->
+    <section class="section">
+        <div class="section-title">Divider</div>
+        <div class="divider">
+            <div class="divider-line"></div>
+            <div class="divider-shape"></div>
+            <div class="divider-shape"></div>
+            <div class="divider-shape"></div>
+            <div class="divider-line"></div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-logo">YEAR OF THE BUILD</div>
+            <p class="footer-tagline">12 projects. 12 months. Zero excuses.</p>
+            <div class="footer-shapes">
+                <div class="footer-shape"></div>
+                <div class="footer-shape"></div>
+                <div class="footer-shape"></div>
+            </div>
+        </div>
+    </footer>
+
+</body>
+</html>

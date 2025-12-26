@@ -1,0 +1,1758 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YOTB Theme: DARKROOM</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+    <style>
+        /* ============================================
+           DARKROOM THEME - YOTB Style Tile
+           Photography darkroom aesthetic
+           ============================================ */
+
+        :root {
+            /* Core Palette */
+            --background: #0A0A0A;
+            --foreground: #E8E0D5;
+            --accent-primary: #8B0000;
+            --accent-secondary: #FFE4B5;
+            --surface: #1A1614;
+            --muted: #4A4240;
+
+            /* Extended Palette */
+            --safelight-glow: rgba(139, 0, 0, 0.15);
+            --safelight-intense: rgba(139, 0, 0, 0.4);
+            --chemical-stain: rgba(139, 107, 78, 0.1);
+            --paper-edge: #D4C8B8;
+            --frame-number: #6B5B4F;
+
+            /* Typography */
+            --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            --font-serif: 'Playfair Display', Georgia, serif;
+
+            /* Spacing */
+            --space-xs: 0.25rem;
+            --space-sm: 0.5rem;
+            --space-md: 1rem;
+            --space-lg: 1.5rem;
+            --space-xl: 2rem;
+            --space-2xl: 3rem;
+            --space-3xl: 4rem;
+
+            /* Animation */
+            --develop-duration: 1.2s;
+            --fade-duration: 0.6s;
+        }
+
+        /* ============================================
+           BASE STYLES
+           ============================================ */
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            font-size: 16px;
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: var(--font-sans);
+            background-color: var(--background);
+            color: var(--foreground);
+            line-height: 1.6;
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* Ambient red safelight glow */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background:
+                radial-gradient(ellipse 80% 50% at 20% 20%, var(--safelight-glow), transparent),
+                radial-gradient(ellipse 60% 40% at 80% 80%, var(--safelight-glow), transparent);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .style-tile {
+            position: relative;
+            z-index: 1;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: var(--space-2xl);
+        }
+
+        /* ============================================
+           HEADER - Theme Title
+           ============================================ */
+
+        .theme-header {
+            text-align: center;
+            padding: var(--space-3xl) 0;
+            margin-bottom: var(--space-3xl);
+            border-bottom: 1px solid var(--muted);
+            position: relative;
+        }
+
+        .theme-header::before {
+            content: 'PROOF SHEET — NOT FOR REPRODUCTION';
+            position: absolute;
+            top: var(--space-md);
+            left: 50%;
+            transform: translateX(-50%);
+            font-family: var(--font-sans);
+            font-size: 0.65rem;
+            letter-spacing: 0.2em;
+            color: var(--muted);
+            text-transform: uppercase;
+        }
+
+        .theme-name {
+            font-family: var(--font-serif);
+            font-size: 4rem;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            color: var(--foreground);
+            text-transform: uppercase;
+            margin-bottom: var(--space-md);
+            text-shadow: 0 0 60px var(--accent-primary);
+        }
+
+        .theme-tagline {
+            font-family: var(--font-sans);
+            font-size: 0.875rem;
+            letter-spacing: 0.15em;
+            color: var(--muted);
+            text-transform: uppercase;
+        }
+
+        /* Frame number styling */
+        .frame-number {
+            font-family: var(--font-sans);
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--frame-number);
+            letter-spacing: 0.05em;
+        }
+
+        /* ============================================
+           SECTION STYLES
+           ============================================ */
+
+        .section {
+            margin-bottom: var(--space-3xl);
+            padding: var(--space-xl);
+            background: var(--surface);
+            border: 1px solid var(--muted);
+            position: relative;
+        }
+
+        /* Contact sheet frame effect */
+        .section::before {
+            content: '';
+            position: absolute;
+            top: -8px;
+            left: 20px;
+            right: 20px;
+            height: 8px;
+            background: repeating-linear-gradient(
+                90deg,
+                transparent,
+                transparent 8px,
+                var(--muted) 8px,
+                var(--muted) 10px,
+                transparent 10px,
+                transparent 18px
+            );
+        }
+
+        .section::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 20px;
+            right: 20px;
+            height: 8px;
+            background: repeating-linear-gradient(
+                90deg,
+                transparent,
+                transparent 8px,
+                var(--muted) 8px,
+                var(--muted) 10px,
+                transparent 10px,
+                transparent 18px
+            );
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: var(--space-md);
+            margin-bottom: var(--space-xl);
+            padding-bottom: var(--space-md);
+            border-bottom: 1px dashed var(--muted);
+        }
+
+        .section-title {
+            font-family: var(--font-serif);
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--foreground);
+        }
+
+        .section-frame {
+            font-family: var(--font-sans);
+            font-size: 0.625rem;
+            font-weight: 700;
+            color: var(--accent-secondary);
+            background: var(--background);
+            padding: var(--space-xs) var(--space-sm);
+            border: 1px solid var(--accent-secondary);
+        }
+
+        /* ============================================
+           TYPOGRAPHY SCALE
+           ============================================ */
+
+        .typography-grid {
+            display: grid;
+            gap: var(--space-xl);
+        }
+
+        .type-specimen {
+            padding: var(--space-lg);
+            background: var(--background);
+            border-left: 3px solid var(--accent-primary);
+            position: relative;
+            animation: develop var(--develop-duration) ease-out forwards;
+            opacity: 0;
+        }
+
+        .type-specimen:nth-child(1) { animation-delay: 0.1s; }
+        .type-specimen:nth-child(2) { animation-delay: 0.2s; }
+        .type-specimen:nth-child(3) { animation-delay: 0.3s; }
+        .type-specimen:nth-child(4) { animation-delay: 0.4s; }
+        .type-specimen:nth-child(5) { animation-delay: 0.5s; }
+        .type-specimen:nth-child(6) { animation-delay: 0.6s; }
+
+        @keyframes develop {
+            0% {
+                opacity: 0;
+                filter: blur(4px) brightness(0.5);
+            }
+            50% {
+                opacity: 0.7;
+                filter: blur(1px) brightness(0.8);
+            }
+            100% {
+                opacity: 1;
+                filter: blur(0) brightness(1);
+            }
+        }
+
+        .type-label {
+            font-family: var(--font-sans);
+            font-size: 0.625rem;
+            font-weight: 600;
+            letter-spacing: 0.1em;
+            color: var(--accent-primary);
+            text-transform: uppercase;
+            margin-bottom: var(--space-sm);
+        }
+
+        .type-meta {
+            font-family: var(--font-sans);
+            font-size: 0.75rem;
+            color: var(--muted);
+            margin-top: var(--space-sm);
+        }
+
+        h1 {
+            font-family: var(--font-serif);
+            font-size: 3.5rem;
+            font-weight: 700;
+            line-height: 1.1;
+            letter-spacing: -0.02em;
+            color: var(--foreground);
+        }
+
+        h2 {
+            font-family: var(--font-serif);
+            font-size: 2.5rem;
+            font-weight: 600;
+            line-height: 1.2;
+            letter-spacing: -0.01em;
+            color: var(--foreground);
+        }
+
+        h3 {
+            font-family: var(--font-serif);
+            font-size: 1.75rem;
+            font-weight: 600;
+            line-height: 1.3;
+            color: var(--foreground);
+        }
+
+        h4 {
+            font-family: var(--font-sans);
+            font-size: 1.25rem;
+            font-weight: 600;
+            line-height: 1.4;
+            color: var(--foreground);
+        }
+
+        .body-text {
+            font-family: var(--font-sans);
+            font-size: 1rem;
+            line-height: 1.7;
+            color: var(--foreground);
+        }
+
+        .small-text {
+            font-family: var(--font-sans);
+            font-size: 0.875rem;
+            line-height: 1.6;
+            color: var(--muted);
+        }
+
+        /* Photo credit style */
+        .photo-credit {
+            font-family: var(--font-sans);
+            font-size: 0.6875rem;
+            font-style: italic;
+            color: var(--muted);
+            letter-spacing: 0.05em;
+        }
+
+        /* Date stamp style */
+        .date-stamp {
+            font-family: var(--font-sans);
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: var(--accent-secondary);
+            background: var(--background);
+            padding: var(--space-xs) var(--space-sm);
+            display: inline-block;
+        }
+
+        /* ============================================
+           COLOR SWATCHES
+           ============================================ */
+
+        .color-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: var(--space-lg);
+        }
+
+        .color-swatch {
+            position: relative;
+            aspect-ratio: 4/3;
+            overflow: hidden;
+        }
+
+        .color-swatch::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            border: 1px solid var(--muted);
+        }
+
+        /* Crop marks on swatches */
+        .color-swatch::after {
+            content: '';
+            position: absolute;
+            top: -1px;
+            left: -1px;
+            width: 12px;
+            height: 12px;
+            border-top: 2px solid var(--foreground);
+            border-left: 2px solid var(--foreground);
+        }
+
+        .swatch-color {
+            width: 100%;
+            height: 70%;
+            transition: filter var(--fade-duration) ease;
+        }
+
+        .color-swatch:hover .swatch-color {
+            filter: brightness(1.1);
+        }
+
+        .swatch-info {
+            height: 30%;
+            padding: var(--space-sm);
+            background: var(--background);
+            border-top: 1px solid var(--muted);
+        }
+
+        .swatch-name {
+            font-family: var(--font-sans);
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--foreground);
+            margin-bottom: 2px;
+        }
+
+        .swatch-value {
+            font-family: var(--font-sans);
+            font-size: 0.625rem;
+            color: var(--muted);
+            font-variant-numeric: tabular-nums;
+        }
+
+        /* ============================================
+           NEWSLETTER SIGNUP
+           ============================================ */
+
+        .newsletter-section {
+            background: linear-gradient(
+                135deg,
+                var(--surface) 0%,
+                var(--background) 100%
+            );
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Red safelight glow effect */
+        .newsletter-section::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(
+                ellipse at center,
+                var(--safelight-glow) 0%,
+                transparent 50%
+            );
+            pointer-events: none;
+        }
+
+        .newsletter-content {
+            position: relative;
+            z-index: 1;
+            text-align: center;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        .newsletter-icon {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto var(--space-lg);
+            position: relative;
+        }
+
+        /* Loupe circle icon */
+        .newsletter-icon::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 60px;
+            height: 60px;
+            border: 3px solid var(--accent-primary);
+            border-radius: 50%;
+            box-shadow:
+                0 0 20px var(--accent-primary),
+                inset 0 0 20px var(--safelight-glow);
+        }
+
+        .newsletter-icon::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            right: 5px;
+            width: 20px;
+            height: 4px;
+            background: var(--accent-primary);
+            transform: rotate(45deg);
+            border-radius: 2px;
+        }
+
+        .newsletter-title {
+            font-family: var(--font-serif);
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--foreground);
+            margin-bottom: var(--space-md);
+        }
+
+        .newsletter-description {
+            font-family: var(--font-sans);
+            font-size: 1rem;
+            color: var(--muted);
+            margin-bottom: var(--space-xl);
+            line-height: 1.7;
+        }
+
+        .newsletter-form {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-md);
+        }
+
+        .form-field {
+            position: relative;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: var(--space-md) var(--space-lg);
+            font-family: var(--font-sans);
+            font-size: 1rem;
+            color: var(--foreground);
+            background: var(--background);
+            border: 1px solid var(--muted);
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        .form-input::placeholder {
+            color: var(--muted);
+        }
+
+        .form-input:focus {
+            border-color: var(--accent-primary);
+            box-shadow: 0 0 20px var(--safelight-glow);
+        }
+
+        .newsletter-disclaimer {
+            font-family: var(--font-sans);
+            font-size: 0.75rem;
+            color: var(--muted);
+            margin-top: var(--space-md);
+        }
+
+        /* ============================================
+           BUTTONS
+           ============================================ */
+
+        .button-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: var(--space-lg);
+            align-items: flex-start;
+        }
+
+        .button-group {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-sm);
+        }
+
+        .button-label {
+            font-family: var(--font-sans);
+            font-size: 0.625rem;
+            font-weight: 600;
+            letter-spacing: 0.1em;
+            color: var(--muted);
+            text-transform: uppercase;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--space-sm);
+            padding: var(--space-md) var(--space-xl);
+            font-family: var(--font-sans);
+            font-size: 0.875rem;
+            font-weight: 600;
+            text-decoration: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: none;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+                90deg,
+                transparent,
+                rgba(255, 255, 255, 0.1),
+                transparent
+            );
+            transition: left 0.5s ease;
+        }
+
+        .btn:hover::before {
+            left: 100%;
+        }
+
+        .btn-primary {
+            background: var(--accent-primary);
+            color: var(--foreground);
+            box-shadow: 0 0 20px var(--safelight-glow);
+        }
+
+        .btn-primary:hover {
+            background: #A00000;
+            box-shadow: 0 0 40px var(--safelight-intense);
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--foreground);
+            border: 1px solid var(--foreground);
+        }
+
+        .btn-secondary:hover {
+            background: var(--foreground);
+            color: var(--background);
+        }
+
+        .btn-ghost {
+            background: transparent;
+            color: var(--accent-secondary);
+            border: 1px dashed var(--muted);
+        }
+
+        .btn-ghost:hover {
+            border-color: var(--accent-secondary);
+            box-shadow: 0 0 20px rgba(255, 228, 181, 0.1);
+        }
+
+        /* ============================================
+           PROJECT CARD
+           ============================================ */
+
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: var(--space-xl);
+        }
+
+        .project-card {
+            background: var(--background);
+            border: 1px solid var(--muted);
+            position: relative;
+            transition: all 0.4s ease;
+            animation: develop var(--develop-duration) ease-out forwards;
+            opacity: 0;
+        }
+
+        .project-card:hover {
+            border-color: var(--accent-primary);
+            box-shadow: 0 0 40px var(--safelight-glow);
+        }
+
+        /* Sprocket holes on sides */
+        .project-card::before,
+        .project-card::after {
+            content: '';
+            position: absolute;
+            top: 20px;
+            bottom: 20px;
+            width: 12px;
+            background: repeating-linear-gradient(
+                180deg,
+                transparent,
+                transparent 6px,
+                var(--muted) 6px,
+                var(--muted) 12px,
+                transparent 12px,
+                transparent 18px
+            );
+        }
+
+        .project-card::before { left: -12px; }
+        .project-card::after { right: -12px; }
+
+        .card-image {
+            aspect-ratio: 16/10;
+            background: var(--surface);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card-image::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(
+                180deg,
+                transparent 60%,
+                rgba(10, 10, 10, 0.8) 100%
+            );
+        }
+
+        /* Film frame number */
+        .card-image::after {
+            content: '12A';
+            position: absolute;
+            bottom: var(--space-sm);
+            right: var(--space-sm);
+            font-family: var(--font-sans);
+            font-size: 0.625rem;
+            font-weight: 700;
+            color: var(--accent-secondary);
+            opacity: 0.6;
+        }
+
+        .card-body {
+            padding: var(--space-lg);
+        }
+
+        .card-meta {
+            display: flex;
+            align-items: center;
+            gap: var(--space-md);
+            margin-bottom: var(--space-md);
+        }
+
+        .card-number {
+            font-family: var(--font-sans);
+            font-size: 0.625rem;
+            font-weight: 700;
+            color: var(--accent-primary);
+            background: rgba(139, 0, 0, 0.2);
+            padding: var(--space-xs) var(--space-sm);
+        }
+
+        .card-status {
+            font-family: var(--font-sans);
+            font-size: 0.625rem;
+            font-weight: 600;
+            color: var(--muted);
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+        }
+
+        .card-title {
+            font-family: var(--font-serif);
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--foreground);
+            margin-bottom: var(--space-sm);
+            transition: color 0.3s ease;
+        }
+
+        .project-card:hover .card-title {
+            color: var(--accent-secondary);
+        }
+
+        .card-description {
+            font-family: var(--font-sans);
+            font-size: 0.875rem;
+            color: var(--muted);
+            line-height: 1.6;
+            margin-bottom: var(--space-lg);
+        }
+
+        .card-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: var(--space-sm);
+        }
+
+        .card-tag {
+            font-family: var(--font-sans);
+            font-size: 0.625rem;
+            font-weight: 600;
+            color: var(--frame-number);
+            background: var(--surface);
+            padding: var(--space-xs) var(--space-sm);
+            border: 1px solid var(--muted);
+        }
+
+        /* ============================================
+           DEVLOG CARD
+           ============================================ */
+
+        .devlog-card {
+            display: flex;
+            gap: var(--space-xl);
+            padding: var(--space-lg);
+            background: var(--background);
+            border: 1px solid var(--muted);
+            position: relative;
+            transition: all 0.4s ease;
+        }
+
+        .devlog-card:hover {
+            border-color: var(--accent-primary);
+            box-shadow: 0 0 30px var(--safelight-glow);
+        }
+
+        /* Hanging clip effect */
+        .devlog-card::before {
+            content: '';
+            position: absolute;
+            top: -10px;
+            left: 30px;
+            width: 20px;
+            height: 10px;
+            background: var(--muted);
+            clip-path: polygon(20% 0%, 80% 0%, 100% 100%, 0% 100%);
+        }
+
+        .devlog-date-block {
+            flex-shrink: 0;
+            width: 80px;
+            text-align: center;
+            padding-top: var(--space-sm);
+        }
+
+        .devlog-week {
+            font-family: var(--font-serif);
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--accent-primary);
+            line-height: 1;
+            text-shadow: 0 0 20px var(--safelight-glow);
+        }
+
+        .devlog-date {
+            font-family: var(--font-sans);
+            font-size: 0.625rem;
+            font-weight: 600;
+            color: var(--muted);
+            letter-spacing: 0.1em;
+            margin-top: var(--space-xs);
+        }
+
+        .devlog-content {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .devlog-title {
+            font-family: var(--font-serif);
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--foreground);
+            margin-bottom: var(--space-sm);
+            transition: color 0.3s ease;
+        }
+
+        .devlog-card:hover .devlog-title {
+            color: var(--accent-secondary);
+        }
+
+        .devlog-excerpt {
+            font-family: var(--font-sans);
+            font-size: 0.875rem;
+            color: var(--muted);
+            line-height: 1.7;
+            margin-bottom: var(--space-md);
+        }
+
+        .devlog-link {
+            font-family: var(--font-sans);
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--accent-primary);
+            text-decoration: none;
+            letter-spacing: 0.05em;
+            transition: color 0.3s ease;
+        }
+
+        .devlog-link:hover {
+            color: var(--accent-secondary);
+        }
+
+        /* ============================================
+           CODE BLOCK
+           ============================================ */
+
+        .code-block {
+            background: var(--background);
+            border: 1px solid var(--muted);
+            font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace;
+            font-size: 0.875rem;
+            line-height: 1.6;
+            overflow-x: auto;
+            position: relative;
+        }
+
+        .code-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: var(--space-sm) var(--space-md);
+            background: var(--surface);
+            border-bottom: 1px solid var(--muted);
+        }
+
+        .code-language {
+            font-family: var(--font-sans);
+            font-size: 0.625rem;
+            font-weight: 600;
+            color: var(--accent-primary);
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+        }
+
+        .code-filename {
+            font-family: var(--font-sans);
+            font-size: 0.75rem;
+            color: var(--muted);
+        }
+
+        .code-content {
+            padding: var(--space-lg);
+            margin: 0;
+            color: var(--foreground);
+        }
+
+        .code-content .keyword { color: var(--accent-primary); }
+        .code-content .string { color: var(--accent-secondary); }
+        .code-content .comment { color: var(--muted); font-style: italic; }
+        .code-content .function { color: var(--paper-edge); }
+        .code-content .number { color: #C79B6D; }
+
+        /* ============================================
+           CALLOUTS
+           ============================================ */
+
+        .callout-grid {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-lg);
+        }
+
+        .callout {
+            padding: var(--space-lg);
+            background: var(--background);
+            border-left: 4px solid;
+            position: relative;
+        }
+
+        /* Chemical stain effect */
+        .callout::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 100px;
+            height: 100px;
+            background: radial-gradient(
+                ellipse at top right,
+                var(--chemical-stain),
+                transparent 70%
+            );
+            pointer-events: none;
+        }
+
+        .callout-note {
+            border-color: var(--muted);
+        }
+
+        .callout-warning {
+            border-color: var(--accent-secondary);
+            background: rgba(255, 228, 181, 0.03);
+        }
+
+        .callout-success {
+            border-color: #4A6741;
+            background: rgba(74, 103, 65, 0.05);
+        }
+
+        .callout-header {
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+            margin-bottom: var(--space-sm);
+        }
+
+        .callout-icon {
+            width: 16px;
+            height: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.875rem;
+        }
+
+        .callout-note .callout-icon { color: var(--muted); }
+        .callout-warning .callout-icon { color: var(--accent-secondary); }
+        .callout-success .callout-icon { color: #6B8E63; }
+
+        .callout-label {
+            font-family: var(--font-sans);
+            font-size: 0.625rem;
+            font-weight: 700;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+        }
+
+        .callout-note .callout-label { color: var(--muted); }
+        .callout-warning .callout-label { color: var(--accent-secondary); }
+        .callout-success .callout-label { color: #6B8E63; }
+
+        .callout-content {
+            font-family: var(--font-sans);
+            font-size: 0.875rem;
+            color: var(--foreground);
+            line-height: 1.7;
+        }
+
+        /* ============================================
+           BLOCKQUOTE
+           ============================================ */
+
+        .blockquote {
+            padding: var(--space-xl);
+            background: var(--background);
+            border: 1px solid var(--muted);
+            position: relative;
+            margin: var(--space-lg) 0;
+        }
+
+        /* Crop marks */
+        .blockquote::before,
+        .blockquote::after {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+        }
+
+        .blockquote::before {
+            top: -1px;
+            left: -1px;
+            border-top: 2px solid var(--accent-primary);
+            border-left: 2px solid var(--accent-primary);
+        }
+
+        .blockquote::after {
+            bottom: -1px;
+            right: -1px;
+            border-bottom: 2px solid var(--accent-primary);
+            border-right: 2px solid var(--accent-primary);
+        }
+
+        .blockquote-text {
+            font-family: var(--font-serif);
+            font-size: 1.5rem;
+            font-style: italic;
+            color: var(--foreground);
+            line-height: 1.5;
+            margin-bottom: var(--space-lg);
+        }
+
+        .blockquote-citation {
+            font-family: var(--font-sans);
+            font-size: 0.75rem;
+            color: var(--muted);
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+        }
+
+        .blockquote-citation::before {
+            content: '';
+            width: 20px;
+            height: 1px;
+            background: var(--muted);
+        }
+
+        /* ============================================
+           LISTS
+           ============================================ */
+
+        .list-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: var(--space-xl);
+        }
+
+        .list-group h4 {
+            font-family: var(--font-sans);
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--muted);
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            margin-bottom: var(--space-md);
+            padding-bottom: var(--space-sm);
+            border-bottom: 1px dashed var(--muted);
+        }
+
+        .styled-list {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .styled-list li {
+            font-family: var(--font-sans);
+            font-size: 0.9375rem;
+            color: var(--foreground);
+            padding: var(--space-sm) 0;
+            padding-left: var(--space-lg);
+            position: relative;
+            line-height: 1.6;
+        }
+
+        /* Unordered list - frame number style */
+        ul.styled-list li::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 8px;
+            height: 8px;
+            border: 2px solid var(--accent-primary);
+            background: transparent;
+        }
+
+        ul.styled-list li:hover::before {
+            background: var(--accent-primary);
+            box-shadow: 0 0 10px var(--accent-primary);
+        }
+
+        /* Ordered list - contact sheet style */
+        ol.styled-list {
+            counter-reset: frame-counter;
+        }
+
+        ol.styled-list li {
+            counter-increment: frame-counter;
+        }
+
+        ol.styled-list li::before {
+            content: counter(frame-counter) 'A';
+            position: absolute;
+            left: 0;
+            top: var(--space-sm);
+            font-family: var(--font-sans);
+            font-size: 0.625rem;
+            font-weight: 700;
+            color: var(--accent-secondary);
+        }
+
+        /* ============================================
+           IMAGE TREATMENT
+           ============================================ */
+
+        .image-treatments {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: var(--space-xl);
+        }
+
+        .image-treatment {
+            position: relative;
+        }
+
+        .image-frame {
+            aspect-ratio: 4/3;
+            background: var(--surface);
+            position: relative;
+            overflow: hidden;
+            border: 1px solid var(--muted);
+        }
+
+        /* Film border with sprocket holes */
+        .image-frame::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 16px;
+            background: var(--background);
+            border-bottom: 1px solid var(--muted);
+            z-index: 2;
+        }
+
+        .image-frame::after {
+            content: '';
+            position: absolute;
+            top: 4px;
+            left: 10px;
+            right: 10px;
+            height: 8px;
+            background: repeating-linear-gradient(
+                90deg,
+                transparent,
+                transparent 12px,
+                var(--muted) 12px,
+                var(--muted) 20px,
+                transparent 20px,
+                transparent 32px
+            );
+            z-index: 3;
+        }
+
+        .image-placeholder {
+            position: absolute;
+            top: 16px;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background:
+                linear-gradient(45deg, var(--surface) 25%, transparent 25%),
+                linear-gradient(-45deg, var(--surface) 25%, transparent 25%),
+                linear-gradient(45deg, transparent 75%, var(--muted) 75%),
+                linear-gradient(-45deg, transparent 75%, var(--muted) 75%);
+            background-size: 20px 20px;
+            background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: filter var(--develop-duration) ease;
+        }
+
+        .image-treatment:hover .image-placeholder {
+            filter: brightness(1.1);
+        }
+
+        .image-label {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            font-family: var(--font-sans);
+            font-size: 0.625rem;
+            font-weight: 700;
+            color: var(--accent-secondary);
+            background: rgba(10, 10, 10, 0.8);
+            padding: var(--space-xs) var(--space-sm);
+            z-index: 4;
+        }
+
+        .image-caption {
+            padding: var(--space-md) 0;
+        }
+
+        .caption-title {
+            font-family: var(--font-sans);
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--foreground);
+            margin-bottom: var(--space-xs);
+        }
+
+        .caption-meta {
+            font-family: var(--font-sans);
+            font-size: 0.6875rem;
+            font-style: italic;
+            color: var(--muted);
+        }
+
+        /* ============================================
+           CONTACT SHEET LAYOUT
+           ============================================ */
+
+        .contact-sheet {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 2px;
+            background: var(--muted);
+            padding: 2px;
+            margin-top: var(--space-xl);
+        }
+
+        .contact-frame {
+            aspect-ratio: 3/2;
+            background: var(--surface);
+            position: relative;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .contact-frame:hover {
+            z-index: 10;
+            transform: scale(1.05);
+            box-shadow: 0 0 30px var(--safelight-glow);
+        }
+
+        .contact-frame::after {
+            content: attr(data-frame);
+            position: absolute;
+            bottom: 2px;
+            right: 4px;
+            font-family: var(--font-sans);
+            font-size: 0.5rem;
+            font-weight: 700;
+            color: var(--accent-secondary);
+            opacity: 0.5;
+        }
+
+        /* Red loupe effect on hover */
+        .contact-frame::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0);
+            width: 60%;
+            height: 60%;
+            border: 2px solid var(--accent-primary);
+            border-radius: 50%;
+            opacity: 0;
+            transition: all 0.3s ease;
+        }
+
+        .contact-frame:hover::before {
+            transform: translate(-50%, -50%) scale(1);
+            opacity: 1;
+            box-shadow: 0 0 20px var(--accent-primary);
+        }
+
+        /* ============================================
+           FOOTER
+           ============================================ */
+
+        .style-tile-footer {
+            text-align: center;
+            padding: var(--space-3xl) 0 var(--space-xl);
+            margin-top: var(--space-3xl);
+            border-top: 1px solid var(--muted);
+        }
+
+        .footer-text {
+            font-family: var(--font-sans);
+            font-size: 0.75rem;
+            color: var(--muted);
+            letter-spacing: 0.1em;
+        }
+
+        .footer-date {
+            font-family: var(--font-sans);
+            font-size: 0.625rem;
+            color: var(--frame-number);
+            margin-top: var(--space-sm);
+        }
+
+        /* ============================================
+           RESPONSIVE
+           ============================================ */
+
+        @media (max-width: 768px) {
+            .style-tile {
+                padding: var(--space-lg);
+            }
+
+            .theme-name {
+                font-size: 2.5rem;
+            }
+
+            h1 { font-size: 2.5rem; }
+            h2 { font-size: 1.75rem; }
+            h3 { font-size: 1.25rem; }
+
+            .devlog-card {
+                flex-direction: column;
+            }
+
+            .devlog-date-block {
+                width: 100%;
+                text-align: left;
+                display: flex;
+                align-items: baseline;
+                gap: var(--space-md);
+            }
+
+            .contact-sheet {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="style-tile">
+        <!-- Header -->
+        <header class="theme-header">
+            <h1 class="theme-name">Darkroom</h1>
+            <p class="theme-tagline">Where images emerge from the chemical dark</p>
+        </header>
+
+        <!-- Typography -->
+        <section class="section">
+            <div class="section-header">
+                <span class="section-frame">1A</span>
+                <h2 class="section-title">Typography</h2>
+            </div>
+            <div class="typography-grid">
+                <div class="type-specimen">
+                    <div class="type-label">H1 / Display</div>
+                    <h1>The patience of process</h1>
+                    <div class="type-meta">Playfair Display 700 / 3.5rem / -0.02em</div>
+                </div>
+                <div class="type-specimen">
+                    <div class="type-label">H2 / Section</div>
+                    <h2>Developing in the dark</h2>
+                    <div class="type-meta">Playfair Display 600 / 2.5rem / -0.01em</div>
+                </div>
+                <div class="type-specimen">
+                    <div class="type-label">H3 / Subsection</div>
+                    <h3>Silver halide crystals react</h3>
+                    <div class="type-meta">Playfair Display 600 / 1.75rem</div>
+                </div>
+                <div class="type-specimen">
+                    <div class="type-label">H4 / Label</div>
+                    <h4>Fixing the permanent image</h4>
+                    <div class="type-meta">Inter 600 / 1.25rem</div>
+                </div>
+                <div class="type-specimen">
+                    <div class="type-label">Body</div>
+                    <p class="body-text">In the darkroom, time moves differently. Under the safelight's amber glow, images emerge slowly from the developer bath like memories surfacing from the subconscious. This is the craft of patience, of chemistry, of light captured and preserved.</p>
+                    <div class="type-meta">Inter 400 / 1rem / 1.7 line-height</div>
+                </div>
+                <div class="type-specimen">
+                    <div class="type-label">Small / Caption</div>
+                    <p class="small-text">Exposure: 8 seconds at f/8. Ilford Multigrade IV RC Deluxe, developed in Ilford Multigrade developer 1+9 for 60 seconds at 20C.</p>
+                    <div class="type-meta">Inter 400 / 0.875rem / 1.6 line-height</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Color Swatches -->
+        <section class="section">
+            <div class="section-header">
+                <span class="section-frame">2A</span>
+                <h2 class="section-title">Color Palette</h2>
+            </div>
+            <div class="color-grid">
+                <div class="color-swatch">
+                    <div class="swatch-color" style="background-color: #0A0A0A;"></div>
+                    <div class="swatch-info">
+                        <div class="swatch-name">Background</div>
+                        <div class="swatch-value">#0A0A0A</div>
+                    </div>
+                </div>
+                <div class="color-swatch">
+                    <div class="swatch-color" style="background-color: #E8E0D5;"></div>
+                    <div class="swatch-info">
+                        <div class="swatch-name">Foreground</div>
+                        <div class="swatch-value">#E8E0D5</div>
+                    </div>
+                </div>
+                <div class="color-swatch">
+                    <div class="swatch-color" style="background-color: #8B0000;"></div>
+                    <div class="swatch-info">
+                        <div class="swatch-name">Safelight Red</div>
+                        <div class="swatch-value">#8B0000</div>
+                    </div>
+                </div>
+                <div class="color-swatch">
+                    <div class="swatch-color" style="background-color: #FFE4B5;"></div>
+                    <div class="swatch-info">
+                        <div class="swatch-name">Sepia Tone</div>
+                        <div class="swatch-value">#FFE4B5</div>
+                    </div>
+                </div>
+                <div class="color-swatch">
+                    <div class="swatch-color" style="background-color: #1A1614;"></div>
+                    <div class="swatch-info">
+                        <div class="swatch-name">Surface</div>
+                        <div class="swatch-value">#1A1614</div>
+                    </div>
+                </div>
+                <div class="color-swatch">
+                    <div class="swatch-color" style="background-color: #4A4240;"></div>
+                    <div class="swatch-info">
+                        <div class="swatch-name">Muted</div>
+                        <div class="swatch-value">#4A4240</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Newsletter Signup -->
+        <section class="section newsletter-section">
+            <div class="section-header">
+                <span class="section-frame">3A</span>
+                <h2 class="section-title">Newsletter</h2>
+            </div>
+            <div class="newsletter-content">
+                <div class="newsletter-icon"></div>
+                <h3 class="newsletter-title">Watch it develop</h3>
+                <p class="newsletter-description">Weekly dispatches from the darkroom. No spam, no prints stuck together. Just honest updates on building 12 projects in 12 months.</p>
+                <form class="newsletter-form">
+                    <div class="form-field">
+                        <input type="email" class="form-input" placeholder="your@email.com">
+                    </div>
+                    <button type="submit" class="btn btn-primary">Enter the darkroom</button>
+                </form>
+                <p class="newsletter-disclaimer">Your email stays in the developing tray. Unsubscribe anytime.</p>
+            </div>
+        </section>
+
+        <!-- Buttons -->
+        <section class="section">
+            <div class="section-header">
+                <span class="section-frame">4A</span>
+                <h2 class="section-title">Buttons</h2>
+            </div>
+            <div class="button-grid">
+                <div class="button-group">
+                    <span class="button-label">Primary</span>
+                    <button class="btn btn-primary">Develop print</button>
+                </div>
+                <div class="button-group">
+                    <span class="button-label">Secondary</span>
+                    <button class="btn btn-secondary">View contact sheet</button>
+                </div>
+                <div class="button-group">
+                    <span class="button-label">Ghost</span>
+                    <button class="btn btn-ghost">Browse archive</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Project Card -->
+        <section class="section">
+            <div class="section-header">
+                <span class="section-frame">5A</span>
+                <h2 class="section-title">Project Card</h2>
+            </div>
+            <div class="card-grid">
+                <article class="project-card">
+                    <div class="card-image"></div>
+                    <div class="card-body">
+                        <div class="card-meta">
+                            <span class="card-number">PROJ 01</span>
+                            <span class="card-status">In Development</span>
+                        </div>
+                        <h3 class="card-title">Mythical</h3>
+                        <p class="card-description">A calming bedtime story generator for restless minds. AI-crafted tales that wind down with you.</p>
+                        <div class="card-tags">
+                            <span class="card-tag">AI</span>
+                            <span class="card-tag">Web App</span>
+                            <span class="card-tag">Sleep</span>
+                        </div>
+                    </div>
+                </article>
+                <article class="project-card" style="animation-delay: 0.3s;">
+                    <div class="card-image"></div>
+                    <div class="card-body">
+                        <div class="card-meta">
+                            <span class="card-number">PROJ 02</span>
+                            <span class="card-status">Queued</span>
+                        </div>
+                        <h3 class="card-title">Tempo</h3>
+                        <p class="card-description">Pomodoro reimagined. Time-boxing that adapts to your natural rhythms, not against them.</p>
+                        <div class="card-tags">
+                            <span class="card-tag">Productivity</span>
+                            <span class="card-tag">macOS</span>
+                        </div>
+                    </div>
+                </article>
+            </div>
+        </section>
+
+        <!-- Devlog Card -->
+        <section class="section">
+            <div class="section-header">
+                <span class="section-frame">6A</span>
+                <h2 class="section-title">Devlog Card</h2>
+            </div>
+            <article class="devlog-card">
+                <div class="devlog-date-block">
+                    <span class="devlog-week">01</span>
+                    <span class="devlog-date">JAN 15</span>
+                </div>
+                <div class="devlog-content">
+                    <h3 class="devlog-title">Week One: Into the dark</h3>
+                    <p class="devlog-excerpt">First exposure. The Year of the Build begins with shaky hands and a vision of what could emerge. Setting up infrastructure, defining what "launch" means, and accepting that perfection is the enemy of shipped.</p>
+                    <a href="#" class="devlog-link">READ THE FULL ENTRY &rarr;</a>
+                </div>
+            </article>
+        </section>
+
+        <!-- Code Block -->
+        <section class="section">
+            <div class="section-header">
+                <span class="section-frame">7A</span>
+                <h2 class="section-title">Code Block</h2>
+            </div>
+            <div class="code-block">
+                <div class="code-header">
+                    <span class="code-language">TypeScript</span>
+                    <span class="code-filename">darkroom.ts</span>
+                </div>
+                <pre class="code-content"><span class="keyword">interface</span> <span class="function">DevelopmentProcess</span> {
+  <span class="comment">// Time in the developer bath</span>
+  exposureTime: <span class="keyword">number</span>;
+  temperature: <span class="number">20</span>;
+  agitation: <span class="string">'continuous'</span> | <span class="string">'intermittent'</span>;
+}
+
+<span class="keyword">async function</span> <span class="function">developPrint</span>(
+  negative: <span class="function">Negative</span>,
+  paper: <span class="function">PhotoPaper</span>
+): <span class="function">Promise</span>&lt;<span class="function">Print</span>&gt; {
+  <span class="keyword">await</span> expose(negative, paper);
+  <span class="keyword">await</span> develop(paper, { seconds: <span class="number">60</span> });
+  <span class="keyword">await</span> stopBath(paper);
+  <span class="keyword">await</span> fix(paper);
+  <span class="keyword">return</span> wash(paper);
+}</pre>
+            </div>
+        </section>
+
+        <!-- Callouts -->
+        <section class="section">
+            <div class="section-header">
+                <span class="section-frame">8A</span>
+                <h2 class="section-title">Callouts</h2>
+            </div>
+            <div class="callout-grid">
+                <div class="callout callout-note">
+                    <div class="callout-header">
+                        <span class="callout-icon">&#9679;</span>
+                        <span class="callout-label">Developer's Note</span>
+                    </div>
+                    <p class="callout-content">Always pre-soak your paper in clean water before development. This ensures even absorption of chemistry and prevents uneven development patterns.</p>
+                </div>
+                <div class="callout callout-warning">
+                    <div class="callout-header">
+                        <span class="callout-icon">&#9651;</span>
+                        <span class="callout-label">Safelight Warning</span>
+                    </div>
+                    <p class="callout-content">Multigrade paper is sensitive to green light as well as blue. Standard red safelights may cause fogging if exposure exceeds 4 minutes. Work efficiently.</p>
+                </div>
+                <div class="callout callout-success">
+                    <div class="callout-header">
+                        <span class="callout-icon">&#10003;</span>
+                        <span class="callout-label">Print Cleared</span>
+                    </div>
+                    <p class="callout-content">Fixing complete. The image is now permanent. You can turn on the lights after 30 seconds in the final wash.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Blockquote -->
+        <section class="section">
+            <div class="section-header">
+                <span class="section-frame">9A</span>
+                <h2 class="section-title">Blockquote</h2>
+            </div>
+            <blockquote class="blockquote">
+                <p class="blockquote-text">"The darkroom is a place of meditation, of patience, where images emerge like memories from the depths of the subconscious."</p>
+                <cite class="blockquote-citation">Ansel Adams, The Print</cite>
+            </blockquote>
+        </section>
+
+        <!-- Lists -->
+        <section class="section">
+            <div class="section-header">
+                <span class="section-frame">10A</span>
+                <h2 class="section-title">Lists</h2>
+            </div>
+            <div class="list-container">
+                <div class="list-group">
+                    <h4>Unordered</h4>
+                    <ul class="styled-list">
+                        <li>Developer (D-76, 1:1 dilution)</li>
+                        <li>Stop bath (water or citric acid)</li>
+                        <li>Fixer (rapid or standard)</li>
+                        <li>Hypo clearing agent</li>
+                        <li>Photo-Flo wetting agent</li>
+                    </ul>
+                </div>
+                <div class="list-group">
+                    <h4>Ordered</h4>
+                    <ol class="styled-list">
+                        <li>Load film onto spiral in complete darkness</li>
+                        <li>Pre-wash at development temperature</li>
+                        <li>Develop with agitation pattern</li>
+                        <li>Stop development immediately</li>
+                        <li>Fix for recommended time</li>
+                        <li>Final wash and hang to dry</li>
+                    </ol>
+                </div>
+            </div>
+        </section>
+
+        <!-- Image Treatment -->
+        <section class="section">
+            <div class="section-header">
+                <span class="section-frame">11A</span>
+                <h2 class="section-title">Image Treatment</h2>
+            </div>
+            <div class="image-treatments">
+                <figure class="image-treatment">
+                    <div class="image-frame">
+                        <div class="image-placeholder"></div>
+                        <span class="image-label">12A</span>
+                    </div>
+                    <figcaption class="image-caption">
+                        <div class="caption-title">Standard Print</div>
+                        <div class="caption-meta">RC Pearl, Grade 2, f/8 @ 12s</div>
+                    </figcaption>
+                </figure>
+                <figure class="image-treatment">
+                    <div class="image-frame">
+                        <div class="image-placeholder"></div>
+                        <span class="image-label">13A</span>
+                    </div>
+                    <figcaption class="image-caption">
+                        <div class="caption-title">High Contrast</div>
+                        <div class="caption-meta">FB Glossy, Grade 4, f/11 @ 8s</div>
+                    </figcaption>
+                </figure>
+                <figure class="image-treatment">
+                    <div class="image-frame">
+                        <div class="image-placeholder"></div>
+                        <span class="image-label">14A</span>
+                    </div>
+                    <figcaption class="image-caption">
+                        <div class="caption-title">Sepia Toned</div>
+                        <div class="caption-meta">Warmtone, Split-toned, selenium/sepia</div>
+                    </figcaption>
+                </figure>
+            </div>
+
+            <!-- Contact Sheet -->
+            <div class="contact-sheet">
+                <div class="contact-frame" data-frame="1A"></div>
+                <div class="contact-frame" data-frame="2A"></div>
+                <div class="contact-frame" data-frame="3A"></div>
+                <div class="contact-frame" data-frame="4A"></div>
+                <div class="contact-frame" data-frame="5A"></div>
+                <div class="contact-frame" data-frame="6A"></div>
+                <div class="contact-frame" data-frame="7A"></div>
+                <div class="contact-frame" data-frame="8A"></div>
+                <div class="contact-frame" data-frame="9A"></div>
+                <div class="contact-frame" data-frame="10A"></div>
+                <div class="contact-frame" data-frame="11A"></div>
+                <div class="contact-frame" data-frame="12A"></div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="style-tile-footer">
+            <p class="footer-text">YOTB / Year of the Build / Theme: Darkroom</p>
+            <p class="footer-date">Proof printed: December 2024 / Roll 17 / Frame 36</p>
+        </footer>
+    </div>
+</body>
+</html>

@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>YOTB Variant 03 - Sacred Frame</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    /*
+    ========================================
+    VARIANT 03: SACRED FRAME
+    ========================================
+    Primary experiment: Ornate decorative wrapper around ultra-minimal content
+    Devlog presentation: Clean cards with no decoration
+    Empty state: Hidden entirely
+    Section temperature: Frame ornate, interior stark white
+    */
+
+    :root {
+      --paper: #FDFBF7;
+      --ink: #1C1917;
+      --ink-muted: #44403C;
+      --ink-faint: #78716C;
+      --forest: #2E5A3C;
+      --forest-hover: #234830;
+      --forest-light: rgba(46, 90, 60, 0.1);
+      --amber: #B45309;
+      --amber-light: rgba(180, 83, 9, 0.1);
+      --void: #0A0A0A;
+      --light: #FAFAFA;
+      --surface: #FFFFFF;
+      --secondary: #E8E6E1;
+
+      --text-xs: 10px;
+      --text-sm: 13px;
+      --text-base: 16px;
+      --text-lg: 26px;
+      --text-xl: 42px;
+      --text-2xl: 68px;
+      --text-3xl: 110px;
+
+      --leading: 1.618;
+      --leading-tight: 1.2;
+      --leading-none: 0.9;
+
+      --space-1: 8px;
+      --space-2: 13px;
+      --space-3: 21px;
+      --space-4: 34px;
+      --space-5: 55px;
+      --space-6: 89px;
+
+      --content-max: 1000px;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html { font-size: 17px; }
+
+    body {
+      font-family: 'Space Grotesk', -apple-system, sans-serif;
+      font-weight: 450;
+      line-height: var(--leading);
+      color: var(--ink);
+      background-color: var(--void);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ============================================
+       SACRED FRAME - OUTER BORDER
+       ============================================ */
+
+    .sacred-frame {
+      min-height: 100vh;
+      padding: var(--space-4);
+      position: relative;
+    }
+
+    .frame-border {
+      position: fixed;
+      pointer-events: none;
+      z-index: 100;
+    }
+
+    .frame-border--top,
+    .frame-border--bottom {
+      left: var(--space-4);
+      right: var(--space-4);
+      height: var(--space-4);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .frame-border--top {
+      top: var(--space-4);
+      border-top: 2px solid var(--forest);
+    }
+
+    .frame-border--bottom {
+      bottom: var(--space-4);
+      border-bottom: 2px solid var(--forest);
+    }
+
+    .frame-border--left,
+    .frame-border--right {
+      top: var(--space-4);
+      bottom: var(--space-4);
+      width: var(--space-4);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .frame-border--left {
+      left: var(--space-4);
+      border-left: 2px solid var(--forest);
+    }
+
+    .frame-border--right {
+      right: var(--space-4);
+      border-right: 2px solid var(--forest);
+    }
+
+    /* Corner ornaments */
+    .frame-corner {
+      position: fixed;
+      width: 40px;
+      height: 40px;
+      z-index: 101;
+    }
+
+    .frame-corner::before,
+    .frame-corner::after {
+      content: '';
+      position: absolute;
+      background: var(--forest);
+    }
+
+    .frame-corner--tl { top: var(--space-4); left: var(--space-4); }
+    .frame-corner--tr { top: var(--space-4); right: var(--space-4); }
+    .frame-corner--bl { bottom: var(--space-4); left: var(--space-4); }
+    .frame-corner--br { bottom: var(--space-4); right: var(--space-4); }
+
+    .frame-corner--tl::before { top: -2px; left: 0; width: 40px; height: 2px; }
+    .frame-corner--tl::after { top: 0; left: -2px; width: 2px; height: 40px; }
+
+    .frame-corner--tr::before { top: -2px; right: 0; width: 40px; height: 2px; }
+    .frame-corner--tr::after { top: 0; right: -2px; width: 2px; height: 40px; }
+
+    .frame-corner--bl::before { bottom: -2px; left: 0; width: 40px; height: 2px; }
+    .frame-corner--bl::after { bottom: 0; left: -2px; width: 2px; height: 40px; }
+
+    .frame-corner--br::before { bottom: -2px; right: 0; width: 40px; height: 2px; }
+    .frame-corner--br::after { bottom: 0; right: -2px; width: 2px; height: 40px; }
+
+    /* Corner diamonds */
+    .frame-diamond {
+      position: fixed;
+      width: 12px;
+      height: 12px;
+      background: var(--forest);
+      transform: rotate(45deg);
+      z-index: 102;
+    }
+
+    .frame-diamond--tl { top: calc(var(--space-4) - 6px); left: calc(var(--space-4) - 6px); }
+    .frame-diamond--tr { top: calc(var(--space-4) - 6px); right: calc(var(--space-4) - 6px); }
+    .frame-diamond--bl { bottom: calc(var(--space-4) - 6px); left: calc(var(--space-4) - 6px); }
+    .frame-diamond--br { bottom: calc(var(--space-4) - 6px); right: calc(var(--space-4) - 6px); }
+
+    /* ============================================
+       INTERIOR - ULTRA CLEAN
+       ============================================ */
+
+    .interior {
+      background: var(--surface);
+      min-height: calc(100vh - var(--space-4) * 2);
+      margin: var(--space-4);
+      margin-top: 0;
+    }
+
+    .container {
+      max-width: var(--content-max);
+      margin: 0 auto;
+      padding: 0 var(--space-5);
+    }
+
+    /* ============================================
+       HERO - MINIMAL TYPE
+       ============================================ */
+
+    .hero {
+      padding: var(--space-6) 0;
+      text-align: center;
+      border-bottom: 1px solid var(--secondary);
+    }
+
+    .hero-title {
+      font-size: clamp(var(--text-xl), 6vw, var(--text-2xl));
+      font-weight: 700;
+      line-height: var(--leading-tight);
+      letter-spacing: -0.02em;
+      margin-bottom: var(--space-3);
+    }
+
+    .hero-subtitle {
+      font-size: var(--text-base);
+      color: var(--ink-muted);
+      max-width: 500px;
+      margin: 0 auto var(--space-4);
+    }
+
+    .hero-meta {
+      font-size: var(--text-xs);
+      color: var(--ink-faint);
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+    }
+
+    /* ============================================
+       DEVLOGS - CLEAN CARDS
+       ============================================ */
+
+    section {
+      padding: var(--space-5) 0;
+      border-bottom: 1px solid var(--secondary);
+    }
+
+    section:last-of-type {
+      border-bottom: none;
+    }
+
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: var(--space-4);
+    }
+
+    .section-title {
+      font-size: var(--text-sm);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--ink-muted);
+    }
+
+    .section-link {
+      font-size: var(--text-xs);
+      color: var(--ink-faint);
+      text-decoration: none;
+    }
+
+    .section-link:hover {
+      color: var(--ink);
+    }
+
+    .devlog-list {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-4);
+    }
+
+    .devlog-card {
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      gap: var(--space-4);
+      align-items: start;
+    }
+
+    .devlog-week {
+      font-size: var(--text-xl);
+      font-weight: 700;
+      color: var(--secondary);
+      line-height: 1;
+      min-width: 50px;
+    }
+
+    .devlog-content h3 {
+      font-size: var(--text-lg);
+      font-weight: 600;
+      margin-bottom: var(--space-1);
+    }
+
+    .devlog-content h3 a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .devlog-content h3 a:hover {
+      color: var(--forest);
+    }
+
+    .devlog-content p {
+      font-size: var(--text-sm);
+      color: var(--ink-muted);
+      line-height: var(--leading);
+    }
+
+    .devlog-date {
+      font-size: var(--text-xs);
+      color: var(--ink-faint);
+      text-align: right;
+    }
+
+    /* ============================================
+       CURRENT PROJECT - SIMPLE BOX
+       ============================================ */
+
+    .project-box {
+      border: 1px solid var(--ink);
+      padding: var(--space-4);
+    }
+
+    .project-status {
+      display: inline-block;
+      font-size: var(--text-xs);
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--amber);
+      margin-bottom: var(--space-2);
+    }
+
+    .project-title {
+      font-size: var(--text-xl);
+      font-weight: 700;
+      margin-bottom: var(--space-2);
+    }
+
+    .project-desc {
+      font-size: var(--text-base);
+      color: var(--ink-muted);
+      line-height: var(--leading);
+      margin-bottom: var(--space-4);
+    }
+
+    .project-meta {
+      display: flex;
+      justify-content: space-between;
+      font-size: var(--text-xs);
+      color: var(--ink-faint);
+      padding-top: var(--space-3);
+      border-top: 1px solid var(--secondary);
+    }
+
+    /* ============================================
+       NEWSLETTER - INLINE
+       ============================================ */
+
+    .newsletter {
+      background: var(--paper);
+      padding: var(--space-4);
+    }
+
+    .newsletter-inner {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: var(--space-4);
+    }
+
+    .newsletter h3 {
+      font-size: var(--text-base);
+      font-weight: 600;
+    }
+
+    .newsletter p {
+      font-size: var(--text-sm);
+      color: var(--ink-muted);
+    }
+
+    .newsletter-form {
+      display: flex;
+      gap: var(--space-2);
+    }
+
+    .newsletter-input {
+      font-family: inherit;
+      font-size: var(--text-sm);
+      padding: var(--space-2);
+      border: 1px solid var(--secondary);
+      background: var(--surface);
+      width: 200px;
+    }
+
+    .newsletter-input:focus {
+      outline: none;
+      border-color: var(--ink);
+    }
+
+    .btn {
+      font-family: inherit;
+      font-size: var(--text-xs);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      padding: var(--space-2) var(--space-3);
+      border: 1px solid var(--ink);
+      background: var(--ink);
+      color: var(--paper);
+      cursor: pointer;
+    }
+
+    .btn:hover {
+      background: var(--ink-muted);
+    }
+
+    /* ============================================
+       FOOTER
+       ============================================ */
+
+    .footer {
+      padding: var(--space-4) 0;
+      text-align: center;
+    }
+
+    .footer-brand {
+      font-size: var(--text-sm);
+      font-weight: 600;
+      margin-bottom: var(--space-1);
+    }
+
+    .footer-meta {
+      font-size: var(--text-xs);
+      color: var(--ink-faint);
+    }
+
+    /* ============================================
+       RESPONSIVE
+       ============================================ */
+
+    @media (max-width: 768px) {
+      .sacred-frame {
+        padding: var(--space-2);
+      }
+
+      .frame-border--top,
+      .frame-border--bottom {
+        left: var(--space-2);
+        right: var(--space-2);
+        height: var(--space-2);
+      }
+
+      .frame-border--left,
+      .frame-border--right {
+        top: var(--space-2);
+        bottom: var(--space-2);
+        width: var(--space-2);
+      }
+
+      .frame-corner,
+      .frame-diamond {
+        display: none;
+      }
+
+      .interior {
+        margin: var(--space-2);
+      }
+
+      .devlog-card {
+        grid-template-columns: 1fr;
+      }
+
+      .devlog-week {
+        font-size: var(--text-lg);
+      }
+
+      .devlog-date {
+        text-align: left;
+      }
+
+      .newsletter-inner {
+        flex-direction: column;
+        text-align: center;
+      }
+
+      .newsletter-form {
+        flex-direction: column;
+        width: 100%;
+      }
+
+      .newsletter-input {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="sacred-frame">
+    <!-- Frame elements -->
+    <div class="frame-border frame-border--top"></div>
+    <div class="frame-border frame-border--bottom"></div>
+    <div class="frame-border frame-border--left"></div>
+    <div class="frame-border frame-border--right"></div>
+    <div class="frame-corner frame-corner--tl"></div>
+    <div class="frame-corner frame-corner--tr"></div>
+    <div class="frame-corner frame-corner--bl"></div>
+    <div class="frame-corner frame-corner--br"></div>
+    <div class="frame-diamond frame-diamond--tl"></div>
+    <div class="frame-diamond frame-diamond--tr"></div>
+    <div class="frame-diamond frame-diamond--bl"></div>
+    <div class="frame-diamond frame-diamond--br"></div>
+
+    <div class="interior">
+      <!-- HERO -->
+      <header class="hero">
+        <div class="container">
+          <h1 class="hero-title">Year of the Build</h1>
+          <p class="hero-subtitle">12 projects in 12 months. Public accountability for creators who ship.</p>
+          <p class="hero-meta">Month 1 of 12 / January 2025</p>
+        </div>
+      </header>
+
+      <main>
+        <!-- DEVLOGS -->
+        <section>
+          <div class="container">
+            <div class="section-header">
+              <h2 class="section-title">Recent Devlogs</h2>
+              <a href="#" class="section-link">View all</a>
+            </div>
+
+            <div class="devlog-list">
+              <article class="devlog-card">
+                <span class="devlog-week">03</span>
+                <div class="devlog-content">
+                  <h3><a href="#">The Rewrite That Saved the Project</a></h3>
+                  <p>Sometimes you have to throw it all away to move forward. This week's lesson in knowing when to cut your losses.</p>
+                </div>
+                <span class="devlog-date">Jan 21</span>
+              </article>
+
+              <article class="devlog-card">
+                <span class="devlog-week">02</span>
+                <div class="devlog-content">
+                  <h3><a href="#">Learning to Say No to Features</a></h3>
+                  <p>Scope creep nearly killed the timeline. Here's the framework I'm using to stay focused.</p>
+                </div>
+                <span class="devlog-date">Jan 14</span>
+              </article>
+
+              <article class="devlog-card">
+                <span class="devlog-week">01</span>
+                <div class="devlog-content">
+                  <h3><a href="#">Choosing the First Project</a></h3>
+                  <p>The hardest decision: what to build when you could build anything.</p>
+                </div>
+                <span class="devlog-date">Jan 7</span>
+              </article>
+            </div>
+          </div>
+        </section>
+
+        <!-- CURRENT PROJECT -->
+        <section>
+          <div class="container">
+            <div class="section-header">
+              <h2 class="section-title">Now Building</h2>
+            </div>
+
+            <div class="project-box">
+              <span class="project-status">In Progress</span>
+              <h3 class="project-title">Scratchpad</h3>
+              <p class="project-desc">A minimal writing environment. Markdown-native, keyboard-first, radically simple. For people who want to write, not manage a writing app.</p>
+              <div class="project-meta">
+                <span>Project 01 of 12</span>
+                <span>Target: January 31, 2025</span>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- NEWSLETTER -->
+        <section class="newsletter">
+          <div class="container">
+            <div class="newsletter-inner">
+              <div>
+                <h3>Weekly Updates</h3>
+                <p>Devlogs delivered to your inbox every Monday.</p>
+              </div>
+              <form class="newsletter-form">
+                <input type="email" class="newsletter-input" placeholder="you@example.com" required>
+                <button type="submit" class="btn">Subscribe</button>
+              </form>
+            </div>
+          </div>
+        </section>
+      </main>
+
+      <footer class="footer">
+        <div class="container">
+          <div class="footer-brand">YOTB</div>
+          <div class="footer-meta">Getty Made LLC / 2025</div>
+        </div>
+      </footer>
+    </div>
+  </div>
+
+</body>
+</html>

@@ -1,0 +1,1387 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>YOTB Style Tile: PRESSURE COOKER</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Oswald:wght@700&display=swap" rel="stylesheet">
+  <style>
+    /* ==========================================================================
+       RESET & BASE — PRESSURE COOKER THEME
+       Barely-contained deadline energy. Everything urgent. About to burst.
+       ========================================================================== */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      /* Typography */
+      --font-display: 'Oswald', sans-serif;
+      --font-body: 'Inter', -apple-system, system-ui, sans-serif;
+      --font-mono: 'SF Mono', 'Monaco', 'Consolas', monospace;
+
+      /* Pressure Cooker Scale — OVERSIZED */
+      --text-xs: 0.75rem;
+      --text-sm: 0.875rem;
+      --text-base: 1rem;
+      --text-lg: 1.125rem;
+      --text-xl: 1.5rem;
+      --text-2xl: 2rem;
+      --text-3xl: 3rem;
+      --text-4xl: 4.5rem;
+      --text-5xl: 7rem;
+      --text-6xl: 10rem;
+
+      /* Colors — High Contrast, Emergency Energy */
+      --color-bg: #FFFFFF;
+      --color-fg: #000000;
+      --color-accent: #FF0000;
+      --color-accent-secondary: #000000;
+      --color-surface: #F5F5F5;
+      --color-muted: #666666;
+      --color-border: #000000;
+      --color-code-bg: #000000;
+      --color-code-fg: #FFFFFF;
+
+      /* Spacing — TIGHT */
+      --space-xs: 0.25rem;
+      --space-sm: 0.5rem;
+      --space-md: 0.75rem;
+      --space-lg: 1rem;
+      --space-xl: 1.5rem;
+      --space-2xl: 2rem;
+      --space-3xl: 3rem;
+
+      /* No radius — sharp edges only */
+      --radius: 0;
+    }
+
+    html {
+      font-size: 16px;
+      scroll-behavior: auto; /* Instant, no smooth */
+    }
+
+    body {
+      font-family: var(--font-body);
+      font-size: var(--text-base);
+      line-height: 1.4;
+      color: var(--color-fg);
+      background: var(--color-bg);
+      padding: 0;
+      margin: 0;
+      overflow-x: hidden;
+    }
+
+    /* Selection styling */
+    ::selection {
+      background: var(--color-accent);
+      color: var(--color-bg);
+    }
+
+    /* ==========================================================================
+       LAYOUT — Edge to edge, no breathing room
+       ========================================================================== */
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 var(--space-lg);
+    }
+
+    .tile-section {
+      padding: var(--space-2xl) 0;
+      border-bottom: 3px solid var(--color-fg);
+    }
+
+    .tile-section:last-child {
+      border-bottom: none;
+    }
+
+    .tile-label {
+      font-family: var(--font-body);
+      font-size: var(--text-xs);
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      color: var(--color-muted);
+      margin-bottom: var(--space-lg);
+      display: flex;
+      align-items: center;
+      gap: var(--space-sm);
+    }
+
+    .tile-label::before {
+      content: '';
+      width: 8px;
+      height: 8px;
+      background: var(--color-accent);
+      animation: pulse 1s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.3; }
+    }
+
+    /* ==========================================================================
+       HEADER — Full bleed, maximum impact
+       ========================================================================== */
+    .hero {
+      background: var(--color-fg);
+      color: var(--color-bg);
+      padding: var(--space-xl) var(--space-lg);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-content {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .hero-title {
+      font-family: var(--font-display);
+      font-size: var(--text-6xl);
+      font-weight: 700;
+      line-height: 0.85;
+      text-transform: uppercase;
+      letter-spacing: -0.02em;
+      margin: 0;
+    }
+
+    .hero-title .accent {
+      color: var(--color-accent);
+    }
+
+    .hero-subtitle {
+      font-family: var(--font-body);
+      font-size: var(--text-sm);
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.2em;
+      margin-top: var(--space-lg);
+      color: var(--color-muted);
+    }
+
+    .deadline-stamp {
+      position: absolute;
+      top: var(--space-lg);
+      right: var(--space-lg);
+      font-family: var(--font-mono);
+      font-size: var(--text-xs);
+      color: var(--color-accent);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+
+    .deadline-stamp::before {
+      content: 'DEADLINE: ';
+      color: var(--color-muted);
+    }
+
+    /* Progress bar in hero */
+    .hero-progress {
+      margin-top: var(--space-xl);
+      display: flex;
+      align-items: center;
+      gap: var(--space-md);
+    }
+
+    .progress-bar {
+      flex: 1;
+      height: 4px;
+      background: rgba(255,255,255,0.2);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .progress-bar-fill {
+      position: absolute;
+      left: 0;
+      top: 0;
+      height: 100%;
+      background: var(--color-accent);
+      transition: width 0s; /* Instant */
+    }
+
+    .progress-label {
+      font-family: var(--font-mono);
+      font-size: var(--text-xs);
+      color: var(--color-accent);
+      min-width: 60px;
+      text-align: right;
+    }
+
+    /* ==========================================================================
+       TYPOGRAPHY — Compressed, urgent, oversized
+       ========================================================================== */
+    h1, .h1 {
+      font-family: var(--font-display);
+      font-size: var(--text-5xl);
+      font-weight: 700;
+      line-height: 0.9;
+      text-transform: uppercase;
+      letter-spacing: -0.01em;
+    }
+
+    h2, .h2 {
+      font-family: var(--font-display);
+      font-size: var(--text-4xl);
+      font-weight: 700;
+      line-height: 0.95;
+      text-transform: uppercase;
+      letter-spacing: -0.01em;
+    }
+
+    h3, .h3 {
+      font-family: var(--font-display);
+      font-size: var(--text-3xl);
+      font-weight: 700;
+      line-height: 1;
+      text-transform: uppercase;
+    }
+
+    h4, .h4 {
+      font-family: var(--font-display);
+      font-size: var(--text-2xl);
+      font-weight: 700;
+      line-height: 1.1;
+      text-transform: uppercase;
+    }
+
+    p {
+      font-family: var(--font-body);
+      font-size: var(--text-base);
+      line-height: 1.5;
+      max-width: 60ch;
+    }
+
+    p.large {
+      font-size: var(--text-lg);
+      font-weight: 500;
+    }
+
+    small, .small {
+      font-size: var(--text-sm);
+      color: var(--color-muted);
+    }
+
+    a {
+      color: var(--color-accent);
+      text-decoration: none;
+      border-bottom: 2px solid currentColor;
+      transition: none; /* Instant */
+    }
+
+    a:hover {
+      background: var(--color-accent);
+      color: var(--color-bg);
+    }
+
+    .type-scale {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-lg);
+    }
+
+    .type-sample {
+      display: flex;
+      align-items: baseline;
+      gap: var(--space-lg);
+      border-bottom: 1px solid var(--color-surface);
+      padding-bottom: var(--space-md);
+    }
+
+    .type-sample-label {
+      font-family: var(--font-mono);
+      font-size: var(--text-xs);
+      color: var(--color-muted);
+      min-width: 80px;
+      text-transform: uppercase;
+    }
+
+    /* ==========================================================================
+       COLORS
+       ========================================================================== */
+    .color-grid {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 0;
+      border: 3px solid var(--color-fg);
+    }
+
+    .color-swatch {
+      aspect-ratio: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding: var(--space-sm);
+      font-family: var(--font-mono);
+      font-size: var(--text-xs);
+      border-right: 1px solid var(--color-fg);
+    }
+
+    .color-swatch:last-child {
+      border-right: none;
+    }
+
+    .color-swatch.dark {
+      color: white;
+    }
+
+    .color-swatch span {
+      display: block;
+    }
+
+    .color-swatch .color-name {
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      font-weight: 600;
+    }
+
+    /* ==========================================================================
+       NEWSLETTER — Main CTA, Maximum urgency
+       ========================================================================== */
+    .newsletter-section {
+      background: var(--color-fg);
+      color: var(--color-bg);
+      padding: var(--space-2xl) var(--space-lg);
+      margin: 0 calc(-1 * var(--space-lg));
+    }
+
+    .newsletter-form {
+      max-width: 600px;
+    }
+
+    .newsletter-form h3 {
+      color: var(--color-bg);
+      margin-bottom: var(--space-xs);
+    }
+
+    .newsletter-form p {
+      color: var(--color-muted);
+      margin-bottom: var(--space-lg);
+    }
+
+    .form-row {
+      display: flex;
+      gap: 0;
+    }
+
+    input[type="email"] {
+      flex: 1;
+      padding: var(--space-md) var(--space-lg);
+      font-size: var(--text-base);
+      font-family: var(--font-body);
+      font-weight: 500;
+      border: 3px solid var(--color-bg);
+      background: transparent;
+      color: var(--color-bg);
+      outline: none;
+    }
+
+    input[type="email"]::placeholder {
+      color: var(--color-muted);
+    }
+
+    input[type="email"]:focus {
+      border-color: var(--color-accent);
+    }
+
+    .countdown {
+      display: flex;
+      gap: var(--space-lg);
+      margin-top: var(--space-lg);
+      padding-top: var(--space-lg);
+      border-top: 1px solid rgba(255,255,255,0.2);
+    }
+
+    .countdown-item {
+      text-align: center;
+    }
+
+    .countdown-value {
+      font-family: var(--font-display);
+      font-size: var(--text-3xl);
+      line-height: 1;
+      color: var(--color-accent);
+    }
+
+    .countdown-label {
+      font-family: var(--font-mono);
+      font-size: var(--text-xs);
+      color: var(--color-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+
+    /* ==========================================================================
+       BUTTONS — Sharp, aggressive, instant
+       ========================================================================== */
+    .button-row {
+      display: flex;
+      gap: var(--space-md);
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: var(--space-md) var(--space-xl);
+      font-family: var(--font-display);
+      font-size: var(--text-lg);
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      border: 3px solid transparent;
+      cursor: pointer;
+      text-decoration: none;
+      transition: none; /* Instant */
+      position: relative;
+      overflow: hidden;
+    }
+
+    .btn-primary {
+      background: var(--color-accent);
+      color: var(--color-bg);
+      border-color: var(--color-accent);
+    }
+
+    .btn-primary:hover {
+      background: var(--color-fg);
+      border-color: var(--color-fg);
+      color: var(--color-bg);
+    }
+
+    .btn-secondary {
+      background: transparent;
+      color: var(--color-fg);
+      border-color: var(--color-fg);
+    }
+
+    .btn-secondary:hover {
+      background: var(--color-fg);
+      color: var(--color-bg);
+    }
+
+    /* Button with progress */
+    .btn-progress {
+      position: relative;
+    }
+
+    .btn-progress::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      height: 3px;
+      width: 75%;
+      background: rgba(255,255,255,0.5);
+    }
+
+    /* ==========================================================================
+       PROJECT CARD — Dense grid, status indicators
+       ========================================================================== */
+    .project-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 0;
+      border: 3px solid var(--color-fg);
+    }
+
+    .project-card {
+      border-right: 1px solid var(--color-fg);
+      border-bottom: 1px solid var(--color-fg);
+      padding: var(--space-lg);
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-sm);
+      position: relative;
+      transition: none;
+    }
+
+    .project-card:hover {
+      background: var(--color-fg);
+      color: var(--color-bg);
+    }
+
+    .project-card:hover .project-status {
+      color: var(--color-muted);
+    }
+
+    .project-card:hover a {
+      color: var(--color-accent);
+    }
+
+    .project-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+    }
+
+    .project-number {
+      font-family: var(--font-display);
+      font-size: var(--text-4xl);
+      line-height: 0.9;
+      color: var(--color-surface);
+      position: absolute;
+      top: var(--space-sm);
+      right: var(--space-md);
+    }
+
+    .project-card:hover .project-number {
+      color: rgba(255,255,255,0.1);
+    }
+
+    .project-status {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-xs);
+      font-family: var(--font-mono);
+      font-size: var(--text-xs);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--color-muted);
+    }
+
+    .project-status::before {
+      content: '';
+      width: 8px;
+      height: 8px;
+      background: var(--color-muted);
+    }
+
+    .project-status.active::before {
+      background: var(--color-accent);
+      animation: pulse 1s ease-in-out infinite;
+    }
+
+    .project-status.launched::before {
+      background: #00FF00;
+    }
+
+    .project-card h4 {
+      margin: 0;
+      font-size: var(--text-xl);
+    }
+
+    .project-card p {
+      margin: 0;
+      font-size: var(--text-sm);
+      color: var(--color-muted);
+    }
+
+    .project-card:hover p {
+      color: rgba(255,255,255,0.6);
+    }
+
+    .project-progress {
+      margin-top: auto;
+      padding-top: var(--space-md);
+    }
+
+    .project-progress-bar {
+      height: 2px;
+      background: var(--color-surface);
+      position: relative;
+    }
+
+    .project-progress-fill {
+      position: absolute;
+      left: 0;
+      top: 0;
+      height: 100%;
+      background: var(--color-accent);
+    }
+
+    .project-card:hover .project-progress-bar {
+      background: rgba(255,255,255,0.2);
+    }
+
+    /* ==========================================================================
+       DEVLOG CARD — Tight, urgent, timestamp-forward
+       ========================================================================== */
+    .devlog-list {
+      border: 3px solid var(--color-fg);
+    }
+
+    .devlog-card {
+      display: grid;
+      grid-template-columns: 120px 1fr;
+      gap: var(--space-lg);
+      padding: var(--space-lg);
+      border-bottom: 1px solid var(--color-fg);
+      transition: none;
+    }
+
+    .devlog-card:last-child {
+      border-bottom: none;
+    }
+
+    .devlog-card:hover {
+      background: var(--color-fg);
+      color: var(--color-bg);
+    }
+
+    .devlog-date {
+      font-family: var(--font-mono);
+      font-size: var(--text-xs);
+      color: var(--color-accent);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      padding-top: 0.3em;
+    }
+
+    .devlog-card:hover .devlog-date {
+      color: var(--color-accent);
+    }
+
+    .devlog-content h3 {
+      font-size: var(--text-xl);
+      margin: 0 0 var(--space-xs) 0;
+    }
+
+    .devlog-content h3 a {
+      color: inherit;
+      text-decoration: none;
+      border-bottom: none;
+    }
+
+    .devlog-content h3 a:hover {
+      background: none;
+      color: var(--color-accent);
+    }
+
+    .devlog-content p {
+      color: var(--color-muted);
+      margin: 0;
+      font-size: var(--text-sm);
+    }
+
+    .devlog-card:hover .devlog-content p {
+      color: rgba(255,255,255,0.6);
+    }
+
+    .devlog-meta {
+      display: flex;
+      gap: var(--space-md);
+      margin-top: var(--space-sm);
+      font-family: var(--font-mono);
+      font-size: var(--text-xs);
+      color: var(--color-muted);
+      text-transform: uppercase;
+    }
+
+    /* ==========================================================================
+       CODE — Terminal aesthetic
+       ========================================================================== */
+    pre {
+      background: var(--color-code-bg);
+      color: var(--color-code-fg);
+      padding: var(--space-lg);
+      overflow-x: auto;
+      font-family: var(--font-mono);
+      font-size: var(--text-sm);
+      line-height: 1.5;
+      border: 3px solid var(--color-fg);
+      position: relative;
+    }
+
+    pre::before {
+      content: 'TERMINAL';
+      position: absolute;
+      top: 0;
+      right: 0;
+      padding: var(--space-xs) var(--space-sm);
+      font-size: var(--text-xs);
+      background: var(--color-accent);
+      color: var(--color-bg);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+
+    code {
+      font-family: var(--font-mono);
+      font-size: 0.9em;
+    }
+
+    p code, li code {
+      background: var(--color-surface);
+      padding: 0.1em 0.3em;
+      border: 1px solid var(--color-fg);
+    }
+
+    .code-comment {
+      color: var(--color-muted);
+    }
+
+    .code-keyword {
+      color: var(--color-accent);
+    }
+
+    .code-string {
+      color: #00FF00;
+    }
+
+    /* ==========================================================================
+       CALLOUTS — Warning-forward
+       ========================================================================== */
+    .callout-stack {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      border: 3px solid var(--color-fg);
+    }
+
+    .callout {
+      padding: var(--space-lg);
+      display: grid;
+      grid-template-columns: 80px 1fr;
+      gap: var(--space-lg);
+      border-bottom: 1px solid var(--color-fg);
+    }
+
+    .callout:last-child {
+      border-bottom: none;
+    }
+
+    .callout-type {
+      font-family: var(--font-display);
+      font-size: var(--text-sm);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      padding-top: 0.2em;
+    }
+
+    .callout p {
+      margin: 0;
+    }
+
+    .callout.note .callout-type {
+      color: var(--color-fg);
+    }
+
+    .callout.warning {
+      background: var(--color-accent);
+      color: var(--color-bg);
+    }
+
+    .callout.warning .callout-type {
+      color: var(--color-bg);
+    }
+
+    .callout.success {
+      background: var(--color-fg);
+      color: var(--color-bg);
+    }
+
+    .callout.success .callout-type {
+      color: #00FF00;
+    }
+
+    /* ==========================================================================
+       BLOCKQUOTE — Bold, urgent
+       ========================================================================== */
+    blockquote {
+      margin: 0;
+      padding: var(--space-lg);
+      border-left: 6px solid var(--color-accent);
+      background: var(--color-surface);
+      font-family: var(--font-display);
+      font-size: var(--text-2xl);
+      line-height: 1.2;
+      text-transform: uppercase;
+    }
+
+    blockquote p {
+      margin: 0;
+      max-width: none;
+      font-family: inherit;
+      font-size: inherit;
+    }
+
+    blockquote cite {
+      display: block;
+      margin-top: var(--space-md);
+      font-family: var(--font-mono);
+      font-size: var(--text-xs);
+      font-style: normal;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--color-muted);
+    }
+
+    /* ==========================================================================
+       LISTS — Numbered urgently
+       ========================================================================== */
+    .list-section {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--space-xl);
+    }
+
+    ul, ol {
+      padding-left: var(--space-xl);
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-sm);
+    }
+
+    ul {
+      list-style: none;
+      padding-left: 0;
+    }
+
+    ul li {
+      padding-left: var(--space-lg);
+      position: relative;
+    }
+
+    ul li::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0.6em;
+      width: 8px;
+      height: 2px;
+      background: var(--color-accent);
+    }
+
+    ol {
+      list-style: none;
+      padding-left: 0;
+      counter-reset: list-counter;
+    }
+
+    ol li {
+      counter-increment: list-counter;
+      padding-left: 2.5rem;
+      position: relative;
+    }
+
+    ol li::before {
+      content: counter(list-counter, decimal-leading-zero);
+      position: absolute;
+      left: 0;
+      font-family: var(--font-display);
+      font-size: var(--text-sm);
+      color: var(--color-accent);
+    }
+
+    .list-header {
+      font-family: var(--font-display);
+      font-size: var(--text-sm);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: var(--space-md);
+      padding-bottom: var(--space-sm);
+      border-bottom: 2px solid var(--color-fg);
+    }
+
+    /* ==========================================================================
+       IMAGE TREATMENT — Edge to edge, minimal caption
+       ========================================================================== */
+    figure {
+      margin: 0;
+    }
+
+    .image-placeholder {
+      aspect-ratio: 16/9;
+      background: var(--color-fg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--color-bg);
+      font-family: var(--font-mono);
+      font-size: var(--text-xs);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      position: relative;
+    }
+
+    .image-placeholder::before {
+      content: 'PROCESSING';
+      position: absolute;
+      top: var(--space-sm);
+      left: var(--space-sm);
+      font-size: var(--text-xs);
+      color: var(--color-accent);
+      animation: blink 0.5s step-end infinite;
+    }
+
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0; }
+    }
+
+    figcaption {
+      padding: var(--space-sm) 0;
+      font-family: var(--font-mono);
+      font-size: var(--text-xs);
+      color: var(--color-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      border-bottom: 1px solid var(--color-fg);
+    }
+
+    /* ==========================================================================
+       PROGRESS INDICATORS — Everywhere
+       ========================================================================== */
+    .progress-section {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0;
+      border: 3px solid var(--color-fg);
+    }
+
+    .progress-item {
+      padding: var(--space-lg);
+      border-right: 1px solid var(--color-fg);
+      text-align: center;
+    }
+
+    .progress-item:last-child {
+      border-right: none;
+    }
+
+    .progress-value {
+      font-family: var(--font-display);
+      font-size: var(--text-4xl);
+      line-height: 1;
+      color: var(--color-fg);
+    }
+
+    .progress-value.accent {
+      color: var(--color-accent);
+    }
+
+    .progress-item-label {
+      font-family: var(--font-mono);
+      font-size: var(--text-xs);
+      color: var(--color-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-top: var(--space-sm);
+    }
+
+    .progress-item-bar {
+      height: 3px;
+      background: var(--color-surface);
+      margin-top: var(--space-md);
+      position: relative;
+    }
+
+    .progress-item-bar-fill {
+      position: absolute;
+      left: 0;
+      top: 0;
+      height: 100%;
+      background: var(--color-accent);
+    }
+
+    /* ==========================================================================
+       METADATA & TAGS
+       ========================================================================== */
+    .meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-sm) var(--space-md);
+      font-family: var(--font-mono);
+      font-size: var(--text-xs);
+      color: var(--color-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .tag {
+      background: var(--color-fg);
+      color: var(--color-bg);
+      padding: var(--space-xs) var(--space-sm);
+      font-size: var(--text-xs);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .tag.urgent {
+      background: var(--color-accent);
+    }
+
+    /* ==========================================================================
+       RESPONSIVE — Maintain density
+       ========================================================================== */
+    @media (max-width: 768px) {
+      :root {
+        --text-5xl: 4rem;
+        --text-6xl: 5rem;
+      }
+
+      .hero-title {
+        font-size: var(--text-5xl);
+      }
+
+      .color-grid {
+        grid-template-columns: repeat(3, 1fr);
+      }
+
+      .color-swatch:nth-child(3) {
+        border-right: none;
+      }
+
+      .color-swatch:nth-child(4) {
+        border-top: 1px solid var(--color-fg);
+      }
+
+      .devlog-card {
+        grid-template-columns: 1fr;
+        gap: var(--space-sm);
+      }
+
+      .progress-section {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .progress-item:nth-child(2) {
+        border-right: none;
+      }
+
+      .progress-item:nth-child(3),
+      .progress-item:nth-child(4) {
+        border-top: 1px solid var(--color-fg);
+      }
+
+      .list-section {
+        grid-template-columns: 1fr;
+      }
+
+      .callout {
+        grid-template-columns: 1fr;
+        gap: var(--space-sm);
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HERO — Maximum impact -->
+  <header class="hero">
+    <div class="hero-content">
+      <span class="deadline-stamp" id="deadline">DEC 31, 2025</span>
+      <h1 class="hero-title">PRESSURE<br><span class="accent">COOKER</span></h1>
+      <p class="hero-subtitle">Year of the Build Style Tile</p>
+      <div class="hero-progress">
+        <div class="progress-bar">
+          <div class="progress-bar-fill" style="width: 8.33%;"></div>
+        </div>
+        <span class="progress-label">01/12</span>
+      </div>
+    </div>
+  </header>
+
+  <div class="container">
+
+    <!-- TYPOGRAPHY -->
+    <section class="tile-section">
+      <p class="tile-label">Typography</p>
+      <div class="type-scale">
+        <div class="type-sample">
+          <span class="type-sample-label">H1</span>
+          <h1>YEAR OF THE BUILD</h1>
+        </div>
+        <div class="type-sample">
+          <span class="type-sample-label">H2</span>
+          <h2>12 PROJECTS. 12 MONTHS.</h2>
+        </div>
+        <div class="type-sample">
+          <span class="type-sample-label">H3</span>
+          <h3>WEEK ONE: MYTHICAL BEGINS</h3>
+        </div>
+        <div class="type-sample">
+          <span class="type-sample-label">H4</span>
+          <h4>BUILDING IN PUBLIC, ONE LAUNCH AT A TIME</h4>
+        </div>
+        <div class="type-sample">
+          <span class="type-sample-label">Body LG</span>
+          <p class="large">Every week I share what I'm building, what's working, what's breaking, and what I'm learning along the way. No filter. No polish.</p>
+        </div>
+        <div class="type-sample">
+          <span class="type-sample-label">Body</span>
+          <p>This is the body text. It needs to be readable under pressure. Tight line-height, efficient spacing, clear hierarchy. The goal is speed—your eyes should race, not wander. Here's a <a href="#">link to something</a> inline.</p>
+        </div>
+        <div class="type-sample">
+          <span class="type-sample-label">Small</span>
+          <p><small>Small text for metadata, timestamps, and secondary information.</small></p>
+        </div>
+      </div>
+    </section>
+
+    <!-- COLORS -->
+    <section class="tile-section">
+      <p class="tile-label">Colors</p>
+      <div class="color-grid">
+        <div class="color-swatch" style="background: #FFFFFF; border-bottom: 1px solid #000;">
+          <span class="color-name">Background</span>
+          <span>#FFFFFF</span>
+        </div>
+        <div class="color-swatch dark" style="background: #000000;">
+          <span class="color-name">Foreground</span>
+          <span>#000000</span>
+        </div>
+        <div class="color-swatch dark" style="background: #FF0000;">
+          <span class="color-name">Accent</span>
+          <span>#FF0000</span>
+        </div>
+        <div class="color-swatch dark" style="background: #000000;">
+          <span class="color-name">Secondary</span>
+          <span>#000000</span>
+        </div>
+        <div class="color-swatch" style="background: #F5F5F5;">
+          <span class="color-name">Surface</span>
+          <span>#F5F5F5</span>
+        </div>
+        <div class="color-swatch" style="background: #666666; color: white;">
+          <span class="color-name">Muted</span>
+          <span>#666666</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- PROGRESS INDICATORS -->
+    <section class="tile-section">
+      <p class="tile-label">Progress Indicators</p>
+      <div class="progress-section">
+        <div class="progress-item">
+          <div class="progress-value accent">01</div>
+          <div class="progress-item-label">Shipped</div>
+          <div class="progress-item-bar">
+            <div class="progress-item-bar-fill" style="width: 8.33%;"></div>
+          </div>
+        </div>
+        <div class="progress-item">
+          <div class="progress-value">11</div>
+          <div class="progress-item-label">Remaining</div>
+          <div class="progress-item-bar">
+            <div class="progress-item-bar-fill" style="width: 91.67%;"></div>
+          </div>
+        </div>
+        <div class="progress-item">
+          <div class="progress-value accent">47</div>
+          <div class="progress-item-label">Days Left</div>
+          <div class="progress-item-bar">
+            <div class="progress-item-bar-fill" style="width: 47%;"></div>
+          </div>
+        </div>
+        <div class="progress-item">
+          <div class="progress-value">12</div>
+          <div class="progress-item-label">Total Goal</div>
+          <div class="progress-item-bar">
+            <div class="progress-item-bar-fill" style="width: 100%;"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- NEWSLETTER (Main CTA) -->
+    <section class="tile-section">
+      <p class="tile-label">Newsletter Signup (Main CTA)</p>
+      <div class="newsletter-section">
+        <div class="newsletter-form">
+          <h3>DON'T MISS A LAUNCH</h3>
+          <p>Weekly devlog. Zero spam. Ship updates only.</p>
+          <div class="form-row">
+            <input type="email" placeholder="you@example.com">
+            <button class="btn btn-primary btn-progress">SUBSCRIBE</button>
+          </div>
+          <div class="countdown">
+            <div class="countdown-item">
+              <div class="countdown-value">47</div>
+              <div class="countdown-label">Days</div>
+            </div>
+            <div class="countdown-item">
+              <div class="countdown-value">11</div>
+              <div class="countdown-label">Hours</div>
+            </div>
+            <div class="countdown-item">
+              <div class="countdown-value">32</div>
+              <div class="countdown-label">Min</div>
+            </div>
+            <div class="countdown-item">
+              <div class="countdown-value">08</div>
+              <div class="countdown-label">Sec</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- BUTTONS -->
+    <section class="tile-section">
+      <p class="tile-label">Buttons</p>
+      <div class="button-row">
+        <button class="btn btn-primary">SHIP NOW</button>
+        <button class="btn btn-secondary">VIEW PROGRESS</button>
+      </div>
+    </section>
+
+    <!-- PROJECT CARD -->
+    <section class="tile-section">
+      <p class="tile-label">Project Cards</p>
+      <div class="project-grid">
+        <div class="project-card">
+          <span class="project-number">01</span>
+          <span class="project-status active">In Progress</span>
+          <h4>MYTHICAL</h4>
+          <p>A telehealth platform for mythology enthusiasts and their mythical creatures.</p>
+          <div class="project-progress">
+            <div class="project-progress-bar">
+              <div class="project-progress-fill" style="width: 65%;"></div>
+            </div>
+          </div>
+        </div>
+        <div class="project-card">
+          <span class="project-number">02</span>
+          <span class="project-status">Queued</span>
+          <h4>BUILDLOG</h4>
+          <p>Automated changelog generation from git commits.</p>
+          <div class="project-progress">
+            <div class="project-progress-bar">
+              <div class="project-progress-fill" style="width: 0%;"></div>
+            </div>
+          </div>
+        </div>
+        <div class="project-card">
+          <span class="project-number">03</span>
+          <span class="project-status launched">Launched</span>
+          <h4>YOTB</h4>
+          <p>This very website you're looking at right now.</p>
+          <div class="project-progress">
+            <div class="project-progress-bar">
+              <div class="project-progress-fill" style="width: 100%;"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- DEVLOG CARD -->
+    <section class="tile-section">
+      <p class="tile-label">Devlog Cards</p>
+      <div class="devlog-list">
+        <div class="devlog-card">
+          <div class="devlog-date">JAN 15<br>2025</div>
+          <div class="devlog-content">
+            <h3><a href="#">WEEK ONE: MYTHICAL BEGINS</a></h3>
+            <p>Started the year with a bang. Auth is done, database schema is locked, and I've already broken prod twice.</p>
+            <div class="devlog-meta">
+              <span>8 min read</span>
+              <span class="tag urgent">Urgent</span>
+            </div>
+          </div>
+        </div>
+        <div class="devlog-card">
+          <div class="devlog-date">JAN 08<br>2025</div>
+          <div class="devlog-content">
+            <h3><a href="#">WEEK ZERO: THE SETUP</a></h3>
+            <p>Infrastructure, tooling, and the thousand decisions before the first line of code.</p>
+            <div class="devlog-meta">
+              <span>5 min read</span>
+              <span class="tag">Setup</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CODE -->
+    <section class="tile-section">
+      <p class="tile-label">Code Block</p>
+      <pre><code><span class="code-comment">// The moment I knew it was going to work</span>
+<span class="code-keyword">const</span> launch = <span class="code-keyword">async</span> (project) => {
+  <span class="code-keyword">await</span> build(project);
+  <span class="code-keyword">await</span> test(project);
+  <span class="code-keyword">await</span> deploy(project);
+  <span class="code-keyword">return</span> celebrate();
+};</code></pre>
+      <p style="margin-top: var(--space-md);">And here's some <code>inline code</code> within a paragraph. Ship fast.</p>
+    </section>
+
+    <!-- CALLOUTS -->
+    <section class="tile-section">
+      <p class="tile-label">Callouts</p>
+      <div class="callout-stack">
+        <div class="callout note">
+          <span class="callout-type">Note</span>
+          <p>This is a standard callout for tips, notes, or important information worth highlighting. Keep reading.</p>
+        </div>
+        <div class="callout warning">
+          <span class="callout-type">Warning</span>
+          <p>This is a warning callout. Something almost went wrong here. Deadline approaching.</p>
+        </div>
+        <div class="callout success">
+          <span class="callout-type">Shipped</span>
+          <p>This is a success callout. It actually worked. Move to the next one.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- BLOCKQUOTE -->
+    <section class="tile-section">
+      <p class="tile-label">Blockquote</p>
+      <blockquote>
+        <p>"SHIP IT. YOU CAN ALWAYS FIX IT LATER. BUT YOU CAN'T FIX WHAT DOESN'T EXIST."</p>
+        <cite>The Pressure Cooker Manifesto</cite>
+      </blockquote>
+    </section>
+
+    <!-- LISTS -->
+    <section class="tile-section">
+      <p class="tile-label">Lists</p>
+      <div class="list-section">
+        <div>
+          <p class="list-header">UNORDERED</p>
+          <ul>
+            <li>Ship something every month</li>
+            <li>Write about it publicly</li>
+            <li>Learn from what breaks</li>
+            <li>Keep the momentum going</li>
+          </ul>
+        </div>
+        <div>
+          <p class="list-header">ORDERED</p>
+          <ol>
+            <li>Idea to validation</li>
+            <li>Build to MVP</li>
+            <li>Launch to feedback</li>
+            <li>Iterate to improve</li>
+          </ol>
+        </div>
+      </div>
+    </section>
+
+    <!-- IMAGE -->
+    <section class="tile-section">
+      <p class="tile-label">Image Treatment</p>
+      <figure>
+        <div class="image-placeholder">16:9 IMAGE PLACEHOLDER</div>
+        <figcaption>FIG 01 // The moment before everything caught fire</figcaption>
+      </figure>
+    </section>
+
+    <!-- METADATA -->
+    <section class="tile-section">
+      <p class="tile-label">Metadata + Tags</p>
+      <div class="meta">
+        <span>JAN 15, 2025</span>
+        <span>//</span>
+        <span>8 MIN READ</span>
+        <span>//</span>
+        <span class="tag urgent">URGENT</span>
+        <span class="tag">MYTHICAL</span>
+        <span class="tag">LAUNCH</span>
+        <span class="tag">REACT</span>
+      </div>
+    </section>
+
+  </div>
+
+</body>
+</html>

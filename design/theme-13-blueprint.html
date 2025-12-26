@@ -1,0 +1,1764 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YOTB Style Tile — BLUEPRINT Theme</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800;900&family=Barlow:wght@400;500;600;700;800;900&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* ============================================
+           BLUEPRINT THEME — YOTB STYLE TILE
+           Technical Drawing / Architectural Plans
+           ============================================ */
+
+        :root {
+            /* Core Palette */
+            --bg: #0A2540;
+            --bg-surface: #0D3050;
+            --fg: #FFFFFF;
+            --accent-primary: #00D4FF;
+            --accent-secondary: #FFB800;
+            --muted: #4A7090;
+
+            /* Semantic */
+            --grid-line: rgba(0, 212, 255, 0.08);
+            --grid-line-major: rgba(0, 212, 255, 0.15);
+            --dimension-line: rgba(0, 212, 255, 0.6);
+            --annotation: var(--accent-primary);
+            --revision: var(--accent-secondary);
+
+            /* Typography */
+            --font-display: 'Archivo', 'Barlow', sans-serif;
+            --font-mono: 'IBM Plex Mono', monospace;
+
+            /* Spacing */
+            --grid-unit: 8px;
+            --section-gap: calc(var(--grid-unit) * 10);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            font-size: 16px;
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: var(--font-display);
+            background-color: var(--bg);
+            color: var(--fg);
+            line-height: 1.6;
+            min-height: 100vh;
+
+            /* Blueprint Grid Background */
+            background-image:
+                /* Major grid lines */
+                linear-gradient(var(--grid-line-major) 1px, transparent 1px),
+                linear-gradient(90deg, var(--grid-line-major) 1px, transparent 1px),
+                /* Minor grid lines */
+                linear-gradient(var(--grid-line) 1px, transparent 1px),
+                linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+            background-size:
+                80px 80px,
+                80px 80px,
+                16px 16px,
+                16px 16px;
+            background-position: -1px -1px;
+        }
+
+        /* Fold Marks */
+        body::before,
+        body::after {
+            content: '';
+            position: fixed;
+            background: var(--dimension-line);
+            z-index: 1000;
+            pointer-events: none;
+        }
+
+        body::before {
+            top: 0;
+            left: 50%;
+            width: 1px;
+            height: 20px;
+        }
+
+        body::after {
+            top: 50%;
+            left: 0;
+            width: 20px;
+            height: 1px;
+        }
+
+        /* ============================================
+           TITLE BLOCK
+           ============================================ */
+
+        .title-block {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: var(--bg-surface);
+            border: 2px solid var(--accent-primary);
+            padding: 0;
+            font-family: var(--font-mono);
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            z-index: 100;
+            min-width: 280px;
+        }
+
+        .title-block-row {
+            display: flex;
+            border-bottom: 1px solid var(--muted);
+        }
+
+        .title-block-row:last-child {
+            border-bottom: none;
+        }
+
+        .title-block-cell {
+            padding: 6px 10px;
+            border-right: 1px solid var(--muted);
+            flex: 1;
+        }
+
+        .title-block-cell:last-child {
+            border-right: none;
+        }
+
+        .title-block-label {
+            color: var(--muted);
+            font-size: 8px;
+            display: block;
+            margin-bottom: 2px;
+        }
+
+        .title-block-value {
+            color: var(--fg);
+            font-weight: 600;
+        }
+
+        .title-block-title {
+            background: var(--accent-primary);
+            color: var(--bg);
+            padding: 8px 10px;
+            font-weight: 700;
+            font-size: 11px;
+            letter-spacing: 0.15em;
+        }
+
+        /* ============================================
+           LAYOUT
+           ============================================ */
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: calc(var(--grid-unit) * 8) calc(var(--grid-unit) * 4);
+            padding-bottom: 200px;
+        }
+
+        .section {
+            margin-bottom: var(--section-gap);
+            position: relative;
+        }
+
+        /* Section Marker (A-A, B-B style) */
+        .section-marker {
+            position: absolute;
+            left: -60px;
+            top: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-family: var(--font-mono);
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--accent-primary);
+        }
+
+        .section-marker::before,
+        .section-marker::after {
+            content: '';
+            width: 24px;
+            height: 24px;
+            border: 2px solid var(--accent-primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .section-marker-line {
+            width: 2px;
+            height: 40px;
+            background: var(--accent-primary);
+        }
+
+        /* Section Title */
+        .section-title {
+            font-family: var(--font-mono);
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.2em;
+            color: var(--muted);
+            margin-bottom: calc(var(--grid-unit) * 3);
+            padding-bottom: calc(var(--grid-unit) * 1);
+            border-bottom: 1px solid var(--muted);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .section-title::before {
+            content: attr(data-section);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 28px;
+            height: 28px;
+            border: 2px solid var(--accent-primary);
+            border-radius: 50%;
+            color: var(--accent-primary);
+            font-weight: 700;
+            font-size: 10px;
+        }
+
+        /* ============================================
+           HEADER
+           ============================================ */
+
+        .header {
+            text-align: center;
+            padding: calc(var(--grid-unit) * 8) 0;
+            margin-bottom: var(--section-gap);
+            position: relative;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 200px;
+            height: 40px;
+            border: 2px solid var(--dimension-line);
+            border-bottom: none;
+        }
+
+        /* North Arrow */
+        .north-arrow {
+            position: absolute;
+            top: 20px;
+            right: 40px;
+            width: 50px;
+            height: 70px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-family: var(--font-mono);
+            font-size: 10px;
+            font-weight: 700;
+            color: var(--accent-primary);
+        }
+
+        .north-arrow::before {
+            content: '';
+            width: 0;
+            height: 0;
+            border-left: 12px solid transparent;
+            border-right: 12px solid transparent;
+            border-bottom: 20px solid var(--accent-primary);
+            margin-bottom: 4px;
+        }
+
+        .north-arrow::after {
+            content: 'N';
+        }
+
+        .theme-badge {
+            display: inline-block;
+            font-family: var(--font-mono);
+            font-size: 10px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.3em;
+            color: var(--bg);
+            background: var(--accent-primary);
+            padding: 6px 16px;
+            margin-bottom: calc(var(--grid-unit) * 3);
+        }
+
+        .theme-name {
+            font-family: var(--font-display);
+            font-size: clamp(48px, 10vw, 96px);
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            line-height: 0.9;
+            color: var(--fg);
+            margin-bottom: calc(var(--grid-unit) * 2);
+            position: relative;
+        }
+
+        /* Dimension line under title */
+        .theme-name::after {
+            content: '';
+            position: absolute;
+            bottom: -16px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80%;
+            height: 1px;
+            background: var(--dimension-line);
+        }
+
+        .theme-desc {
+            font-family: var(--font-mono);
+            font-size: 12px;
+            color: var(--muted);
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            margin-top: calc(var(--grid-unit) * 4);
+        }
+
+        /* Scale Bar */
+        .scale-bar {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+            margin-top: calc(var(--grid-unit) * 4);
+            font-family: var(--font-mono);
+            font-size: 9px;
+            color: var(--muted);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        .scale-bar-segment {
+            width: 40px;
+            height: 8px;
+            border: 1px solid var(--muted);
+        }
+
+        .scale-bar-segment:nth-child(odd) {
+            background: var(--muted);
+        }
+
+        /* ============================================
+           TYPOGRAPHY
+           ============================================ */
+
+        h1, h2, h3, h4 {
+            font-family: var(--font-display);
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            line-height: 1.1;
+            color: var(--fg);
+        }
+
+        .typography-sample {
+            margin-bottom: calc(var(--grid-unit) * 4);
+            padding: calc(var(--grid-unit) * 3);
+            background: var(--bg-surface);
+            border-left: 3px solid var(--accent-primary);
+            position: relative;
+        }
+
+        .typography-sample::before {
+            content: attr(data-style);
+            position: absolute;
+            top: -10px;
+            left: 20px;
+            font-family: var(--font-mono);
+            font-size: 9px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            color: var(--bg);
+            background: var(--accent-primary);
+            padding: 2px 8px;
+        }
+
+        /* Dimension annotation on hover */
+        .typography-sample:hover::after {
+            content: attr(data-size);
+            position: absolute;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-family: var(--font-mono);
+            font-size: 10px;
+            color: var(--revision);
+            background: rgba(255, 184, 0, 0.1);
+            padding: 4px 8px;
+            border: 1px dashed var(--revision);
+        }
+
+        .h1-sample { font-size: clamp(36px, 5vw, 56px); }
+        .h2-sample { font-size: clamp(28px, 4vw, 40px); }
+        .h3-sample { font-size: clamp(22px, 3vw, 28px); }
+        .h4-sample { font-size: clamp(16px, 2vw, 20px); }
+
+        .body-sample {
+            font-family: var(--font-display);
+            font-size: 16px;
+            font-weight: 400;
+            line-height: 1.7;
+            color: var(--fg);
+            opacity: 0.9;
+        }
+
+        .small-sample {
+            font-family: var(--font-mono);
+            font-size: 12px;
+            font-weight: 400;
+            color: var(--muted);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        .annotation-sample {
+            font-family: var(--font-mono);
+            font-size: 10px;
+            font-weight: 600;
+            color: var(--accent-primary);
+            text-transform: uppercase;
+            letter-spacing: 0.2em;
+        }
+
+        /* ============================================
+           COLOR SWATCHES
+           ============================================ */
+
+        .color-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: calc(var(--grid-unit) * 2);
+        }
+
+        .color-swatch {
+            position: relative;
+            aspect-ratio: 1.2;
+            border: 2px solid var(--muted);
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            overflow: hidden;
+            transition: all 0.2s ease;
+        }
+
+        .color-swatch:hover {
+            border-color: var(--accent-primary);
+            transform: translateY(-2px);
+        }
+
+        /* Dimension lines on swatch */
+        .color-swatch::before {
+            content: '';
+            position: absolute;
+            top: 8px;
+            left: 8px;
+            right: 8px;
+            height: 1px;
+            background:
+                linear-gradient(90deg, currentColor 0%, currentColor 10%, transparent 10%, transparent 90%, currentColor 90%);
+            opacity: 0.3;
+        }
+
+        .color-swatch::after {
+            content: '';
+            position: absolute;
+            top: 8px;
+            bottom: 40px;
+            left: 8px;
+            width: 1px;
+            background:
+                linear-gradient(180deg, currentColor 0%, currentColor 10%, transparent 10%, transparent 90%, currentColor 90%);
+            opacity: 0.3;
+        }
+
+        .color-swatch-info {
+            background: var(--bg-surface);
+            padding: calc(var(--grid-unit) * 1.5);
+            border-top: 1px solid var(--muted);
+        }
+
+        .color-swatch-name {
+            font-family: var(--font-mono);
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            color: var(--fg);
+            margin-bottom: 4px;
+        }
+
+        .color-swatch-value {
+            font-family: var(--font-mono);
+            font-size: 11px;
+            color: var(--muted);
+        }
+
+        .swatch-bg { background-color: var(--bg); color: var(--fg); }
+        .swatch-surface { background-color: var(--bg-surface); color: var(--fg); }
+        .swatch-fg { background-color: var(--fg); color: var(--bg); }
+        .swatch-primary { background-color: var(--accent-primary); color: var(--bg); }
+        .swatch-secondary { background-color: var(--accent-secondary); color: var(--bg); }
+        .swatch-muted { background-color: var(--muted); color: var(--bg); }
+
+        /* ============================================
+           BUTTONS
+           ============================================ */
+
+        .button-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: calc(var(--grid-unit) * 2);
+            align-items: center;
+        }
+
+        .btn {
+            font-family: var(--font-mono);
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.2em;
+            padding: calc(var(--grid-unit) * 2) calc(var(--grid-unit) * 4);
+            border: 2px solid transparent;
+            cursor: pointer;
+            position: relative;
+            transition: all 0.15s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* Primary Button */
+        .btn-primary {
+            background: var(--accent-primary);
+            color: var(--bg);
+            border-color: var(--accent-primary);
+        }
+
+        .btn-primary:hover {
+            background: transparent;
+            color: var(--accent-primary);
+            box-shadow: 0 0 20px rgba(0, 212, 255, 0.3);
+        }
+
+        .btn-primary:active {
+            transform: scale(0.98);
+        }
+
+        /* Dimension annotation on button hover */
+        .btn-primary:hover::after {
+            content: '48px';
+            position: absolute;
+            top: -20px;
+            right: -10px;
+            font-size: 9px;
+            color: var(--revision);
+            background: var(--bg-surface);
+            padding: 2px 6px;
+            border: 1px dashed var(--revision);
+        }
+
+        /* Secondary Button */
+        .btn-secondary {
+            background: transparent;
+            color: var(--fg);
+            border-color: var(--fg);
+        }
+
+        .btn-secondary:hover {
+            background: var(--fg);
+            color: var(--bg);
+        }
+
+        /* Ghost Button */
+        .btn-ghost {
+            background: transparent;
+            color: var(--accent-primary);
+            border-color: transparent;
+            border-bottom: 2px solid var(--accent-primary);
+            padding-left: 0;
+            padding-right: 0;
+        }
+
+        .btn-ghost:hover {
+            border-bottom-color: var(--revision);
+            color: var(--revision);
+        }
+
+        /* Button with icon */
+        .btn-icon::before {
+            content: '';
+            width: 0;
+            height: 0;
+            border-left: 6px solid currentColor;
+            border-top: 4px solid transparent;
+            border-bottom: 4px solid transparent;
+        }
+
+        /* ============================================
+           NEWSLETTER SIGNUP
+           ============================================ */
+
+        .newsletter {
+            background: var(--bg-surface);
+            border: 2px solid var(--accent-primary);
+            padding: calc(var(--grid-unit) * 5);
+            position: relative;
+        }
+
+        /* Title block style header */
+        .newsletter::before {
+            content: 'SUBSCRIPTION FORM — REV. A';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: var(--accent-primary);
+            color: var(--bg);
+            font-family: var(--font-mono);
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.2em;
+            padding: 8px 16px;
+        }
+
+        /* Corner marks */
+        .newsletter::after {
+            content: '';
+            position: absolute;
+            top: 40px;
+            right: 16px;
+            width: 30px;
+            height: 30px;
+            border-top: 2px solid var(--dimension-line);
+            border-right: 2px solid var(--dimension-line);
+        }
+
+        .newsletter-content {
+            margin-top: calc(var(--grid-unit) * 4);
+        }
+
+        .newsletter-title {
+            font-family: var(--font-display);
+            font-size: 28px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: calc(var(--grid-unit) * 1);
+        }
+
+        .newsletter-desc {
+            font-family: var(--font-mono);
+            font-size: 12px;
+            color: var(--muted);
+            margin-bottom: calc(var(--grid-unit) * 3);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        .newsletter-form {
+            display: flex;
+            gap: calc(var(--grid-unit) * 2);
+            flex-wrap: wrap;
+        }
+
+        .newsletter-input {
+            flex: 1;
+            min-width: 250px;
+            background: var(--bg);
+            border: 2px solid var(--muted);
+            padding: calc(var(--grid-unit) * 2);
+            font-family: var(--font-mono);
+            font-size: 12px;
+            color: var(--fg);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            transition: all 0.2s ease;
+        }
+
+        .newsletter-input::placeholder {
+            color: var(--muted);
+        }
+
+        .newsletter-input:focus {
+            outline: none;
+            border-color: var(--accent-primary);
+            box-shadow: 0 0 0 4px rgba(0, 212, 255, 0.1);
+        }
+
+        .newsletter-note {
+            font-family: var(--font-mono);
+            font-size: 10px;
+            color: var(--muted);
+            margin-top: calc(var(--grid-unit) * 2);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .newsletter-note::before {
+            content: 'NOTE:';
+            color: var(--revision);
+            font-weight: 700;
+        }
+
+        /* ============================================
+           PROJECT CARD
+           ============================================ */
+
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: calc(var(--grid-unit) * 3);
+        }
+
+        .project-card {
+            background: var(--bg-surface);
+            border: 2px solid var(--muted);
+            position: relative;
+            transition: all 0.2s ease;
+            overflow: hidden;
+        }
+
+        .project-card:hover {
+            border-color: var(--accent-primary);
+            transform: translateY(-4px);
+            box-shadow: 0 8px 32px rgba(0, 212, 255, 0.15);
+        }
+
+        /* Section marker circle */
+        .project-card::before {
+            content: attr(data-number);
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            width: 32px;
+            height: 32px;
+            border: 2px solid var(--accent-primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: var(--font-mono);
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--accent-primary);
+        }
+
+        /* Dimension reveal on hover */
+        .project-card:hover::after {
+            content: '320 x 240';
+            position: absolute;
+            bottom: 60px;
+            right: 16px;
+            font-family: var(--font-mono);
+            font-size: 9px;
+            color: var(--revision);
+            padding: 2px 6px;
+            border: 1px dashed var(--revision);
+            background: var(--bg-surface);
+        }
+
+        .project-card-image {
+            height: 160px;
+            background:
+                linear-gradient(45deg, var(--bg) 25%, transparent 25%),
+                linear-gradient(-45deg, var(--bg) 25%, transparent 25%),
+                linear-gradient(45deg, transparent 75%, var(--bg) 75%),
+                linear-gradient(-45deg, transparent 75%, var(--bg) 75%);
+            background-size: 16px 16px;
+            background-position: 0 0, 0 8px, 8px -8px, -8px 0px;
+            background-color: var(--muted);
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .project-card-image::after {
+            content: 'RENDER PENDING';
+            font-family: var(--font-mono);
+            font-size: 10px;
+            font-weight: 600;
+            letter-spacing: 0.2em;
+            color: var(--muted);
+            background: var(--bg-surface);
+            padding: 8px 16px;
+            border: 1px dashed var(--muted);
+        }
+
+        .project-card-content {
+            padding: calc(var(--grid-unit) * 3);
+        }
+
+        .project-card-status {
+            font-family: var(--font-mono);
+            font-size: 9px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.2em;
+            color: var(--bg);
+            background: var(--accent-primary);
+            padding: 4px 10px;
+            display: inline-block;
+            margin-bottom: calc(var(--grid-unit) * 1.5);
+        }
+
+        .project-card-status.in-progress {
+            background: var(--revision);
+        }
+
+        .project-card-status.completed {
+            background: #00C896;
+        }
+
+        .project-card-title {
+            font-family: var(--font-display);
+            font-size: 18px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: calc(var(--grid-unit) * 1);
+        }
+
+        .project-card-desc {
+            font-family: var(--font-mono);
+            font-size: 11px;
+            color: var(--muted);
+            line-height: 1.6;
+            margin-bottom: calc(var(--grid-unit) * 2);
+        }
+
+        .project-card-meta {
+            display: flex;
+            gap: calc(var(--grid-unit) * 3);
+            font-family: var(--font-mono);
+            font-size: 10px;
+            color: var(--muted);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            padding-top: calc(var(--grid-unit) * 2);
+            border-top: 1px solid var(--muted);
+        }
+
+        .project-card-meta span {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .project-card-meta span::before {
+            content: '';
+            width: 6px;
+            height: 6px;
+            background: var(--accent-primary);
+        }
+
+        /* ============================================
+           DEVLOG CARD
+           ============================================ */
+
+        .devlog-card {
+            background: var(--bg-surface);
+            border-left: 4px solid var(--accent-primary);
+            padding: calc(var(--grid-unit) * 3);
+            position: relative;
+            transition: all 0.2s ease;
+        }
+
+        .devlog-card:hover {
+            background: rgba(13, 48, 80, 0.8);
+            border-left-color: var(--revision);
+        }
+
+        /* Revision cloud indicator */
+        .devlog-card.revised::before {
+            content: 'REV';
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            font-family: var(--font-mono);
+            font-size: 9px;
+            font-weight: 700;
+            color: var(--revision);
+            padding: 2px 8px;
+            border: 2px dashed var(--revision);
+            border-radius: 12px;
+        }
+
+        .devlog-card-date {
+            font-family: var(--font-mono);
+            font-size: 10px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.2em;
+            color: var(--accent-primary);
+            margin-bottom: calc(var(--grid-unit) * 1);
+        }
+
+        .devlog-card-title {
+            font-family: var(--font-display);
+            font-size: 20px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.03em;
+            margin-bottom: calc(var(--grid-unit) * 1);
+        }
+
+        .devlog-card-excerpt {
+            font-family: var(--font-display);
+            font-size: 14px;
+            color: var(--muted);
+            line-height: 1.6;
+            margin-bottom: calc(var(--grid-unit) * 2);
+        }
+
+        .devlog-card-tags {
+            display: flex;
+            gap: calc(var(--grid-unit) * 1);
+            flex-wrap: wrap;
+        }
+
+        .devlog-tag {
+            font-family: var(--font-mono);
+            font-size: 9px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            color: var(--muted);
+            background: var(--bg);
+            padding: 4px 10px;
+            border: 1px solid var(--muted);
+        }
+
+        /* ============================================
+           CODE BLOCK
+           ============================================ */
+
+        .code-block {
+            background: var(--bg);
+            border: 2px solid var(--muted);
+            position: relative;
+            font-family: var(--font-mono);
+            font-size: 13px;
+            line-height: 1.7;
+            overflow-x: auto;
+        }
+
+        .code-block-header {
+            background: var(--bg-surface);
+            padding: calc(var(--grid-unit) * 1) calc(var(--grid-unit) * 2);
+            border-bottom: 1px solid var(--muted);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .code-block-lang {
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.2em;
+            color: var(--accent-primary);
+        }
+
+        .code-block-file {
+            font-size: 10px;
+            color: var(--muted);
+        }
+
+        .code-block pre {
+            padding: calc(var(--grid-unit) * 2);
+            margin: 0;
+            overflow-x: auto;
+        }
+
+        .code-block code {
+            color: var(--fg);
+        }
+
+        .code-comment { color: var(--muted); }
+        .code-keyword { color: var(--accent-primary); }
+        .code-string { color: var(--revision); }
+        .code-function { color: #00C896; }
+
+        /* Line numbers */
+        .code-line {
+            display: flex;
+        }
+
+        .code-line-number {
+            color: var(--muted);
+            user-select: none;
+            padding-right: calc(var(--grid-unit) * 2);
+            min-width: 32px;
+            text-align: right;
+            border-right: 1px solid var(--muted);
+            margin-right: calc(var(--grid-unit) * 2);
+        }
+
+        /* ============================================
+           CALLOUTS
+           ============================================ */
+
+        .callout {
+            padding: calc(var(--grid-unit) * 3);
+            position: relative;
+            margin-bottom: calc(var(--grid-unit) * 2);
+        }
+
+        /* Base annotation style */
+        .callout::before {
+            content: attr(data-label);
+            position: absolute;
+            top: -10px;
+            left: 20px;
+            font-family: var(--font-mono);
+            font-size: 9px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.2em;
+            padding: 2px 10px;
+        }
+
+        .callout-content {
+            font-family: var(--font-mono);
+            font-size: 12px;
+            line-height: 1.7;
+        }
+
+        /* Note */
+        .callout-note {
+            background: rgba(0, 212, 255, 0.08);
+            border: 2px solid var(--accent-primary);
+        }
+
+        .callout-note::before {
+            background: var(--accent-primary);
+            color: var(--bg);
+        }
+
+        /* Warning */
+        .callout-warning {
+            background: rgba(255, 184, 0, 0.08);
+            border: 2px dashed var(--revision);
+        }
+
+        .callout-warning::before {
+            background: var(--revision);
+            color: var(--bg);
+        }
+
+        /* Success */
+        .callout-success {
+            background: rgba(0, 200, 150, 0.08);
+            border: 2px solid #00C896;
+        }
+
+        .callout-success::before {
+            background: #00C896;
+            color: var(--bg);
+        }
+
+        /* ============================================
+           BLOCKQUOTE
+           ============================================ */
+
+        .blockquote {
+            position: relative;
+            padding: calc(var(--grid-unit) * 4);
+            padding-left: calc(var(--grid-unit) * 6);
+            background: var(--bg-surface);
+            border-left: 4px solid var(--accent-primary);
+            margin: calc(var(--grid-unit) * 3) 0;
+        }
+
+        .blockquote::before {
+            content: '"';
+            position: absolute;
+            top: 10px;
+            left: 16px;
+            font-family: var(--font-display);
+            font-size: 48px;
+            font-weight: 900;
+            color: var(--accent-primary);
+            opacity: 0.3;
+            line-height: 1;
+        }
+
+        .blockquote-text {
+            font-family: var(--font-display);
+            font-size: 18px;
+            font-weight: 500;
+            font-style: italic;
+            line-height: 1.6;
+            color: var(--fg);
+            margin-bottom: calc(var(--grid-unit) * 2);
+        }
+
+        .blockquote-cite {
+            font-family: var(--font-mono);
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            color: var(--muted);
+        }
+
+        .blockquote-cite::before {
+            content: '— ';
+        }
+
+        /* ============================================
+           LISTS
+           ============================================ */
+
+        .list-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: calc(var(--grid-unit) * 4);
+        }
+
+        .list-section h4 {
+            font-family: var(--font-mono);
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.2em;
+            color: var(--accent-primary);
+            margin-bottom: calc(var(--grid-unit) * 2);
+            padding-bottom: calc(var(--grid-unit) * 1);
+            border-bottom: 1px solid var(--muted);
+        }
+
+        .list-unordered,
+        .list-ordered {
+            list-style: none;
+            font-family: var(--font-display);
+            font-size: 14px;
+            line-height: 1.8;
+        }
+
+        .list-unordered li,
+        .list-ordered li {
+            position: relative;
+            padding-left: calc(var(--grid-unit) * 3);
+            margin-bottom: calc(var(--grid-unit) * 1);
+        }
+
+        /* Unordered list - dimension dot */
+        .list-unordered li::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 10px;
+            width: 8px;
+            height: 8px;
+            border: 2px solid var(--accent-primary);
+            border-radius: 50%;
+        }
+
+        /* Ordered list - technical numbers */
+        .list-ordered {
+            counter-reset: list-counter;
+        }
+
+        .list-ordered li::before {
+            counter-increment: list-counter;
+            content: counter(list-counter, decimal-leading-zero);
+            position: absolute;
+            left: 0;
+            top: 0;
+            font-family: var(--font-mono);
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--accent-primary);
+        }
+
+        .list-ordered li {
+            padding-left: calc(var(--grid-unit) * 4);
+        }
+
+        /* ============================================
+           IMAGE TREATMENT
+           ============================================ */
+
+        .image-container {
+            position: relative;
+            margin: calc(var(--grid-unit) * 3) 0;
+        }
+
+        .image-frame {
+            border: 2px solid var(--muted);
+            padding: calc(var(--grid-unit) * 2);
+            background: var(--bg-surface);
+            position: relative;
+        }
+
+        /* Corner registration marks */
+        .image-frame::before,
+        .image-frame::after {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--dimension-line);
+        }
+
+        .image-frame::before {
+            top: -8px;
+            left: -8px;
+            border-right: none;
+            border-bottom: none;
+        }
+
+        .image-frame::after {
+            bottom: -8px;
+            right: -8px;
+            border-left: none;
+            border-top: none;
+        }
+
+        .image-placeholder {
+            aspect-ratio: 16/9;
+            background:
+                repeating-linear-gradient(
+                    45deg,
+                    var(--bg) 0px,
+                    var(--bg) 10px,
+                    var(--bg-surface) 10px,
+                    var(--bg-surface) 20px
+                );
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .image-placeholder::before {
+            content: 'IMAGE AREA';
+            font-family: var(--font-mono);
+            font-size: 12px;
+            font-weight: 600;
+            letter-spacing: 0.3em;
+            color: var(--muted);
+            background: var(--bg-surface);
+            padding: 12px 24px;
+            border: 2px dashed var(--muted);
+        }
+
+        /* Dimension annotations */
+        .image-dimensions {
+            position: absolute;
+            bottom: -30px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-family: var(--font-mono);
+            font-size: 10px;
+            color: var(--muted);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .image-dimensions::before,
+        .image-dimensions::after {
+            content: '';
+            width: 30px;
+            height: 1px;
+            background: var(--muted);
+        }
+
+        .image-caption {
+            font-family: var(--font-mono);
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            color: var(--muted);
+            margin-top: calc(var(--grid-unit) * 2);
+            text-align: center;
+        }
+
+        .image-caption::before {
+            content: 'FIG. ' attr(data-fig) ' — ';
+            color: var(--accent-primary);
+        }
+
+        /* ============================================
+           REVISION CLOUD
+           ============================================ */
+
+        .revision-cloud {
+            position: relative;
+            padding: calc(var(--grid-unit) * 2);
+            margin: calc(var(--grid-unit) * 2) 0;
+        }
+
+        .revision-cloud::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border: 3px dashed var(--revision);
+            border-radius: 20px 10px 20px 10px;
+            background: rgba(255, 184, 0, 0.05);
+        }
+
+        .revision-cloud-label {
+            position: absolute;
+            top: -12px;
+            right: 20px;
+            font-family: var(--font-mono);
+            font-size: 9px;
+            font-weight: 700;
+            color: var(--revision);
+            background: var(--bg-surface);
+            padding: 2px 8px;
+            border: 1px solid var(--revision);
+        }
+
+        /* ============================================
+           INTERACTIVE STATES
+           ============================================ */
+
+        .interactive-demo {
+            background: var(--bg-surface);
+            border: 2px solid var(--muted);
+            padding: calc(var(--grid-unit) * 3);
+        }
+
+        .interactive-demo h4 {
+            font-family: var(--font-mono);
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.2em;
+            color: var(--muted);
+            margin-bottom: calc(var(--grid-unit) * 2);
+        }
+
+        /* Hover target */
+        .hover-target {
+            background: var(--bg);
+            border: 2px solid var(--muted);
+            padding: calc(var(--grid-unit) * 3);
+            text-align: center;
+            cursor: pointer;
+            position: relative;
+            transition: all 0.2s ease;
+        }
+
+        .hover-target:hover {
+            border-color: var(--accent-primary);
+            box-shadow: 0 0 20px rgba(0, 212, 255, 0.2);
+        }
+
+        .hover-target:hover .hover-annotation {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .hover-annotation {
+            position: absolute;
+            bottom: calc(100% + 10px);
+            left: 50%;
+            transform: translateX(-50%) translateY(10px);
+            background: var(--bg-surface);
+            border: 1px solid var(--accent-primary);
+            padding: 6px 12px;
+            font-family: var(--font-mono);
+            font-size: 10px;
+            color: var(--accent-primary);
+            white-space: nowrap;
+            opacity: 0;
+            transition: all 0.2s ease;
+            pointer-events: none;
+        }
+
+        .hover-annotation::after {
+            content: '';
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            border: 6px solid transparent;
+            border-top-color: var(--accent-primary);
+        }
+
+        /* ============================================
+           RESPONSIVE
+           ============================================ */
+
+        @media (max-width: 768px) {
+            .container {
+                padding: calc(var(--grid-unit) * 4) calc(var(--grid-unit) * 2);
+            }
+
+            .title-block {
+                position: static;
+                margin-top: calc(var(--grid-unit) * 4);
+                min-width: 100%;
+            }
+
+            .section-title::before {
+                display: none;
+            }
+
+            .north-arrow {
+                display: none;
+            }
+
+            .newsletter-form {
+                flex-direction: column;
+            }
+
+            .newsletter-input {
+                min-width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Title Block (Fixed) -->
+    <div class="title-block">
+        <div class="title-block-title">YEAR OF THE BUILD</div>
+        <div class="title-block-row">
+            <div class="title-block-cell">
+                <span class="title-block-label">Drawing</span>
+                <span class="title-block-value">STYLE-013</span>
+            </div>
+            <div class="title-block-cell">
+                <span class="title-block-label">Scale</span>
+                <span class="title-block-value">1:1</span>
+            </div>
+            <div class="title-block-cell">
+                <span class="title-block-label">Rev</span>
+                <span class="title-block-value">A</span>
+            </div>
+        </div>
+        <div class="title-block-row">
+            <div class="title-block-cell">
+                <span class="title-block-label">Date</span>
+                <span class="title-block-value">2025.01</span>
+            </div>
+            <div class="title-block-cell">
+                <span class="title-block-label">Sheet</span>
+                <span class="title-block-value">1 OF 1</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+
+        <!-- Header -->
+        <header class="header">
+            <div class="north-arrow"></div>
+            <span class="theme-badge">Style Tile — Theme 13</span>
+            <h1 class="theme-name">Blueprint</h1>
+            <p class="theme-desc">Technical Drawings / Architectural Plans / Construction Documents</p>
+            <div class="scale-bar">
+                <span>0</span>
+                <div class="scale-bar-segment"></div>
+                <div class="scale-bar-segment"></div>
+                <div class="scale-bar-segment"></div>
+                <div class="scale-bar-segment"></div>
+                <span>1 Unit</span>
+            </div>
+        </header>
+
+        <!-- Typography -->
+        <section class="section">
+            <h2 class="section-title" data-section="A">Typography Scale</h2>
+
+            <div class="typography-sample" data-style="H1 / Display" data-size="56px / 900">
+                <h1 class="h1-sample">Build. Ship. Repeat.</h1>
+            </div>
+
+            <div class="typography-sample" data-style="H2 / Section" data-size="40px / 800">
+                <h2 class="h2-sample">12 Projects, 12 Months</h2>
+            </div>
+
+            <div class="typography-sample" data-style="H3 / Subsection" data-size="28px / 700">
+                <h3 class="h3-sample">Week One Progress Report</h3>
+            </div>
+
+            <div class="typography-sample" data-style="H4 / Label" data-size="20px / 700">
+                <h4 class="h4-sample">Technical Specifications</h4>
+            </div>
+
+            <div class="typography-sample" data-style="Body" data-size="16px / 400">
+                <p class="body-sample">Every week, I document the messy reality of building products. The false starts, the pivots, the moments where everything clicks. This is the unfiltered story of shipping 12 projects in 12 months.</p>
+            </div>
+
+            <div class="typography-sample" data-style="Small / Caption" data-size="12px / Mono">
+                <p class="small-sample">Last updated: January 2025 — Rev. A</p>
+            </div>
+
+            <div class="typography-sample" data-style="Annotation" data-size="10px / Mono 600">
+                <p class="annotation-sample">Section A-A — Typical Detail</p>
+            </div>
+        </section>
+
+        <!-- Colors -->
+        <section class="section">
+            <h2 class="section-title" data-section="B">Color Palette</h2>
+
+            <div class="color-grid">
+                <div class="color-swatch swatch-bg">
+                    <div class="color-swatch-info">
+                        <div class="color-swatch-name">Background</div>
+                        <div class="color-swatch-value">#0A2540</div>
+                    </div>
+                </div>
+                <div class="color-swatch swatch-surface">
+                    <div class="color-swatch-info">
+                        <div class="color-swatch-name">Surface</div>
+                        <div class="color-swatch-value">#0D3050</div>
+                    </div>
+                </div>
+                <div class="color-swatch swatch-fg">
+                    <div class="color-swatch-info">
+                        <div class="color-swatch-name">Foreground</div>
+                        <div class="color-swatch-value">#FFFFFF</div>
+                    </div>
+                </div>
+                <div class="color-swatch swatch-primary">
+                    <div class="color-swatch-info">
+                        <div class="color-swatch-name">Primary</div>
+                        <div class="color-swatch-value">#00D4FF</div>
+                    </div>
+                </div>
+                <div class="color-swatch swatch-secondary">
+                    <div class="color-swatch-info">
+                        <div class="color-swatch-name">Secondary</div>
+                        <div class="color-swatch-value">#FFB800</div>
+                    </div>
+                </div>
+                <div class="color-swatch swatch-muted">
+                    <div class="color-swatch-info">
+                        <div class="color-swatch-name">Muted</div>
+                        <div class="color-swatch-value">#4A7090</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Newsletter -->
+        <section class="section">
+            <h2 class="section-title" data-section="C">Newsletter Signup</h2>
+
+            <div class="newsletter">
+                <div class="newsletter-content">
+                    <h3 class="newsletter-title">Subscribe to the Devlog</h3>
+                    <p class="newsletter-desc">Weekly dispatches from the build floor. No spam. Unsubscribe anytime.</p>
+                    <form class="newsletter-form">
+                        <input type="email" class="newsletter-input" placeholder="Enter your email address">
+                        <button type="submit" class="btn btn-primary btn-icon">Subscribe</button>
+                    </form>
+                    <p class="newsletter-note">Join 0 builders following along</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Buttons -->
+        <section class="section">
+            <h2 class="section-title" data-section="D">Button Components</h2>
+
+            <div class="button-row">
+                <button class="btn btn-primary">Primary Action</button>
+                <button class="btn btn-secondary">Secondary</button>
+                <button class="btn btn-ghost">View Details</button>
+            </div>
+
+            <div style="margin-top: 24px;">
+                <div class="interactive-demo">
+                    <h4>Hover Interaction Demo</h4>
+                    <div class="hover-target">
+                        <span class="hover-annotation">WIDTH: 200px / HEIGHT: 48px</span>
+                        Hover to reveal dimensions
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Project Cards -->
+        <section class="section">
+            <h2 class="section-title" data-section="E">Project Cards</h2>
+
+            <div class="card-grid">
+                <article class="project-card" data-number="01">
+                    <div class="project-card-image"></div>
+                    <div class="project-card-content">
+                        <span class="project-card-status">Planning</span>
+                        <h3 class="project-card-title">Mythical</h3>
+                        <p class="project-card-desc">A storytelling engine for tabletop RPG campaigns. Generate lore, track narratives, build worlds.</p>
+                        <div class="project-card-meta">
+                            <span>Jan 2025</span>
+                            <span>React + AI</span>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="project-card" data-number="02">
+                    <div class="project-card-image"></div>
+                    <div class="project-card-content">
+                        <span class="project-card-status in-progress">In Progress</span>
+                        <h3 class="project-card-title">Project Two</h3>
+                        <p class="project-card-desc">Details to be announced. Currently in early ideation and technical discovery phase.</p>
+                        <div class="project-card-meta">
+                            <span>Feb 2025</span>
+                            <span>TBD</span>
+                        </div>
+                    </div>
+                </article>
+            </div>
+        </section>
+
+        <!-- Devlog Cards -->
+        <section class="section">
+            <h2 class="section-title" data-section="F">Devlog Cards</h2>
+
+            <article class="devlog-card">
+                <span class="devlog-card-date">Week 01 — January 6, 2025</span>
+                <h3 class="devlog-card-title">Starting from Zero</h3>
+                <p class="devlog-card-excerpt">The first week is always the hardest. Setting up infrastructure, making technology choices, and fighting the urge to over-engineer everything from day one.</p>
+                <div class="devlog-card-tags">
+                    <span class="devlog-tag">Mythical</span>
+                    <span class="devlog-tag">Setup</span>
+                    <span class="devlog-tag">Planning</span>
+                </div>
+            </article>
+
+            <article class="devlog-card revised">
+                <span class="devlog-card-date">Week 02 — January 13, 2025</span>
+                <h3 class="devlog-card-title">First Lines of Code</h3>
+                <p class="devlog-card-excerpt">Finally writing actual features. The architecture is taking shape. Had to refactor twice already but that is part of the process.</p>
+                <div class="devlog-card-tags">
+                    <span class="devlog-tag">Mythical</span>
+                    <span class="devlog-tag">Development</span>
+                </div>
+            </article>
+        </section>
+
+        <!-- Code Block -->
+        <section class="section">
+            <h2 class="section-title" data-section="G">Code Block</h2>
+
+            <div class="code-block">
+                <div class="code-block-header">
+                    <span class="code-block-lang">TypeScript</span>
+                    <span class="code-block-file">src/components/Blueprint.tsx</span>
+                </div>
+                <pre><code><div class="code-line"><span class="code-line-number">01</span><span class="code-comment">// Blueprint component for YOTB</span></div><div class="code-line"><span class="code-line-number">02</span><span class="code-keyword">interface</span> BlueprintProps {</div><div class="code-line"><span class="code-line-number">03</span>  title: <span class="code-string">string</span>;</div><div class="code-line"><span class="code-line-number">04</span>  revision: <span class="code-string">string</span>;</div><div class="code-line"><span class="code-line-number">05</span>  scale?: <span class="code-string">number</span>;</div><div class="code-line"><span class="code-line-number">06</span>}</div><div class="code-line"><span class="code-line-number">07</span></div><div class="code-line"><span class="code-line-number">08</span><span class="code-keyword">export const</span> <span class="code-function">Blueprint</span> = ({ title, revision }: BlueprintProps) => {</div><div class="code-line"><span class="code-line-number">09</span>  <span class="code-keyword">return</span> (</div><div class="code-line"><span class="code-line-number">10</span>    &lt;div className=<span class="code-string">"blueprint-frame"</span>&gt;</div><div class="code-line"><span class="code-line-number">11</span>      &lt;TitleBlock title={title} rev={revision} /&gt;</div><div class="code-line"><span class="code-line-number">12</span>    &lt;/div&gt;</div><div class="code-line"><span class="code-line-number">13</span>  );</div><div class="code-line"><span class="code-line-number">14</span>};</div></code></pre>
+            </div>
+        </section>
+
+        <!-- Callouts -->
+        <section class="section">
+            <h2 class="section-title" data-section="H">Callouts</h2>
+
+            <div class="callout callout-note" data-label="Note">
+                <div class="callout-content">
+                    This is a standard note callout. Use it for supplementary information that supports the main content without being critical to understanding.
+                </div>
+            </div>
+
+            <div class="callout callout-warning" data-label="Warning">
+                <div class="callout-content">
+                    This is a warning callout. Use it for important caveats, deprecation notices, or information that could cause problems if ignored.
+                </div>
+            </div>
+
+            <div class="callout callout-success" data-label="Success">
+                <div class="callout-content">
+                    This is a success callout. Use it to highlight completed milestones, working solutions, or positive outcomes.
+                </div>
+            </div>
+        </section>
+
+        <!-- Blockquote -->
+        <section class="section">
+            <h2 class="section-title" data-section="I">Blockquote</h2>
+
+            <blockquote class="blockquote">
+                <p class="blockquote-text">Plans are worthless, but planning is everything. The very definition of emergency is that it is unexpected, therefore it is not going to happen the way you are planning.</p>
+                <cite class="blockquote-cite">Dwight D. Eisenhower</cite>
+            </blockquote>
+        </section>
+
+        <!-- Lists -->
+        <section class="section">
+            <h2 class="section-title" data-section="J">Lists</h2>
+
+            <div class="list-container">
+                <div class="list-section">
+                    <h4>Unordered List</h4>
+                    <ul class="list-unordered">
+                        <li>Define project scope and constraints</li>
+                        <li>Set up development environment</li>
+                        <li>Create initial component architecture</li>
+                        <li>Implement core features first</li>
+                        <li>Test, iterate, ship</li>
+                    </ul>
+                </div>
+
+                <div class="list-section">
+                    <h4>Ordered List</h4>
+                    <ol class="list-ordered">
+                        <li>Research and ideation phase</li>
+                        <li>Technical specification draft</li>
+                        <li>MVP development sprint</li>
+                        <li>Internal testing and QA</li>
+                        <li>Public launch and iteration</li>
+                    </ol>
+                </div>
+            </div>
+        </section>
+
+        <!-- Image Treatment -->
+        <section class="section">
+            <h2 class="section-title" data-section="K">Image Treatment</h2>
+
+            <div class="image-container">
+                <div class="image-frame">
+                    <div class="image-placeholder"></div>
+                </div>
+                <div class="image-dimensions">1200 x 675</div>
+                <p class="image-caption" data-fig="01">Typical image treatment with registration marks and dimension annotations</p>
+            </div>
+        </section>
+
+        <!-- Revision Cloud Example -->
+        <section class="section">
+            <h2 class="section-title" data-section="L">Revision Cloud</h2>
+
+            <div class="revision-cloud">
+                <span class="revision-cloud-label">REV. B</span>
+                <p style="font-family: var(--font-mono); font-size: 12px; color: var(--fg); padding: 8px;">
+                    This content has been revised since the original publication. The revision cloud indicates areas of change for easy identification during review.
+                </p>
+            </div>
+        </section>
+
+    </div>
+
+</body>
+</html>

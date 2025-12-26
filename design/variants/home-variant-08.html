@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>YOTB Variant 08 - Texture Contrast</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    /*
+    ========================================
+    VARIANT 08: TEXTURE CONTRAST
+    ========================================
+    Primary experiment: Mixing dot-grid, noise, and clean sections
+    Devlog presentation: Cards on textured background
+    Empty state: Clean white area in contrast
+    Section temperature: Alternating textures create rhythm
+    */
+
+    :root {
+      --paper: #FDFBF7;
+      --ink: #1C1917;
+      --ink-muted: #44403C;
+      --ink-faint: #78716C;
+      --forest: #2E5A3C;
+      --forest-hover: #234830;
+      --forest-light: rgba(46, 90, 60, 0.1);
+      --amber: #B45309;
+      --amber-light: rgba(180, 83, 9, 0.1);
+      --void: #0A0A0A;
+      --light: #FAFAFA;
+      --surface: #FFFFFF;
+      --secondary: #E8E6E1;
+
+      --text-xs: 10px;
+      --text-sm: 13px;
+      --text-base: 16px;
+      --text-lg: 26px;
+      --text-xl: 42px;
+      --text-2xl: 68px;
+      --text-3xl: 110px;
+
+      --leading: 1.618;
+      --leading-tight: 1.2;
+      --leading-none: 0.9;
+
+      --space-1: 8px;
+      --space-2: 13px;
+      --space-3: 21px;
+      --space-4: 34px;
+      --space-5: 55px;
+      --space-6: 89px;
+
+      --content-max: 1100px;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html { font-size: 17px; }
+
+    body {
+      font-family: 'Space Grotesk', -apple-system, sans-serif;
+      font-weight: 450;
+      line-height: var(--leading);
+      color: var(--ink);
+      background-color: var(--paper);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .container {
+      max-width: var(--content-max);
+      margin: 0 auto;
+      padding: 0 var(--space-4);
+    }
+
+    /* ============================================
+       HERO - NOISE TEXTURE
+       ============================================ */
+
+    .hero {
+      background: var(--void);
+      padding: var(--space-6) 0;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+      opacity: 0.04;
+      pointer-events: none;
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--space-5);
+      align-items: center;
+    }
+
+    .hero-text h1 {
+      font-size: clamp(var(--text-xl), 6vw, var(--text-2xl));
+      font-weight: 700;
+      color: var(--light);
+      line-height: var(--leading-tight);
+      margin-bottom: var(--space-3);
+    }
+
+    .hero-text p {
+      font-size: var(--text-base);
+      color: var(--ink-muted);
+      max-width: 400px;
+    }
+
+    .hero-stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: var(--space-3);
+    }
+
+    .stat-box {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.08);
+      padding: var(--space-3);
+      text-align: center;
+    }
+
+    .stat-value {
+      font-size: var(--text-xl);
+      font-weight: 700;
+      color: var(--light);
+    }
+
+    .stat-label {
+      font-size: var(--text-xs);
+      color: var(--ink-faint);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-top: var(--space-1);
+    }
+
+    /* ============================================
+       DEVLOGS - DOT GRID TEXTURE
+       ============================================ */
+
+    .devlogs-section {
+      background: var(--paper);
+      background-image: radial-gradient(circle, rgba(28, 25, 23, 0.08) 1px, transparent 1px);
+      background-size: 21px 21px;
+      padding: var(--space-6) 0;
+    }
+
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: var(--space-4);
+    }
+
+    .section-title {
+      font-size: var(--text-lg);
+      font-weight: 700;
+    }
+
+    .section-link {
+      font-size: var(--text-sm);
+      color: var(--ink-muted);
+      text-decoration: none;
+    }
+
+    .section-link:hover {
+      color: var(--forest);
+    }
+
+    .devlog-cards {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: var(--space-3);
+    }
+
+    .devlog-card {
+      background: var(--surface);
+      border: 1px solid var(--secondary);
+      padding: var(--space-4);
+      transition: all 0.2s ease;
+    }
+
+    .devlog-card:hover {
+      border-color: var(--forest);
+      transform: translateY(-2px);
+    }
+
+    .devlog-week {
+      font-size: var(--text-xs);
+      font-weight: 700;
+      color: var(--forest);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: var(--space-2);
+    }
+
+    .devlog-title {
+      font-size: var(--text-base);
+      font-weight: 600;
+      margin-bottom: var(--space-2);
+    }
+
+    .devlog-title a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .devlog-title a:hover {
+      color: var(--forest);
+    }
+
+    .devlog-excerpt {
+      font-size: var(--text-sm);
+      color: var(--ink-muted);
+      line-height: var(--leading);
+    }
+
+    .devlog-meta {
+      font-size: var(--text-xs);
+      color: var(--ink-faint);
+      margin-top: var(--space-3);
+      padding-top: var(--space-2);
+      border-top: 1px solid var(--secondary);
+    }
+
+    /* ============================================
+       PROJECT - CLEAN WHITE
+       ============================================ */
+
+    .project-section {
+      background: var(--surface);
+      padding: var(--space-6) 0;
+    }
+
+    .project-card {
+      display: grid;
+      grid-template-columns: 1fr 2fr;
+      gap: var(--space-5);
+      align-items: start;
+    }
+
+    .project-visual {
+      aspect-ratio: 1;
+      background: var(--void);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .project-visual::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 60%;
+      height: 60%;
+      border: 8px solid var(--forest);
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+      opacity: 0.5;
+    }
+
+    .project-visual::after {
+      content: '';
+      position: absolute;
+      bottom: 15%;
+      right: 15%;
+      width: 30%;
+      height: 30%;
+      background: var(--amber);
+      transform: rotate(45deg);
+      opacity: 0.3;
+    }
+
+    .project-content {}
+
+    .project-status {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-1);
+      font-size: var(--text-xs);
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--amber);
+      margin-bottom: var(--space-3);
+    }
+
+    .project-status::before {
+      content: '';
+      width: 6px;
+      height: 6px;
+      background: var(--amber);
+      border-radius: 50%;
+      animation: pulse 1.5s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.4; }
+    }
+
+    .project-title {
+      font-size: var(--text-2xl);
+      font-weight: 700;
+      line-height: var(--leading-tight);
+      margin-bottom: var(--space-3);
+    }
+
+    .project-desc {
+      font-size: var(--text-base);
+      color: var(--ink-muted);
+      line-height: var(--leading);
+      margin-bottom: var(--space-4);
+    }
+
+    .project-meta {
+      display: flex;
+      gap: var(--space-4);
+      font-size: var(--text-sm);
+      color: var(--ink-muted);
+    }
+
+    /* ============================================
+       SHIPPED - CLEAN PLACEHOLDER
+       ============================================ */
+
+    .shipped-section {
+      background: var(--surface);
+      padding: var(--space-5) 0;
+      border-top: 1px solid var(--secondary);
+    }
+
+    .shipped-empty {
+      text-align: center;
+      padding: var(--space-4);
+    }
+
+    .shipped-empty p {
+      font-size: var(--text-sm);
+      color: var(--ink-faint);
+    }
+
+    /* ============================================
+       NEWSLETTER - NOISE TEXTURE
+       ============================================ */
+
+    .newsletter {
+      background: var(--void);
+      padding: var(--space-5) 0;
+      position: relative;
+    }
+
+    .newsletter::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+      opacity: 0.03;
+      pointer-events: none;
+    }
+
+    .newsletter-inner {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: var(--space-4);
+      align-items: center;
+    }
+
+    .newsletter h3 {
+      font-size: var(--text-lg);
+      font-weight: 700;
+      color: var(--light);
+      margin-bottom: var(--space-1);
+    }
+
+    .newsletter p {
+      font-size: var(--text-sm);
+      color: var(--ink-muted);
+    }
+
+    .newsletter-form {
+      display: flex;
+      gap: var(--space-2);
+    }
+
+    .newsletter-input {
+      font-family: inherit;
+      font-size: var(--text-base);
+      padding: var(--space-2);
+      border: 2px solid rgba(255,255,255,0.15);
+      background: rgba(255,255,255,0.05);
+      color: var(--light);
+      width: 250px;
+    }
+
+    .newsletter-input:focus {
+      outline: none;
+      border-color: var(--forest);
+    }
+
+    .btn {
+      font-family: inherit;
+      font-size: var(--text-sm);
+      font-weight: 600;
+      padding: var(--space-2) var(--space-3);
+      border: none;
+      cursor: pointer;
+      background: var(--forest);
+      color: var(--paper);
+    }
+
+    .btn:hover {
+      background: var(--forest-hover);
+    }
+
+    /* ============================================
+       FOOTER
+       ============================================ */
+
+    .footer {
+      background: var(--ink);
+      color: var(--paper);
+      padding: var(--space-4) 0;
+    }
+
+    .footer-inner {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .footer-brand {
+      font-size: var(--text-base);
+      font-weight: 700;
+    }
+
+    .footer-meta {
+      font-size: var(--text-xs);
+      color: var(--ink-muted);
+    }
+
+    /* ============================================
+       RESPONSIVE
+       ============================================ */
+
+    @media (max-width: 900px) {
+      .hero-content {
+        grid-template-columns: 1fr;
+      }
+
+      .devlog-cards {
+        grid-template-columns: 1fr;
+      }
+
+      .project-card {
+        grid-template-columns: 1fr;
+      }
+
+      .project-visual {
+        max-width: 300px;
+      }
+    }
+
+    @media (max-width: 600px) {
+      .hero-stats {
+        grid-template-columns: 1fr;
+      }
+
+      .newsletter-inner {
+        grid-template-columns: 1fr;
+      }
+
+      .newsletter-form {
+        flex-direction: column;
+      }
+
+      .newsletter-input {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HERO - NOISE TEXTURE -->
+  <section class="hero">
+    <div class="container hero-content">
+      <div class="hero-text">
+        <h1>Year of the Build</h1>
+        <p>12 projects in 12 months. Public accountability for shipping real products, documented in weekly devlogs.</p>
+      </div>
+      <div class="hero-stats">
+        <div class="stat-box">
+          <div class="stat-value">1</div>
+          <div class="stat-label">Month</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-value">3</div>
+          <div class="stat-label">Devlogs</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-value">0</div>
+          <div class="stat-label">Shipped</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- DEVLOGS - DOT GRID -->
+  <section class="devlogs-section">
+    <div class="container">
+      <div class="section-header">
+        <h2 class="section-title">Latest Devlogs</h2>
+        <a href="#" class="section-link">View all</a>
+      </div>
+
+      <div class="devlog-cards">
+        <article class="devlog-card">
+          <span class="devlog-week">Week 3</span>
+          <h3 class="devlog-title"><a href="#">The Architecture Decision That Changed Everything</a></h3>
+          <p class="devlog-excerpt">Spent three days debating monorepo vs separate repos. Here's why I chose wrong.</p>
+          <div class="devlog-meta">Jan 21 / 7 min read</div>
+        </article>
+
+        <article class="devlog-card">
+          <span class="devlog-week">Week 2</span>
+          <h3 class="devlog-title"><a href="#">First Users, First Feedback</a></h3>
+          <p class="devlog-excerpt">Five alpha testers. Three loved it. Two were confused. What I learned.</p>
+          <div class="devlog-meta">Jan 14 / 5 min read</div>
+        </article>
+
+        <article class="devlog-card">
+          <span class="devlog-week">Week 1</span>
+          <h3 class="devlog-title"><a href="#">Day One: Picking the First Project</a></h3>
+          <p class="devlog-excerpt">The hardest part isn't building. It's choosing what to build first.</p>
+          <div class="devlog-meta">Jan 7 / 4 min read</div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROJECT - CLEAN WHITE -->
+  <section class="project-section">
+    <div class="container">
+      <div class="section-header">
+        <h2 class="section-title">Now Building</h2>
+      </div>
+
+      <div class="project-card">
+        <div class="project-visual"></div>
+        <div class="project-content">
+          <span class="project-status">In Progress</span>
+          <h3 class="project-title">Scratchpad</h3>
+          <p class="project-desc">A distraction-free writing environment for people who think in markdown. Local-first storage, keyboard-driven navigation, and nothing else. No sync conflicts. No subscription. No bullshit.</p>
+          <div class="project-meta">
+            <span>Project 01 of 12</span>
+            <span>Week 3 of 4</span>
+            <span>Ships Jan 31</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SHIPPED - CLEAN -->
+  <section class="shipped-section">
+    <div class="container">
+      <div class="shipped-empty">
+        <p>First launch coming January 31st</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- NEWSLETTER - NOISE -->
+  <section class="newsletter">
+    <div class="container newsletter-inner">
+      <div>
+        <h3>Follow the Build</h3>
+        <p>Weekly devlogs delivered. Unsubscribe anytime.</p>
+      </div>
+      <form class="newsletter-form">
+        <input type="email" class="newsletter-input" placeholder="you@example.com" required>
+        <button type="submit" class="btn">Subscribe</button>
+      </form>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="container footer-inner">
+      <span class="footer-brand">YOTB</span>
+      <span class="footer-meta">Getty Made LLC / 2025</span>
+    </div>
+  </footer>
+
+</body>
+</html>

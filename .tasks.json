@@ -1,0 +1,58 @@
+{
+  "config": {
+    "version": 1,
+    "columns": [
+      {
+        "id": "backlog",
+        "name": "Backlog"
+      },
+      {
+        "id": "ready",
+        "name": "Ready"
+      },
+      {
+        "id": "in_progress",
+        "name": "In Progress"
+      },
+      {
+        "id": "review",
+        "name": "Review"
+      },
+      {
+        "id": "done",
+        "name": "Done",
+        "collapsed": true
+      }
+    ]
+  },
+  "tasks": [
+    {
+      "title": "Run an accessibility check",
+      "type": "chore",
+      "priority": "medium",
+      "status": "backlog",
+      "tags": [],
+      "sortOrder": 0,
+      "source": "user",
+      "id": "d58fe4b8-4def-4f49-8367-72c3867a253a",
+      "createdAt": "2025-12-25T07:57:31.282Z",
+      "updatedAt": "2025-12-25T08:00:21.339Z",
+      "executor": {
+        "type": "command",
+        "name": "audit-accessibility"
+      }
+    },
+    {
+      "title": "Remove parallax. scroll from hero. Just render \"Year of the build\". no year.",
+      "type": "refactor",
+      "priority": "medium",
+      "status": "in_progress",
+      "tags": [],
+      "sortOrder": 0,
+      "source": "user",
+      "id": "bb331c43-eb6f-4ecd-a2eb-8861fe0d33e8",
+      "createdAt": "2025-12-26T04:54:29.431Z",
+      "updatedAt": "2025-12-26T04:54:55.539Z"
+    }
+  ]
+}

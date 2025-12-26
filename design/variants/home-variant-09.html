@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>YOTB Variant 09 - Progress Narrative</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    /*
+    ========================================
+    VARIANT 09: PROGRESS NARRATIVE
+    ========================================
+    Primary experiment: Storytelling progress without showing 11 empty slots
+    Devlog presentation: Chronological narrative
+    Empty state: Journey metaphor (mile markers, not empty grid)
+    Section temperature: Hero dramatic, journey visualization
+    */
+
+    :root {
+      --paper: #FDFBF7;
+      --ink: #1C1917;
+      --ink-muted: #44403C;
+      --ink-faint: #78716C;
+      --forest: #2E5A3C;
+      --forest-hover: #234830;
+      --forest-light: rgba(46, 90, 60, 0.1);
+      --amber: #B45309;
+      --amber-light: rgba(180, 83, 9, 0.1);
+      --void: #0A0A0A;
+      --light: #FAFAFA;
+      --surface: #FFFFFF;
+      --secondary: #E8E6E1;
+
+      --text-xs: 10px;
+      --text-sm: 13px;
+      --text-base: 16px;
+      --text-lg: 26px;
+      --text-xl: 42px;
+      --text-2xl: 68px;
+      --text-3xl: 110px;
+
+      --leading: 1.618;
+      --leading-tight: 1.2;
+      --leading-none: 0.9;
+
+      --space-1: 8px;
+      --space-2: 13px;
+      --space-3: 21px;
+      --space-4: 34px;
+      --space-5: 55px;
+      --space-6: 89px;
+
+      --dot-size: 1px;
+      --dot-spacing: 21px;
+      --dot-color: rgba(28, 25, 23, 0.06);
+      --content-max: 900px;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html { font-size: 17px; }
+
+    body {
+      font-family: 'Space Grotesk', -apple-system, sans-serif;
+      font-weight: 450;
+      line-height: var(--leading);
+      color: var(--ink);
+      background-color: var(--paper);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .container {
+      max-width: var(--content-max);
+      margin: 0 auto;
+      padding: 0 var(--space-4);
+    }
+
+    /* ============================================
+       HERO - THE JOURNEY
+       ============================================ */
+
+    .hero {
+      background: var(--void);
+      padding: var(--space-6) 0;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Journey line decoration */
+    .journey-line {
+      position: absolute;
+      top: 50%;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: linear-gradient(
+        to right,
+        var(--forest) 0%,
+        var(--forest) 8%,
+        rgba(255,255,255,0.1) 8%,
+        rgba(255,255,255,0.1) 100%
+      );
+      transform: translateY(-50%);
+    }
+
+    .journey-marker {
+      position: absolute;
+      top: 50%;
+      left: 4%;
+      transform: translate(-50%, -50%);
+      width: 20px;
+      height: 20px;
+      background: var(--forest);
+      border-radius: 50%;
+      z-index: 1;
+    }
+
+    .journey-marker::after {
+      content: '1';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: var(--text-xs);
+      font-weight: 700;
+      color: var(--paper);
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 2;
+    }
+
+    .hero-context {
+      font-size: var(--text-xs);
+      color: var(--forest);
+      text-transform: uppercase;
+      letter-spacing: 0.2em;
+      margin-bottom: var(--space-3);
+    }
+
+    .hero-title {
+      font-size: clamp(var(--text-xl), 8vw, var(--text-2xl));
+      font-weight: 700;
+      color: var(--light);
+      line-height: var(--leading-tight);
+      margin-bottom: var(--space-3);
+    }
+
+    .hero-subtitle {
+      font-size: var(--text-base);
+      color: var(--ink-muted);
+      max-width: 500px;
+      margin-bottom: var(--space-5);
+    }
+
+    .journey-status {
+      display: flex;
+      gap: var(--space-4);
+      padding: var(--space-4);
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.08);
+      max-width: fit-content;
+    }
+
+    .status-item {
+      text-align: center;
+    }
+
+    .status-value {
+      font-size: var(--text-xl);
+      font-weight: 700;
+      color: var(--light);
+    }
+
+    .status-label {
+      font-size: var(--text-xs);
+      color: var(--ink-faint);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+
+    /* ============================================
+       DEVLOGS - NARRATIVE FLOW
+       ============================================ */
+
+    .main-content {
+      background: var(--paper);
+      background-image: radial-gradient(circle, var(--dot-color) var(--dot-size), transparent var(--dot-size));
+      background-size: var(--dot-spacing) var(--dot-spacing);
+      padding: var(--space-6) 0;
+    }
+
+    .section-intro {
+      margin-bottom: var(--space-5);
+    }
+
+    .section-intro h2 {
+      font-size: var(--text-lg);
+      font-weight: 700;
+      margin-bottom: var(--space-2);
+    }
+
+    .section-intro p {
+      font-size: var(--text-sm);
+      color: var(--ink-muted);
+    }
+
+    .narrative-list {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-4);
+    }
+
+    .narrative-entry {
+      background: var(--surface);
+      padding: var(--space-4);
+      border-left: 4px solid var(--forest);
+      position: relative;
+    }
+
+    .narrative-entry::before {
+      content: '';
+      position: absolute;
+      left: -10px;
+      top: var(--space-4);
+      width: 12px;
+      height: 12px;
+      background: var(--forest);
+      border-radius: 50%;
+    }
+
+    .entry-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: var(--space-2);
+    }
+
+    .entry-week {
+      font-size: var(--text-xs);
+      font-weight: 700;
+      color: var(--forest);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+
+    .entry-date {
+      font-size: var(--text-xs);
+      color: var(--ink-faint);
+    }
+
+    .entry-title {
+      font-size: var(--text-lg);
+      font-weight: 600;
+      margin-bottom: var(--space-2);
+    }
+
+    .entry-title a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .entry-title a:hover {
+      color: var(--forest);
+    }
+
+    .entry-excerpt {
+      font-size: var(--text-base);
+      color: var(--ink-muted);
+      line-height: var(--leading);
+    }
+
+    /* ============================================
+       CURRENT PROJECT - MILESTONE CARD
+       ============================================ */
+
+    .milestone-section {
+      padding: var(--space-6) 0;
+      border-top: 1px solid var(--secondary);
+    }
+
+    .milestone-card {
+      background: var(--surface);
+      border: 2px solid var(--ink);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .milestone-badge {
+      position: absolute;
+      top: 0;
+      right: 0;
+      background: var(--amber);
+      color: var(--paper);
+      font-size: var(--text-xs);
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      padding: var(--space-2) var(--space-3);
+    }
+
+    .milestone-content {
+      padding: var(--space-5);
+    }
+
+    .milestone-context {
+      font-size: var(--text-xs);
+      color: var(--ink-faint);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: var(--space-2);
+    }
+
+    .milestone-title {
+      font-size: var(--text-2xl);
+      font-weight: 700;
+      margin-bottom: var(--space-3);
+    }
+
+    .milestone-desc {
+      font-size: var(--text-base);
+      color: var(--ink-muted);
+      line-height: var(--leading);
+      margin-bottom: var(--space-4);
+    }
+
+    .milestone-progress {
+      padding-top: var(--space-4);
+      border-top: 1px solid var(--secondary);
+    }
+
+    .progress-visual {
+      display: flex;
+      gap: 4px;
+      margin-bottom: var(--space-2);
+    }
+
+    .progress-week {
+      flex: 1;
+      height: 8px;
+      background: var(--secondary);
+    }
+
+    .progress-week.complete {
+      background: var(--forest);
+    }
+
+    .progress-week.current {
+      background: var(--amber);
+    }
+
+    .progress-label {
+      display: flex;
+      justify-content: space-between;
+      font-size: var(--text-xs);
+      color: var(--ink-muted);
+    }
+
+    /* ============================================
+       HORIZON - THE ROAD AHEAD
+       ============================================ */
+
+    .horizon-section {
+      padding: var(--space-5) 0;
+      border-top: 1px solid var(--secondary);
+      text-align: center;
+    }
+
+    .horizon-content {
+      max-width: 400px;
+      margin: 0 auto;
+    }
+
+    .horizon-icon {
+      width: 40px;
+      height: 40px;
+      margin: 0 auto var(--space-3);
+      border: 2px solid var(--secondary);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .horizon-icon::before {
+      content: '';
+      width: 12px;
+      height: 12px;
+      border: 2px solid var(--ink-faint);
+      border-radius: 50%;
+    }
+
+    .horizon-text {
+      font-size: var(--text-sm);
+      color: var(--ink-muted);
+    }
+
+    .horizon-text strong {
+      color: var(--ink);
+    }
+
+    /* ============================================
+       NEWSLETTER
+       ============================================ */
+
+    .newsletter {
+      background: var(--void);
+      padding: var(--space-5) 0;
+    }
+
+    .newsletter-inner {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: var(--space-4);
+      align-items: center;
+    }
+
+    .newsletter h3 {
+      font-size: var(--text-lg);
+      font-weight: 700;
+      color: var(--light);
+      margin-bottom: var(--space-1);
+    }
+
+    .newsletter p {
+      font-size: var(--text-sm);
+      color: var(--ink-muted);
+    }
+
+    .newsletter-form {
+      display: flex;
+      gap: var(--space-2);
+    }
+
+    .newsletter-input {
+      font-family: inherit;
+      font-size: var(--text-base);
+      padding: var(--space-2);
+      border: 2px solid rgba(255,255,255,0.15);
+      background: rgba(255,255,255,0.05);
+      color: var(--light);
+      width: 250px;
+    }
+
+    .newsletter-input:focus {
+      outline: none;
+      border-color: var(--forest);
+    }
+
+    .btn {
+      font-family: inherit;
+      font-size: var(--text-sm);
+      font-weight: 600;
+      padding: var(--space-2) var(--space-3);
+      border: none;
+      cursor: pointer;
+      background: var(--forest);
+      color: var(--paper);
+    }
+
+    .btn:hover {
+      background: var(--forest-hover);
+    }
+
+    /* ============================================
+       FOOTER
+       ============================================ */
+
+    .footer {
+      background: var(--ink);
+      color: var(--paper);
+      padding: var(--space-4) 0;
+    }
+
+    .footer-inner {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .footer-brand {
+      font-size: var(--text-base);
+      font-weight: 700;
+    }
+
+    .footer-meta {
+      font-size: var(--text-xs);
+      color: var(--ink-muted);
+    }
+
+    /* ============================================
+       RESPONSIVE
+       ============================================ */
+
+    @media (max-width: 768px) {
+      .journey-line,
+      .journey-marker {
+        display: none;
+      }
+
+      .journey-status {
+        flex-direction: column;
+        gap: var(--space-2);
+      }
+
+      .newsletter-inner {
+        grid-template-columns: 1fr;
+      }
+
+      .newsletter-form {
+        flex-direction: column;
+      }
+
+      .newsletter-input {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HERO - THE JOURNEY -->
+  <section class="hero">
+    <div class="journey-line"></div>
+    <div class="journey-marker"></div>
+
+    <div class="container hero-content">
+      <span class="hero-context">The Journey Begins</span>
+      <h1 class="hero-title">Year of the Build</h1>
+      <p class="hero-subtitle">12 projects. 12 months. One commitment: ship something real every month, or explain publicly why I failed.</p>
+
+      <div class="journey-status">
+        <div class="status-item">
+          <div class="status-value">1/12</div>
+          <div class="status-label">Months</div>
+        </div>
+        <div class="status-item">
+          <div class="status-value">3</div>
+          <div class="status-label">Devlogs</div>
+        </div>
+        <div class="status-item">
+          <div class="status-value">8 days</div>
+          <div class="status-label">To Launch</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <main class="main-content">
+    <div class="container">
+
+      <!-- DEVLOGS -->
+      <div class="section-intro">
+        <h2>The Story So Far</h2>
+        <p>Week by week updates from the trenches. No polish, no spin. Just what actually happened.</p>
+      </div>
+
+      <div class="narrative-list">
+        <article class="narrative-entry">
+          <div class="entry-header">
+            <span class="entry-week">Week 3</span>
+            <span class="entry-date">January 21, 2025</span>
+          </div>
+          <h3 class="entry-title"><a href="#">The Architecture Decision That Changed Everything</a></h3>
+          <p class="entry-excerpt">Spent three days debating between a monorepo and separate repos. Here's why I chose wrong the first time, and how rebuilding from scratch actually saved time in the end.</p>
+        </article>
+
+        <article class="narrative-entry">
+          <div class="entry-header">
+            <span class="entry-week">Week 2</span>
+            <span class="entry-date">January 14, 2025</span>
+          </div>
+          <h3 class="entry-title"><a href="#">First Users, First Feedback</a></h3>
+          <p class="entry-excerpt">Five people used an early build. Three loved it. Two were confused. What I learned about onboarding from watching people fail.</p>
+        </article>
+
+        <article class="narrative-entry">
+          <div class="entry-header">
+            <span class="entry-week">Week 1</span>
+            <span class="entry-date">January 7, 2025</span>
+          </div>
+          <h3 class="entry-title"><a href="#">Here We Go: Picking Project #1</a></h3>
+          <p class="entry-excerpt">The hardest part isn't building. It's choosing what to build. My framework for picking the first project out of 47 candidates.</p>
+        </article>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- CURRENT PROJECT -->
+  <section class="milestone-section">
+    <div class="container">
+      <div class="milestone-card">
+        <span class="milestone-badge">In Progress</span>
+        <div class="milestone-content">
+          <span class="milestone-context">Month 1 / Project 01 of 12</span>
+          <h3 class="milestone-title">Scratchpad</h3>
+          <p class="milestone-desc">A distraction-free writing environment for people who think in markdown. Local-first, keyboard-driven, radically minimal.</p>
+          <div class="milestone-progress">
+            <div class="progress-visual">
+              <div class="progress-week complete"></div>
+              <div class="progress-week complete"></div>
+              <div class="progress-week current"></div>
+              <div class="progress-week"></div>
+            </div>
+            <div class="progress-label">
+              <span>Week 3 of 4</span>
+              <span>Ships January 31, 2025</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- HORIZON -->
+  <section class="horizon-section">
+    <div class="container">
+      <div class="horizon-content">
+        <div class="horizon-icon"></div>
+        <p class="horizon-text"><strong>11 more projects</strong> waiting on the horizon. Each one will be announced when its time comes.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- NEWSLETTER -->
+  <section class="newsletter">
+    <div class="container newsletter-inner">
+      <div>
+        <h3>Follow the Journey</h3>
+        <p>Weekly updates. Honest struggles. Real progress.</p>
+      </div>
+      <form class="newsletter-form">
+        <input type="email" class="newsletter-input" placeholder="you@example.com" required>
+        <button type="submit" class="btn">Subscribe</button>
+      </form>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="container footer-inner">
+      <span class="footer-brand">Year of the Build</span>
+      <span class="footer-meta">Getty Made LLC / 2025</span>
+    </div>
+  </footer>
+
+</body>
+</html>
