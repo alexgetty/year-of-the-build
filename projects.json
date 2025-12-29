@@ -1,0 +1,6 @@
+{
+  "projects": [
+    { "name": "YOTB", "path": "." }
+  ],
+  "daysBack": 30
+}
