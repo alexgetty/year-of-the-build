@@ -21,14 +21,14 @@ This repo contains:
 - **Content:** MDX (Markdown + JSX components)
 - **Styling:** ITCSS / Atomic Design principles
 - **Newsletter:** Beehiiv (free tier, manual send)
-- **Hosting:** Vercel
+- **Hosting:** GitHub Pages
 - **Analytics:** PostHog
 
 ## Architecture
 
 ### Content Flow
 1. Write devlog in MDX (single source of truth)
-2. Push to main → Vercel builds static site
+2. Push to main → GitHub Pages builds static site
 3. Run render script → paste into Beehiiv → send
 4. Same content, two channels
 
@@ -46,7 +46,7 @@ This repo contains:
 
 ### Publish Workflow
 1. Write devlog in MDX
-2. Git push (deploys site via Vercel)
+2. Git push (deploys site via GitHub Pages)
 3. Run `npm run newsletter` to render MDX to paste-ready HTML
 4. Paste into Beehiiv editor, preview, send
 

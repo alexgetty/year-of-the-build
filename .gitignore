@@ -3,11 +3,13 @@ node_modules/
 
 # Build output
 dist/
+.astro/
 
 # Environment
 .env
 .env.local
 .env.*.local
+.env.production
 
 # OS
 .DS_Store
@@ -16,6 +18,12 @@ dist/
 .idea/
 *.swp
 *.swo
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
 
 # Drafts (keep .gitkeep, ignore generated files)
 drafts/*.md

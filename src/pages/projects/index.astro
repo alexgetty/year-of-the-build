@@ -1,0 +1,105 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+
+const projects = (await getCollection('projects'))
+  .sort((a, b) => a.data.monthNumber - b.data.monthNumber);
+---
+
+<BaseLayout title="Projects" description="12 projects in 12 months - tracking progress and launches">
+  <h1>12 Projects</h1>
+  <p>One project launched each month. Public accountability in action.</p>
+
+  {projects.length === 0 ? (
+    <p>Project list coming soon!</p>
+  ) : (
+    <ul class="project-grid">
+      {projects.map((project) => (
+        <li class={`status-${project.data.status}`}>
+          <a href={`/projects/${project.slug}/`}>
+            <span class="month">Month {project.data.monthNumber}</span>
+            <h2>{project.data.title}</h2>
+            <p>{project.data.description}</p>
+            <span class="status">{project.data.status}</span>
+          </a>
+        </li>
+      ))}
+    </ul>
+  )}
+</BaseLayout>
+
+<style>
+  h1 {
+    font-size: 2.5rem;
+    margin-bottom: 0.5rem;
+  }
+
+  h1 + p {
+    color: #666;
+    font-size: 1.125rem;
+    margin-bottom: 2rem;
+  }
+
+  .project-grid {
+    list-style: none;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.5rem;
+  }
+
+  li a {
+    display: block;
+    height: 100%;
+    padding: 1.5rem;
+    border: 1px solid #ccc;
+    text-decoration: none;
+    color: inherit;
+  }
+
+  li a:hover {
+    border-color: #000;
+  }
+
+  .month {
+    display: block;
+    font-size: 0.875rem;
+    color: #999;
+    margin-bottom: 0.5rem;
+  }
+
+  h2 {
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+  }
+
+  p {
+    color: #666;
+    margin-bottom: 1rem;
+    flex-grow: 1;
+  }
+
+  .status {
+    display: inline-block;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    padding: 0.25rem 0.5rem;
+    border-radius: 2px;
+    background: #f5f5f5;
+    color: #666;
+  }
+
+  .status-launched .status {
+    background: #d4edda;
+    color: #155724;
+  }
+
+  .status-in-progress .status {
+    background: #fff3cd;
+    color: #856404;
+  }
+
+  .status-abandoned .status {
+    background: #f8d7da;
+    color: #721c24;
+  }
+</style>

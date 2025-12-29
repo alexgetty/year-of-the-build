@@ -1,12 +1,24 @@
 {
   "name": "yotb",
+  "type": "module",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "Year of the Build - Public accountability log",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "astro": "astro",
     "changelog": "node scripts/changelog.js"
   },
-  "author": "",
-  "license": "ISC"
+  "author": "Alex Getty",
+  "license": "ISC",
+  "dependencies": {
+    "@astrojs/mdx": "^4.1.0",
+    "@astrojs/react": "^4.1.2",
+    "@gettymade/construct": "file:../the-construct",
+    "astro": "^5.16.6",
+    "framer-motion": "^12.23.26",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  }
 }

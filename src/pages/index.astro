@@ -1,0 +1,91 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import NewsletterSignup from '../components/NewsletterSignup.astro';
+import { getCollection } from 'astro:content';
+
+const devlogs = (await getCollection('devlogs'))
+  .filter(post => !post.data.isDraft)
+  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
+  .slice(0, 3);
+---
+
+<BaseLayout title="Home">
+  <section>
+    <h1>Year of the Build</h1>
+    <p>12 projects in 12 months. Public accountability log.</p>
+  </section>
+
+  <NewsletterSignup />
+
+  <section>
+    <h2>Recent Devlogs</h2>
+    {devlogs.length === 0 ? (
+      <p>No devlogs yet. Check back soon!</p>
+    ) : (
+      <ul>
+        {devlogs.map((post) => (
+          <li>
+            <a href={`/devlogs/${post.slug}/`}>
+              <h3>{post.data.title}</h3>
+              <p>{post.data.description}</p>
+              <time datetime={post.data.pubDate.toISOString()}>
+                {post.data.pubDate.toLocaleDateString('en-US', {
+                  year: 'numeric',
+                  month: 'long',
+                  day: 'numeric'
+                })}
+              </time>
+            </a>
+          </li>
+        ))}
+      </ul>
+    )}
+    <p><a href="/devlogs/">View all devlogs &rarr;</a></p>
+  </section>
+</BaseLayout>
+
+<style>
+  h1 {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+  }
+
+  h2 {
+    font-size: 2rem;
+    margin: 3rem 0 1rem;
+  }
+
+  ul {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+  }
+
+  li a {
+    display: block;
+    padding: 1.5rem;
+    border: 1px solid #ccc;
+    text-decoration: none;
+    color: inherit;
+  }
+
+  li a:hover {
+    border-color: #000;
+  }
+
+  li h3 {
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+  }
+
+  li p {
+    color: #666;
+    margin-bottom: 0.5rem;
+  }
+
+  time {
+    font-size: 0.875rem;
+    color: #999;
+  }
+</style>

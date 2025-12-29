@@ -1,0 +1,191 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+
+export async function getStaticPaths() {
+  const projects = await getCollection('projects');
+  return projects.map((project) => ({
+    params: { slug: project.slug },
+    props: project,
+  }));
+}
+
+const project = Astro.props;
+const { Content } = await project.render();
+---
+
+<BaseLayout title={project.data.title} description={project.data.description}>
+  <article>
+    <header>
+      <span class="month">Month {project.data.monthNumber}</span>
+      <h1>{project.data.title}</h1>
+      <p class="description">{project.data.description}</p>
+
+      <div class="meta">
+        <span class={`status status-${project.data.status}`}>{project.data.status}</span>
+        {project.data.launchDate && (
+          <span class="launch-date">
+            Launched: {project.data.launchDate.toLocaleDateString('en-US', {
+              year: 'numeric',
+              month: 'long',
+              day: 'numeric'
+            })}
+          </span>
+        )}
+      </div>
+
+      {(project.data.repoUrl || project.data.liveUrl) && (
+        <div class="links">
+          {project.data.repoUrl && (
+            <a href={project.data.repoUrl} target="_blank" rel="noopener noreferrer">
+              GitHub Repo &rarr;
+            </a>
+          )}
+          {project.data.liveUrl && (
+            <a href={project.data.liveUrl} target="_blank" rel="noopener noreferrer">
+              Live Site &rarr;
+            </a>
+          )}
+        </div>
+      )}
+    </header>
+
+    <div class="content">
+      <Content />
+    </div>
+
+    <footer>
+      <a href="/projects/">&larr; Back to all projects</a>
+    </footer>
+  </article>
+</BaseLayout>
+
+<style>
+  article {
+    max-width: 720px;
+  }
+
+  header {
+    margin-bottom: 3rem;
+    padding-bottom: 2rem;
+    border-bottom: 1px solid #ccc;
+  }
+
+  .month {
+    display: block;
+    font-size: 0.875rem;
+    color: #999;
+    margin-bottom: 0.5rem;
+  }
+
+  h1 {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+    line-height: 1.2;
+  }
+
+  .description {
+    font-size: 1.125rem;
+    color: #666;
+    margin-bottom: 1rem;
+  }
+
+  .meta {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    margin-bottom: 1rem;
+  }
+
+  .status {
+    display: inline-block;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    padding: 0.25rem 0.5rem;
+    border-radius: 2px;
+    background: #f5f5f5;
+    color: #666;
+  }
+
+  .status-launched {
+    background: #d4edda;
+    color: #155724;
+  }
+
+  .status-in-progress {
+    background: #fff3cd;
+    color: #856404;
+  }
+
+  .status-abandoned {
+    background: #f8d7da;
+    color: #721c24;
+  }
+
+  .launch-date {
+    font-size: 0.875rem;
+    color: #666;
+  }
+
+  .links {
+    display: flex;
+    gap: 1rem;
+  }
+
+  .links a {
+    padding: 0.5rem 1rem;
+    background: #000;
+    color: white;
+    text-decoration: none;
+    border-radius: 2px;
+    font-size: 0.875rem;
+  }
+
+  .links a:hover {
+    background: #333;
+  }
+
+  .content {
+    margin-bottom: 3rem;
+  }
+
+  .content :global(h2) {
+    font-size: 1.75rem;
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+  }
+
+  .content :global(h3) {
+    font-size: 1.375rem;
+    margin-top: 1.5rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .content :global(p) {
+    margin-bottom: 1rem;
+  }
+
+  .content :global(ul),
+  .content :global(ol) {
+    margin-bottom: 1rem;
+    padding-left: 2rem;
+  }
+
+  .content :global(li) {
+    margin-bottom: 0.5rem;
+  }
+
+  footer {
+    padding-top: 2rem;
+    border-top: 1px solid #ccc;
+  }
+
+  footer a {
+    color: #666;
+    text-decoration: none;
+  }
+
+  footer a:hover {
+    color: #000;
+  }
+</style>
