@@ -1,0 +1,238 @@
+/* =============================================================================
+   YOTB Theme — Codex Design System
+   =============================================================================
+   Overrides @gettymade/construct theme tokens (--t-*) for YOTB brand.
+
+   Design direction: Warm paper tones, forest green primary, amber accent.
+   Typography: Space Grotesk, golden ratio scale.
+   Spacing: Fibonacci sequence.
+   ============================================================================= */
+
+/* Google Fonts import */
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
+
+:root {
+  /* ===========================================================================
+     PRIMITIVE EXTENSIONS — YOTB-specific raw values
+     =========================================================================== */
+
+  /* Paper/Ink — Warm neutrals */
+  --p-paper: #FDFBF7;
+  --p-ink-950: #1C1917;
+  --p-ink-800: #292524;
+  --p-ink-700: #44403C;
+  --p-ink-600: #57534E;
+  --p-ink-500: #78716C;
+  --p-ink-400: #A8A29E;
+  --p-ink-300: #D6D3D1;
+  --p-ink-200: #E8E6E1;
+  --p-ink-100: #F5F5F4;
+  --p-ink-50: #FAFAF9;
+
+  /* Forest — Primary green */
+  --p-forest-950: #1E3A28;
+  --p-forest-900: #1E3A28;
+  --p-forest-800: #234830;
+  --p-forest-700: #2E5A3C;
+  --p-forest-600: #2E5A3C;
+  --p-forest-500: #3D7A50;
+  --p-forest-400: #4D9A64;
+  --p-forest-300: #6BB380;
+  --p-forest-200: #A3D4B0;
+  --p-forest-100: #D1EBDA;
+  --p-forest-50: #ECFDF1;
+
+  /* Amber — Accent */
+  --p-amber-950: #451A03;
+  --p-amber-900: #78350F;
+  --p-amber-800: #92400E;
+  --p-amber-700: #B45309;
+  --p-amber-600: #D97706;
+  --p-amber-500: #F59E0B;
+  --p-amber-400: #FBBF24;
+  --p-amber-300: #FCD34D;
+  --p-amber-200: #FDE68A;
+  --p-amber-100: #FEF3C7;
+  --p-amber-50: #FFFBEB;
+
+  /* Void — Dark mode / hero backgrounds */
+  --p-void: #0A0A0A;
+  --p-light: #FAFAFA;
+
+  /* ===========================================================================
+     THEME OVERRIDES — Brand decisions
+     =========================================================================== */
+
+  /* Primary → Forest */
+  --t-primary-50: var(--p-forest-50);
+  --t-primary-100: var(--p-forest-100);
+  --t-primary-200: var(--p-forest-200);
+  --t-primary-300: var(--p-forest-300);
+  --t-primary-400: var(--p-forest-400);
+  --t-primary-500: var(--p-forest-500);
+  --t-primary-600: var(--p-forest-600);
+  --t-primary-700: var(--p-forest-700);
+  --t-primary-800: var(--p-forest-800);
+  --t-primary-900: var(--p-forest-900);
+
+  /* Neutral → Ink (warm stone grays) */
+  --t-neutral-50: var(--p-ink-50);
+  --t-neutral-100: var(--p-ink-100);
+  --t-neutral-200: var(--p-ink-200);
+  --t-neutral-300: var(--p-ink-300);
+  --t-neutral-400: var(--p-ink-400);
+  --t-neutral-500: var(--p-ink-500);
+  --t-neutral-600: var(--p-ink-600);
+  --t-neutral-700: var(--p-ink-700);
+  --t-neutral-800: var(--p-ink-800);
+  --t-neutral-900: var(--p-ink-950);
+  --t-neutral-950: var(--p-ink-950);
+
+  /* Warning → Amber */
+  --t-warning-50: var(--p-amber-50);
+  --t-warning-100: var(--p-amber-100);
+  --t-warning-500: var(--p-amber-500);
+  --t-warning-600: var(--p-amber-600);
+
+  /* Typography — Space Grotesk */
+  --t-font-family-base: 'Space Grotesk', system-ui, -apple-system, sans-serif;
+  --t-font-family-heading: 'Space Grotesk', system-ui, -apple-system, sans-serif;
+
+  /* Font sizes — Golden Ratio scale (base 16px, ratio 1.618) */
+  --t-font-size-xs: 0.625rem;   /* 10px */
+  --t-font-size-sm: 0.8125rem;  /* 13px */
+  --t-font-size-base: 1rem;     /* 16px */
+  --t-font-size-lg: 1.625rem;   /* 26px */
+  --t-font-size-xl: 2.625rem;   /* 42px */
+  --t-font-size-2xl: 4.25rem;   /* 68px */
+  --t-font-size-3xl: 6.875rem;  /* 110px */
+  --t-font-size-4xl: 11.125rem; /* 178px */
+
+  /* Line heights */
+  --t-line-height-tight: 1.2;
+  --t-line-height-normal: 1.618; /* Golden ratio */
+  --t-line-height-relaxed: 1.8;
+
+  /* Letter spacing */
+  --t-letter-spacing-tight: -0.02em;
+  --t-letter-spacing-normal: 0;
+  --t-letter-spacing-wide: 0.15em;
+
+  /* Spacing — Fibonacci sequence */
+  --t-spacing-xxs: 0.5rem;    /* 8px */
+  --t-spacing-xs: 0.5rem;     /* 8px */
+  --t-spacing-sm: 0.8125rem;  /* 13px */
+  --t-spacing-md: 1.3125rem;  /* 21px */
+  --t-spacing-lg: 2.125rem;   /* 34px */
+  --t-spacing-xl: 3.4375rem;  /* 55px */
+  --t-spacing-2xl: 5.5625rem; /* 89px */
+  --t-spacing-3xl: 9rem;      /* 144px */
+
+  /* Radii — Slightly sharper for editorial feel */
+  --t-radius-sm: 2px;
+  --t-radius-md: 4px;
+  --t-radius-lg: 6px;
+  --t-radius-xl: 8px;
+
+  /* ===========================================================================
+     SEMANTIC OVERRIDES — Use-case adjustments
+     =========================================================================== */
+
+  /* Backgrounds — Paper tones */
+  --bg-canvas: var(--p-paper);
+  --bg-surface: #FFFFFF;
+  --bg-surface-raised: var(--p-ink-100);
+  --bg-muted: var(--p-ink-200);
+
+  /* Text */
+  --text-primary: var(--p-ink-950);
+  --text-secondary: var(--p-ink-700);
+  --text-muted: var(--p-ink-500);
+
+  /* Borders */
+  --border-default: var(--p-ink-200);
+  --border-muted: var(--p-ink-100);
+  --border-strong: var(--p-ink-300);
+
+  /* Focus ring */
+  --color-focus-ring: var(--p-forest-500);
+
+  /* ===========================================================================
+     YOTB-SPECIFIC TOKENS — Site-level variables
+     =========================================================================== */
+
+  /* Hero / dark sections */
+  --yotb-void: var(--p-void);
+  --yotb-light: var(--p-light);
+
+  /* Accent for decorative elements (not text - fails WCAG) */
+  --yotb-amber: var(--p-amber-700);
+  --yotb-amber-light: rgba(180, 83, 9, 0.1);
+
+  /* Layout */
+  --yotb-content-max: 1200px;
+  --yotb-golden-major: 61.8%;
+  --yotb-golden-minor: 38.2%;
+
+  /* Dot grid pattern */
+  --yotb-dot-size: 1px;
+  --yotb-dot-spacing: 21px;
+  --yotb-dot-color: rgba(28, 25, 23, 0.06);
+
+  /* ===========================================================================
+     LAYOUT — Structural measurements
+     =========================================================================== */
+
+  /* Header */
+  --header-height: 60px;
+
+  /* ===========================================================================
+     ANIMATION — Motion tokens for scroll-driven animations
+     =========================================================================== */
+
+  /* Flicker effect timing */
+  --anim-flicker-duration: 0.6s;
+  --anim-flicker-stagger: 0.03s;
+
+  /* L-path movement */
+  --anim-rearrange-duration: 0.8s;
+  --anim-rearrange-stagger: 0.05s;
+
+  /* Morph to nav */
+  --anim-morph-duration: 0.4s;
+
+  /* Easing curves */
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out-cubic: cubic-bezier(0.65, 0, 0.35, 1);
+  --ease-flicker: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* =============================================================================
+   BASE STYLES
+   ============================================================================= */
+
+html {
+  font-size: 17px; /* Slightly larger base for readability */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  font-family: var(--font-family-base);
+  font-weight: 450;
+  line-height: var(--line-height-normal);
+  color: var(--text-primary);
+  background-color: var(--bg-canvas);
+}
+
+/* Focus indicators */
+:focus-visible {
+  outline: 2px solid var(--color-focus-ring);
+  outline-offset: 4px;
+}
+
+/* Selection */
+::selection {
+  background-color: var(--p-forest-200);
+  color: var(--p-ink-950);
+}

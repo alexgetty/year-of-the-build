@@ -1,91 +1,167 @@
 ---
-import BaseLayout from '../layouts/BaseLayout.astro';
-import NewsletterSignup from '../components/NewsletterSignup.astro';
+import '@gettymade/construct/styles';
+import '../styles/theme.css';
+import { Hero } from '../components/Hero';
+import { SiteHeader } from '../components/SiteHeader';
+import { SiteFooter } from '../components/SiteFooter';
 import { getCollection } from 'astro:content';
 
 const devlogs = (await getCollection('devlogs'))
   .filter(post => !post.data.isDraft)
-  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
-  .slice(0, 3);
+  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+
+const latestDevlog = devlogs[0] ? {
+  title: devlogs[0].data.title,
+  slug: devlogs[0].slug,
+  pubDate: devlogs[0].data.pubDate,
+} : null;
+
+const recentDevlogs = devlogs.slice(0, 3);
 ---
 
-<BaseLayout title="Home">
-  <section>
-    <h1>Year of the Build</h1>
-    <p>12 projects in 12 months. Public accountability log.</p>
-  </section>
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="description" content="Year of the Build - Building in public, one project at a time" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="generator" content={Astro.generator} />
+    <title>Year of the Build</title>
+  </head>
+  <body>
+    <!-- Sticky header - appears after scrolling past hero -->
+    <SiteHeader client:load showAfterHero={true} variant="dark" />
 
-  <NewsletterSignup />
+    <!-- Full-viewport hero -->
+    <Hero latestDevlog={latestDevlog} />
 
-  <section>
-    <h2>Recent Devlogs</h2>
-    {devlogs.length === 0 ? (
-      <p>No devlogs yet. Check back soon!</p>
-    ) : (
-      <ul>
-        {devlogs.map((post) => (
-          <li>
-            <a href={`/devlogs/${post.slug}/`}>
-              <h3>{post.data.title}</h3>
-              <p>{post.data.description}</p>
-              <time datetime={post.data.pubDate.toISOString()}>
-                {post.data.pubDate.toLocaleDateString('en-US', {
-                  year: 'numeric',
-                  month: 'long',
-                  day: 'numeric'
-                })}
-              </time>
-            </a>
-          </li>
-        ))}
-      </ul>
-    )}
-    <p><a href="/devlogs/">View all devlogs &rarr;</a></p>
-  </section>
-</BaseLayout>
+    <!-- Constrained content -->
+    <main class="main-content">
+      <div class="container">
+        <section class="devlogs-section">
+          <h2 class="section-title">Recent Devlogs</h2>
+          {recentDevlogs.length === 0 ? (
+            <p class="empty-state">No devlogs yet. Check back soon!</p>
+          ) : (
+            <ul class="devlog-list">
+              {recentDevlogs.map((post) => (
+                <li>
+                  <a href={`/devlogs/${post.slug}/`} class="devlog-card">
+                    <h3>{post.data.title}</h3>
+                    <p>{post.data.description}</p>
+                    <time datetime={post.data.pubDate.toISOString()}>
+                      {post.data.pubDate.toLocaleDateString('en-US', {
+                        year: 'numeric',
+                        month: 'long',
+                        day: 'numeric'
+                      })}
+                    </time>
+                  </a>
+                </li>
+              ))}
+            </ul>
+          )}
+          <p class="view-all"><a href="/devlogs/">View all devlogs &rarr;</a></p>
+        </section>
+      </div>
+    </main>
+
+    <!-- Full-width footer -->
+    <SiteFooter />
+  </body>
+</html>
 
 <style>
-  h1 {
-    font-size: 3rem;
-    margin-bottom: 1rem;
+  body {
+    margin: 0;
+    padding: 0;
   }
 
-  h2 {
-    font-size: 2rem;
-    margin: 3rem 0 1rem;
+  .main-content {
+    background: var(--bg-canvas);
+    background-image: radial-gradient(
+      circle,
+      var(--yotb-dot-color) var(--yotb-dot-size),
+      transparent var(--yotb-dot-size)
+    );
+    background-size: var(--yotb-dot-spacing) var(--yotb-dot-spacing);
   }
 
-  ul {
+  .container {
+    max-width: var(--yotb-content-max);
+    margin: 0 auto;
+    padding: var(--inset-xl) var(--inset-lg);
+  }
+
+  /* Devlogs section */
+  .devlogs-section {
+    padding: var(--stack-lg) 0 var(--stack-xl);
+  }
+
+  .section-title {
+    font-size: var(--font-size-lg);
+    font-weight: var(--font-weight-bold);
+    margin-bottom: var(--stack-md);
+    padding-bottom: var(--inset-sm);
+    border-bottom: 2px solid var(--text-primary);
+  }
+
+  .empty-state {
+    color: var(--text-muted);
+    padding: var(--inset-xl) 0;
+  }
+
+  .devlog-list {
     list-style: none;
     display: flex;
     flex-direction: column;
-    gap: 2rem;
+    gap: var(--gap-md);
   }
 
-  li a {
+  .devlog-card {
     display: block;
-    padding: 1.5rem;
-    border: 1px solid #ccc;
+    padding: var(--inset-lg);
+    border: 1px solid var(--border-default);
     text-decoration: none;
     color: inherit;
+    transition: border-color var(--motion-fast);
   }
 
-  li a:hover {
-    border-color: #000;
+  .devlog-card:hover {
+    border-color: var(--text-primary);
   }
 
-  li h3 {
-    font-size: 1.5rem;
-    margin-bottom: 0.5rem;
+  .devlog-card h3 {
+    font-size: var(--font-size-lg);
+    font-weight: var(--font-weight-semibold);
+    margin-bottom: var(--stack-xs);
+    color: var(--text-primary);
   }
 
-  li p {
-    color: #666;
-    margin-bottom: 0.5rem;
+  .devlog-card p {
+    color: var(--text-secondary);
+    margin-bottom: var(--stack-xs);
+    line-height: var(--line-height-normal);
   }
 
-  time {
-    font-size: 0.875rem;
-    color: #999;
+  .devlog-card time {
+    font-size: var(--font-size-xs);
+    color: var(--text-muted);
+  }
+
+  .view-all {
+    margin-top: var(--stack-md);
+  }
+
+  .view-all a {
+    color: var(--text-secondary);
+    text-decoration: none;
+    font-size: var(--font-size-sm);
+    transition: color var(--motion-fast);
+  }
+
+  .view-all a:hover {
+    color: var(--text-primary);
   }
 </style>

@@ -2,7 +2,7 @@
 
 ## Project Overview
 
-Public accountability log for building and launching 12 projects in 12 months.
+Public accountability log for building and launching projects in public.
 
 - **Domain:** yearofthebuild.xyz
 - **Business entity:** Getty Made LLC (see repos/gettymade — READONLY)
@@ -69,7 +69,7 @@ This repo contains:
 - Goal: stay 2-3 weeks ahead with queued content
 - Some weeks heavier than others, but never skip
 
-## Definition of "Launch" (for the 12 projects)
+## Definition of "Launch"
 
 A project is launched when:
 1. Public repo on GitHub
@@ -89,5 +89,5 @@ A project is launched when:
 - Build and refine interactive components for posts
 - Maintain site infrastructure
 - Build newsletter render script when site is ready
-- Push back on scope creep — 12 projects is already ambitious
+- Push back on scope creep
 - Keep the weird alive

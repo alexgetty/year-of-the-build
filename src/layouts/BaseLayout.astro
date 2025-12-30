@@ -1,12 +1,15 @@
 ---
 import '@gettymade/construct/styles';
+import '../styles/theme.css';
+import { SiteHeader } from '../components/SiteHeader';
+import { SiteFooter } from '../components/SiteFooter';
 
 interface Props {
   title: string;
   description?: string;
 }
 
-const { title, description = "Year of the Build - 12 projects in 12 months" } = Astro.props;
+const { title, description = "Year of the Build - Building in public, one project at a time" } = Astro.props;
 ---
 
 <!doctype html>
@@ -20,76 +23,33 @@ const { title, description = "Year of the Build - 12 projects in 12 months" } = 
     <title>{title} - YOTB</title>
   </head>
   <body>
-    <header>
-      <nav>
-        <a href="/">YOTB</a>
-        <ul>
-          <li><a href="/devlogs/">Devlogs</a></li>
-          <li><a href="/projects/">Projects</a></li>
-          <li><a href="/about/">About</a></li>
-        </ul>
-      </nav>
-    </header>
+    <!-- Sticky header for non-homepage -->
+    <SiteHeader client:load variant="dark" />
 
-    <main>
-      <slot />
-    </main>
+    <div class="site-container">
+      <main>
+        <slot />
+      </main>
+    </div>
 
-    <footer>
-      <p>&copy; 2025 Getty Made LLC. Year of the Build.</p>
-    </footer>
+    <SiteFooter />
   </body>
 </html>
 
 <style>
-  * {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-  }
-
   body {
-    font-family: system-ui, sans-serif;
-    line-height: 1.6;
-    max-width: 1200px;
+    /* Account for sticky header height */
+    padding-top: var(--header-height, 60px);
+  }
+
+  .site-container {
+    max-width: var(--yotb-content-max);
     margin: 0 auto;
-    padding: 1rem;
-  }
-
-  header {
-    padding: 2rem 0;
-    border-bottom: 1px solid #ccc;
-    margin-bottom: 2rem;
-  }
-
-  nav {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-
-  nav a {
-    text-decoration: none;
-    color: #000;
-    font-weight: 600;
-  }
-
-  nav ul {
-    list-style: none;
-    display: flex;
-    gap: 2rem;
+    padding: 0 var(--inset-lg);
   }
 
   main {
     min-height: 60vh;
-    padding: 2rem 0;
-  }
-
-  footer {
-    border-top: 1px solid #ccc;
-    padding: 2rem 0;
-    margin-top: 4rem;
-    text-align: center;
-    color: #666;
+    padding: var(--stack-lg) 0;
   }
 </style>

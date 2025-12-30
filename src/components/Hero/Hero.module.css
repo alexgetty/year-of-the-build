@@ -1,0 +1,246 @@
+/* =============================================================================
+   Hero — Full-viewport static hero
+   ============================================================================= */
+
+.hero {
+  position: relative;
+  min-height: 95vh;
+  background: var(--yotb-void);
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+}
+
+/* =============================================================================
+   Depth Layers — Background decorations with blur for z-depth
+   ============================================================================= */
+
+.depthBg {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.shapeRing {
+  position: absolute;
+  top: 10%;
+  right: -10%;
+  width: clamp(300px, 40vw, 500px);
+  height: clamp(300px, 40vw, 500px);
+  border: clamp(40px, 6vw, 80px) solid var(--t-primary-600);
+  border-radius: 50%;
+  opacity: 0.2;
+  filter: blur(20px);
+}
+
+.shapeSquare {
+  position: absolute;
+  bottom: -5%;
+  left: -5%;
+  width: clamp(200px, 25vw, 300px);
+  height: clamp(200px, 25vw, 300px);
+  background: var(--yotb-amber);
+  opacity: 0.15;
+  filter: blur(30px);
+  transform: rotate(15deg);
+}
+
+.depthMid {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.shapeDiamond {
+  position: absolute;
+  top: 20%;
+  right: 15%;
+  width: clamp(60px, 8vw, 100px);
+  height: clamp(60px, 8vw, 100px);
+  border: 3px solid var(--t-primary-500);
+  transform: rotate(45deg);
+  opacity: 0.5;
+  filter: blur(2px);
+}
+
+.shapeCircle {
+  position: absolute;
+  bottom: 30%;
+  left: 10%;
+  width: clamp(40px, 5vw, 60px);
+  height: clamp(40px, 5vw, 60px);
+  border: 3px solid var(--yotb-amber);
+  border-radius: 50%;
+  opacity: 0.4;
+  filter: blur(1px);
+}
+
+.depthFg {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  pointer-events: none;
+}
+
+.shapeDot {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  background: var(--t-primary-500);
+  border-radius: 50%;
+}
+
+.shapeDot:nth-child(1) {
+  top: 15%;
+  left: 20%;
+}
+
+.shapeDot:nth-child(2) {
+  top: 40%;
+  right: 25%;
+}
+
+.shapeDot:nth-child(3) {
+  bottom: 20%;
+  left: 30%;
+}
+
+.shapeLine {
+  position: absolute;
+  bottom: 15%;
+  right: 10%;
+  width: 80px;
+  height: 2px;
+  background: var(--yotb-amber);
+}
+
+/* =============================================================================
+   Content — Title
+   ============================================================================= */
+
+.content {
+  position: relative;
+  z-index: 10;
+  max-width: var(--yotb-content-max);
+  margin: 0 auto;
+  padding: 0 var(--inset-lg);
+  width: 100%;
+}
+
+.title {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  font-size: clamp(4rem, 15vw, 10rem);
+  font-weight: var(--font-weight-bold);
+  line-height: 0.85;
+  letter-spacing: var(--t-letter-spacing-tight);
+  text-transform: uppercase;
+  color: var(--yotb-light);
+  margin: 0;
+}
+
+.word {
+  display: block;
+}
+
+/* =============================================================================
+   Bottom Bar — Latest devlog + Nav
+   ============================================================================= */
+
+.bottomBar {
+  position: absolute;
+  bottom: var(--inset-xl);
+  left: var(--inset-lg);
+  right: var(--inset-lg);
+  z-index: 10;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: var(--yotb-content-max);
+  margin: 0 auto;
+}
+
+/* Latest devlog */
+.latest {
+  display: flex;
+  align-items: center;
+  gap: var(--gap-sm);
+}
+
+.latestLabel {
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-medium);
+  text-transform: uppercase;
+  letter-spacing: var(--t-letter-spacing-wide);
+  color: var(--p-ink-500);
+}
+
+.latestLink {
+  display: flex;
+  align-items: center;
+  gap: var(--gap-sm);
+  text-decoration: none;
+  color: var(--yotb-light);
+  transition: opacity 0.2s ease;
+}
+
+.latestLink:hover {
+  opacity: 0.8;
+}
+
+.latestTitle {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+}
+
+.latestDate {
+  font-size: var(--font-size-xs);
+  color: var(--p-ink-500);
+}
+
+/* Navigation */
+.nav {
+  display: flex;
+  gap: var(--gap-lg);
+}
+
+.navLink {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  text-decoration: none;
+  color: var(--yotb-light);
+  opacity: 0.8;
+  transition: opacity 0.2s ease;
+}
+
+.navLink:hover {
+  opacity: 1;
+}
+
+/* =============================================================================
+   Responsive
+   ============================================================================= */
+
+@media (max-width: 600px) {
+  .shapeDiamond,
+  .shapeCircle,
+  .shapeDot,
+  .shapeLine {
+    display: none;
+  }
+
+  .bottomBar {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--gap-md);
+  }
+
+  .latest {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--gap-xs);
+  }
+}

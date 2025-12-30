@@ -6,9 +6,9 @@ const projects = (await getCollection('projects'))
   .sort((a, b) => a.data.monthNumber - b.data.monthNumber);
 ---
 
-<BaseLayout title="Projects" description="12 projects in 12 months - tracking progress and launches">
-  <h1>12 Projects</h1>
-  <p>One project launched each month. Public accountability in action.</p>
+<BaseLayout title="Projects" description="Projects built in public - tracking progress and launches">
+  <h1>Projects</h1>
+  <p>Building in public. Public accountability in action.</p>
 
   {projects.length === 0 ? (
     <p>Project list coming soon!</p>
