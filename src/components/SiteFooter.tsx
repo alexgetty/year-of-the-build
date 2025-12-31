@@ -15,23 +15,10 @@ export const SiteFooter: FC<SiteFooterProps> = ({
 }) => {
   return (
     <footer className={styles.footer}>
-      {/* Background layer - blurred, far */}
-      <div className={styles.depthBg} aria-hidden="true">
+      {/* Background decorations - big blurred shapes */}
+      <div className={styles.decorations} aria-hidden="true">
         <div className={styles.shapeRing} />
         <div className={styles.shapeSquare} />
-      </div>
-
-      {/* Mid layer - slightly blurred */}
-      <div className={styles.depthMid} aria-hidden="true">
-        <div className={styles.shapeDiamond} />
-        <div className={styles.shapeCircle} />
-      </div>
-
-      {/* Foreground layer - sharp */}
-      <div className={styles.depthFg} aria-hidden="true">
-        <div className={styles.shapeDot} />
-        <div className={styles.shapeDot} />
-        <div className={styles.shapeLine} />
       </div>
 
       <div className={styles.container}>

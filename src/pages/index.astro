@@ -17,6 +17,10 @@ const latestDevlog = devlogs[0] ? {
 } : null;
 
 const recentDevlogs = devlogs.slice(0, 3);
+
+const projects = (await getCollection('projects'))
+  .sort((a, b) => a.data.monthNumber - b.data.monthNumber)
+  .slice(0, 4);
 ---
 
 <!doctype html>
@@ -36,35 +40,113 @@ const recentDevlogs = devlogs.slice(0, 3);
     <!-- Full-viewport hero -->
     <Hero latestDevlog={latestDevlog} />
 
-    <!-- Constrained content -->
+    <!-- Main Content -->
     <main class="main-content">
-      <div class="container">
-        <section class="devlogs-section">
-          <h2 class="section-title">Recent Devlogs</h2>
+
+      <!-- Mission / Intro Section -->
+      <section class="intro-section">
+        <div class="container">
+          <div class="section-label">
+            <span>About</span>
+          </div>
+          <div class="intro-content">
+            <div class="intro-text">
+              <p class="intro-headline">Building in public. No excuses.</p>
+              <p class="intro-body">
+                A public accountability log for building and shipping real products.
+                No vaporware. No "coming soon" pages that never arrive. Just raw creation,
+                documented in real-time. Each week brings progress. The work speaks for itself.
+              </p>
+              <a href="/about/" class="intro-link">Learn more about the project &rarr;</a>
+            </div>
+            <div class="intro-stats">
+              <div class="stat">
+                <span class="stat-number">{projects.length}</span>
+                <span class="stat-label">Projects</span>
+              </div>
+              <div class="stat">
+                <span class="stat-number">{devlogs.length}</span>
+                <span class="stat-label">Devlogs</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Latest Devlogs -->
+      <section class="devlogs-section">
+        <div class="container">
+          <div class="section-header">
+            <div class="section-label">
+              <span>Latest Devlogs</span>
+            </div>
+            <a href="/devlogs/" class="view-all">View all</a>
+          </div>
+
           {recentDevlogs.length === 0 ? (
             <p class="empty-state">No devlogs yet. Check back soon!</p>
           ) : (
-            <ul class="devlog-list">
+            <div class="devlog-cards">
               {recentDevlogs.map((post) => (
-                <li>
-                  <a href={`/devlogs/${post.slug}/`} class="devlog-card">
-                    <h3>{post.data.title}</h3>
-                    <p>{post.data.description}</p>
+                <article class="devlog-card">
+                  <span class="devlog-week">Week {post.data.weekNumber}</span>
+                  <h3 class="devlog-title">
+                    <a href={`/devlogs/${post.slug}/`}>{post.data.title}</a>
+                  </h3>
+                  <p class="devlog-excerpt">{post.data.description}</p>
+                  <div class="devlog-meta">
                     <time datetime={post.data.pubDate.toISOString()}>
                       {post.data.pubDate.toLocaleDateString('en-US', {
-                        year: 'numeric',
-                        month: 'long',
+                        month: 'short',
                         day: 'numeric'
                       })}
                     </time>
-                  </a>
-                </li>
+                  </div>
+                </article>
               ))}
-            </ul>
+            </div>
           )}
-          <p class="view-all"><a href="/devlogs/">View all devlogs &rarr;</a></p>
-        </section>
-      </div>
+        </div>
+      </section>
+
+      <!-- Projects Section -->
+      <section class="projects-section">
+        <div class="container">
+          <div class="section-header">
+            <div class="section-label">
+              <span>Projects</span>
+            </div>
+            <a href="/projects/" class="view-all">View all</a>
+          </div>
+
+          <div class="project-grid">
+            {projects.map((project) => (
+              <article class="project-card">
+                <span class="project-number">{String(project.data.monthNumber).padStart(2, '0')}</span>
+                <span class={`project-status status-${project.data.status}`}>
+                  {project.data.status === 'building' ? 'Building' :
+                   project.data.status === 'launched' ? 'Live' : 'Planned'}
+                </span>
+                <h3 class="project-title">
+                  <a href={`/projects/${project.slug}/`}>{project.data.title}</a>
+                </h3>
+                <p class="project-description">{project.data.description}</p>
+                {project.data.tags && project.data.tags.length > 0 && (
+                  <div class="project-tags">
+                    {project.data.tags.map((tag: string) => (
+                      <span class="project-tag">{tag}</span>
+                    ))}
+                  </div>
+                )}
+                <div class="project-meta">
+                  <span>{project.data.month} 2025</span>
+                </div>
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
+
     </main>
 
     <!-- Full-width footer -->
@@ -91,77 +173,396 @@ const recentDevlogs = devlogs.slice(0, 3);
   .container {
     max-width: var(--yotb-content-max);
     margin: 0 auto;
-    padding: var(--inset-xl) var(--inset-lg);
+    padding: 0 var(--t-spacing-lg);
   }
 
-  /* Devlogs section */
-  .devlogs-section {
-    padding: var(--stack-lg) 0 var(--stack-xl);
+  section {
+    padding: var(--t-spacing-2xl) 0;
+    border-bottom: 1px solid var(--border-default);
   }
 
-  .section-title {
-    font-size: var(--font-size-lg);
-    font-weight: var(--font-weight-bold);
-    margin-bottom: var(--stack-md);
-    padding-bottom: var(--inset-sm);
-    border-bottom: 2px solid var(--text-primary);
+  section:last-of-type {
+    border-bottom: none;
+  }
+
+  /* =============================================================================
+     Section Label — With extending line (from Codex)
+     ============================================================================= */
+
+  .section-label {
+    display: flex;
+    align-items: center;
+    gap: var(--t-spacing-sm);
+    font-size: var(--t-font-size-xs);
+    font-weight: 600;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+  }
+
+  .section-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border-default);
+  }
+
+  .section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--t-spacing-lg);
+  }
+
+  .section-header .section-label {
+    flex: 1;
+    margin-right: var(--t-spacing-lg);
+  }
+
+  .view-all {
+    font-size: var(--t-font-size-sm);
+    font-weight: 500;
+    color: var(--text-secondary);
+    text-decoration: none;
+    white-space: nowrap;
+    transition: color 0.2s ease;
+  }
+
+  .view-all:hover {
+    color: var(--t-primary-600);
   }
 
   .empty-state {
     color: var(--text-muted);
-    padding: var(--inset-xl) 0;
+    padding: var(--t-spacing-xl) 0;
   }
 
-  .devlog-list {
-    list-style: none;
+  /* =============================================================================
+     Intro Section
+     ============================================================================= */
+
+  .intro-section {
+    background: var(--bg-canvas);
+  }
+
+  .intro-section .section-label {
+    margin-bottom: var(--t-spacing-lg);
+  }
+
+  .intro-content {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: var(--t-spacing-xl);
+    align-items: start;
+  }
+
+  .intro-headline {
+    font-size: var(--t-font-size-xl);
+    font-weight: 700;
+    line-height: var(--t-line-height-tight);
+    margin-bottom: var(--t-spacing-sm);
+    color: var(--text-primary);
+  }
+
+  .intro-body {
+    font-size: var(--t-font-size-base);
+    color: var(--text-secondary);
+    line-height: var(--t-line-height-normal);
+    margin-bottom: var(--t-spacing-md);
+    max-width: 600px;
+  }
+
+  .intro-link {
+    display: inline-block;
+    font-size: var(--t-font-size-sm);
+    font-weight: 600;
+    color: var(--t-primary-600);
+    text-decoration: none;
+    transition: color 0.2s ease;
+  }
+
+  .intro-link:hover {
+    color: var(--t-primary-700);
+  }
+
+  .intro-stats {
     display: flex;
-    flex-direction: column;
-    gap: var(--gap-md);
+    gap: var(--t-spacing-lg);
+    border-left: 1px solid var(--border-default);
+    padding-left: var(--t-spacing-lg);
+  }
+
+  .stat {
+    padding-left: var(--t-spacing-sm);
+    border-left: 2px solid var(--t-primary-600);
+  }
+
+  .stat-number {
+    display: block;
+    font-size: var(--t-font-size-xl);
+    font-weight: 700;
+    line-height: 1;
+    color: var(--text-primary);
+  }
+
+  .stat-label {
+    font-size: var(--t-font-size-xs);
+    font-weight: 500;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  /* =============================================================================
+     Devlog Cards — Variant 8 style (simple white cards)
+     ============================================================================= */
+
+  .devlog-cards {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--t-spacing-md);
   }
 
   .devlog-card {
-    display: block;
-    padding: var(--inset-lg);
+    background: var(--bg-surface);
     border: 1px solid var(--border-default);
-    text-decoration: none;
-    color: inherit;
-    transition: border-color var(--motion-fast);
+    padding: var(--t-spacing-lg);
+    transition: all 0.2s ease;
   }
 
   .devlog-card:hover {
-    border-color: var(--text-primary);
+    border-color: var(--t-primary-600);
+    transform: translateY(-2px);
   }
 
-  .devlog-card h3 {
-    font-size: var(--font-size-lg);
-    font-weight: var(--font-weight-semibold);
-    margin-bottom: var(--stack-xs);
-    color: var(--text-primary);
+  .devlog-week {
+    display: block;
+    font-size: var(--t-font-size-xs);
+    font-weight: 700;
+    color: var(--t-primary-600);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: var(--t-spacing-sm);
   }
 
-  .devlog-card p {
-    color: var(--text-secondary);
-    margin-bottom: var(--stack-xs);
-    line-height: var(--line-height-normal);
+  .devlog-title {
+    font-size: var(--t-font-size-base);
+    font-weight: 600;
+    margin-bottom: var(--t-spacing-sm);
+    line-height: var(--t-line-height-tight);
   }
 
-  .devlog-card time {
-    font-size: var(--font-size-xs);
-    color: var(--text-muted);
-  }
-
-  .view-all {
-    margin-top: var(--stack-md);
-  }
-
-  .view-all a {
-    color: var(--text-secondary);
+  .devlog-title a {
+    color: inherit;
     text-decoration: none;
-    font-size: var(--font-size-sm);
-    transition: color var(--motion-fast);
+    transition: color 0.2s ease;
   }
 
-  .view-all a:hover {
-    color: var(--text-primary);
+  .devlog-title a:hover {
+    color: var(--t-primary-600);
+  }
+
+  .devlog-excerpt {
+    font-size: var(--t-font-size-sm);
+    color: var(--text-secondary);
+    line-height: var(--t-line-height-normal);
+  }
+
+  .devlog-meta {
+    font-size: var(--t-font-size-xs);
+    color: var(--text-muted);
+    margin-top: var(--t-spacing-md);
+    padding-top: var(--t-spacing-sm);
+    border-top: 1px solid var(--border-default);
+  }
+
+  /* =============================================================================
+     Project Cards — With corner accent and status tags (from home.html)
+     ============================================================================= */
+
+  .project-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--t-spacing-md);
+  }
+
+  .project-card {
+    position: relative;
+    border: 1px solid var(--border-default);
+    padding: var(--t-spacing-lg);
+    padding-top: var(--t-spacing-xl);
+    overflow: hidden;
+    transition: all 0.2s ease;
+  }
+
+  /* Corner accent triangle */
+  .project-card::before {
+    content: '';
+    position: absolute;
+    top: -1px;
+    right: -1px;
+    width: 120px;
+    height: 120px;
+    background: rgba(46, 90, 60, 0.08);
+    clip-path: polygon(100% 0, 0 0, 100% 100%);
+    transition: all 0.3s ease;
+  }
+
+  .project-card:hover {
+    border-color: var(--t-primary-600);
+  }
+
+  .project-card:hover::before {
+    width: 140px;
+    height: 140px;
+  }
+
+  .project-number {
+    position: absolute;
+    top: var(--t-spacing-sm);
+    right: var(--t-spacing-sm);
+    font-size: var(--t-font-size-lg);
+    font-weight: 700;
+    color: var(--t-primary-600);
+    line-height: 1;
+    z-index: 1;
+  }
+
+  /* Hard-edge status tags */
+  .project-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: var(--t-font-size-xs);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    padding: 4px 8px;
+    margin-bottom: var(--t-spacing-sm);
+  }
+
+  .project-status::before {
+    content: '';
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+  }
+
+  .status-launched {
+    background: var(--t-primary-600);
+    color: var(--yotb-light);
+  }
+
+  .status-launched::before {
+    background: var(--yotb-light);
+    box-shadow: 0 0 0 2px var(--t-primary-600), 0 0 0 4px rgba(255, 255, 255, 0.3);
+  }
+
+  .status-building {
+    background: var(--yotb-amber);
+    color: var(--yotb-light);
+  }
+
+  .status-building::before {
+    background: var(--yotb-light);
+    animation: pulse 1.5s ease-in-out infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
+  }
+
+  .status-planning {
+    background: rgba(28, 25, 23, 0.08);
+    color: var(--text-secondary);
+  }
+
+  .status-planning::before {
+    background: var(--text-muted);
+  }
+
+  .project-title {
+    font-size: var(--t-font-size-base);
+    font-weight: 600;
+    margin-bottom: var(--t-spacing-xs);
+  }
+
+  .project-title a {
+    color: inherit;
+    text-decoration: none;
+    transition: color 0.2s ease;
+  }
+
+  .project-title a:hover {
+    color: var(--t-primary-600);
+  }
+
+  .project-description {
+    font-size: var(--t-font-size-sm);
+    color: var(--text-secondary);
+    line-height: var(--t-line-height-normal);
+  }
+
+  .project-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--t-spacing-xs);
+    margin-top: var(--t-spacing-md);
+  }
+
+  .project-tag {
+    font-size: var(--t-font-size-xs);
+    color: var(--text-secondary);
+    padding: 2px 8px;
+    border: 1px solid var(--border-default);
+    background: transparent;
+  }
+
+  .project-meta {
+    font-size: var(--t-font-size-xs);
+    color: var(--text-muted);
+    margin-top: var(--t-spacing-md);
+  }
+
+  /* =============================================================================
+     Responsive
+     ============================================================================= */
+
+  @media (max-width: 1100px) {
+    .project-grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  @media (max-width: 900px) {
+    .intro-content {
+      grid-template-columns: 1fr;
+    }
+
+    .intro-stats {
+      border-left: none;
+      padding-left: 0;
+      border-top: 1px solid var(--border-default);
+      padding-top: var(--t-spacing-lg);
+    }
+
+    .devlog-cards {
+      grid-template-columns: 1fr;
+    }
+
+    .project-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (max-width: 600px) {
+    .project-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .devlog-cards {
+      grid-template-columns: 1fr;
+    }
   }
 </style>

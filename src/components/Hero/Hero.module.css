@@ -125,7 +125,7 @@
   z-index: 10;
   max-width: var(--yotb-content-max);
   margin: 0 auto;
-  padding: 0 var(--inset-lg);
+  padding: 0 var(--t-spacing-lg);
   width: 100%;
 }
 
@@ -134,7 +134,7 @@
   flex-direction: column;
   align-items: flex-start;
   font-size: clamp(4rem, 15vw, 10rem);
-  font-weight: var(--font-weight-bold);
+  font-weight: 700;
   line-height: 0.85;
   letter-spacing: var(--t-letter-spacing-tight);
   text-transform: uppercase;
@@ -152,9 +152,9 @@
 
 .bottomBar {
   position: absolute;
-  bottom: var(--inset-xl);
-  left: var(--inset-lg);
-  right: var(--inset-lg);
+  bottom: var(--t-spacing-xl);
+  left: var(--t-spacing-lg);
+  right: var(--t-spacing-lg);
   z-index: 10;
   display: flex;
   justify-content: space-between;
@@ -167,12 +167,12 @@
 .latest {
   display: flex;
   align-items: center;
-  gap: var(--gap-sm);
+  gap: var(--t-spacing-sm);
 }
 
 .latestLabel {
-  font-size: var(--font-size-xs);
-  font-weight: var(--font-weight-medium);
+  font-size: var(--t-font-size-xs);
+  font-weight: 500;
   text-transform: uppercase;
   letter-spacing: var(--t-letter-spacing-wide);
   color: var(--p-ink-500);
@@ -181,7 +181,7 @@
 .latestLink {
   display: flex;
   align-items: center;
-  gap: var(--gap-sm);
+  gap: var(--t-spacing-sm);
   text-decoration: none;
   color: var(--yotb-light);
   transition: opacity 0.2s ease;
@@ -192,24 +192,24 @@
 }
 
 .latestTitle {
-  font-size: var(--font-size-sm);
-  font-weight: var(--font-weight-medium);
+  font-size: var(--t-font-size-sm);
+  font-weight: 500;
 }
 
 .latestDate {
-  font-size: var(--font-size-xs);
+  font-size: var(--t-font-size-xs);
   color: var(--p-ink-500);
 }
 
 /* Navigation */
 .nav {
   display: flex;
-  gap: var(--gap-lg);
+  gap: var(--t-spacing-lg);
 }
 
 .navLink {
-  font-size: var(--font-size-sm);
-  font-weight: var(--font-weight-medium);
+  font-size: var(--t-font-size-sm);
+  font-weight: 500;
   text-decoration: none;
   color: var(--yotb-light);
   opacity: 0.8;
@@ -235,12 +235,12 @@
   .bottomBar {
     flex-direction: column;
     align-items: flex-start;
-    gap: var(--gap-md);
+    gap: var(--t-spacing-md);
   }
 
   .latest {
     flex-direction: column;
     align-items: flex-start;
-    gap: var(--gap-xs);
+    gap: var(--t-spacing-xs);
   }
 }

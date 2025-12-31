@@ -9,15 +9,15 @@ const devlogs = (await getCollection('devlogs'))
 
 <BaseLayout title="Devlogs" description="Weekly devlogs documenting the journey of building in public">
   <h1>Devlogs</h1>
-  <p>Weekly updates on progress, challenges, and learnings.</p>
+  <p class="subtitle">Weekly updates on progress, challenges, and learnings.</p>
 
   {devlogs.length === 0 ? (
-    <p>No devlogs yet. Check back soon!</p>
+    <p class="empty">No devlogs yet. Check back soon!</p>
   ) : (
-    <ul>
+    <ul class="devlog-list">
       {devlogs.map((post) => (
         <li>
-          <a href={`/devlogs/${post.slug}/`}>
+          <a href={`/devlogs/${post.slug}/`} class="devlog-item">
             <span class="week">Week {post.data.weekNumber}</span>
             <h2>{post.data.title}</h2>
             <p>{post.data.description}</p>
@@ -37,54 +37,65 @@ const devlogs = (await getCollection('devlogs'))
 
 <style>
   h1 {
-    font-size: 2.5rem;
-    margin-bottom: 0.5rem;
+    font-size: var(--t-font-size-xl);
+    font-weight: 700;
+    margin-bottom: var(--t-spacing-xs);
   }
 
-  h1 + p {
-    color: #666;
-    font-size: 1.125rem;
-    margin-bottom: 2rem;
+  .subtitle {
+    color: var(--text-secondary);
+    font-size: var(--t-font-size-base);
+    margin-bottom: var(--t-spacing-xl);
   }
 
-  ul {
+  .empty {
+    color: var(--text-muted);
+  }
+
+  .devlog-list {
     list-style: none;
     display: flex;
     flex-direction: column;
-    gap: 1.5rem;
+    gap: var(--t-spacing-md);
   }
 
-  li a {
+  .devlog-item {
     display: block;
-    padding: 1.5rem;
-    border: 1px solid #ccc;
+    padding: var(--t-spacing-lg);
+    border: 1px solid var(--border-default);
     text-decoration: none;
     color: inherit;
+    transition: border-color 0.2s ease;
   }
 
-  li a:hover {
-    border-color: #000;
+  .devlog-item:hover {
+    border-color: var(--t-primary-600);
   }
 
   .week {
     display: block;
-    font-size: 0.875rem;
-    color: #999;
-    margin-bottom: 0.5rem;
+    font-size: var(--t-font-size-xs);
+    font-weight: 600;
+    color: var(--t-primary-600);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: var(--t-spacing-xs);
   }
 
   h2 {
-    font-size: 1.5rem;
-    margin-bottom: 0.5rem;
+    font-size: var(--t-font-size-lg);
+    font-weight: 700;
+    margin-bottom: var(--t-spacing-xs);
   }
 
   p {
-    color: #666;
-    margin-bottom: 0.5rem;
+    color: var(--text-secondary);
+    margin-bottom: var(--t-spacing-xs);
+    line-height: var(--t-line-height-normal);
   }
 
   time {
-    font-size: 0.875rem;
-    color: #999;
+    font-size: var(--t-font-size-xs);
+    color: var(--text-muted);
   }
 </style>
