@@ -3,12 +3,38 @@ import '@gettymade/construct/styles';
 import '../../styles/theme.css';
 import { SiteHeader } from '../../components/SiteHeader';
 import { SiteFooter } from '../../components/SiteFooter';
-import { DevlogCard } from '../../components/DevlogCard';
+import { PageHeader } from '../../components/PageHeader';
+import { DevlogTimeline } from '../../components/DevlogTimeline';
 import { getCollection } from 'astro:content';
 
 const devlogs = (await getCollection('devlogs'))
   .filter(post => !post.data.isDraft)
   .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+
+// Get project lookup for resolving projectSlugs
+const allProjects = await getCollection('projects');
+const projectMap = allProjects.reduce((acc, p) => {
+  acc[p.slug] = { slug: p.slug, title: p.data.title.replace(/^Project \d+: /, '') };
+  return acc;
+}, {} as Record<string, { slug: string; title: string }>);
+
+// Helper to resolve projectSlugs to project objects
+function resolveProjects(slugs?: string[]) {
+  if (!slugs) return undefined;
+  return slugs.map(slug => projectMap[slug]).filter(Boolean);
+}
+
+// Prepare devlog data for timeline component
+function prepareDevlogData(posts: typeof devlogs) {
+  return posts.map(post => ({
+    title: post.data.title,
+    description: post.data.description,
+    slug: post.slug,
+    weekNumber: post.data.weekNumber,
+    pubDate: post.data.pubDate,
+    projects: resolveProjects(post.data.projectSlugs),
+  }));
+}
 
 // Group devlogs by month
 const groupedByMonth = devlogs.reduce((acc, post) => {
@@ -24,19 +50,6 @@ const groupedByMonth = devlogs.reduce((acc, post) => {
 }, {} as Record<string, typeof devlogs>);
 
 const months = Object.keys(groupedByMonth);
-
-// Get project lookup for resolving projectSlugs
-const allProjects = await getCollection('projects');
-const projectMap = allProjects.reduce((acc, p) => {
-  acc[p.slug] = { slug: p.slug, title: p.data.title.replace(/^Project \d+: /, '') };
-  return acc;
-}, {} as Record<string, { slug: string; title: string }>);
-
-// Helper to resolve projectSlugs to project objects
-function resolveProjects(slugs?: string[]) {
-  if (!slugs) return undefined;
-  return slugs.map(slug => projectMap[slug]).filter(Boolean);
-}
 ---
 
 <!doctype html>
@@ -53,13 +66,10 @@ function resolveProjects(slugs?: string[]) {
     <SiteHeader client:load variant="dark" />
 
     <main class="main-content">
-      <!-- Page Header -->
-      <header class="page-header">
-        <div class="container">
-          <h1 class="page-title">Devlog</h1>
-          <p class="page-description">Weekly updates from the trenches. What worked, what broke, and everything in between.</p>
-        </div>
-      </header>
+      <PageHeader
+        title="Devlog"
+        description="Weekly updates from the trenches. What worked, what broke, and everything in between."
+      />
 
       <!-- Timeline Section -->
       <section class="timeline-section">
@@ -92,21 +102,10 @@ function resolveProjects(slugs?: string[]) {
                       <h2 class="month-title">{month}</h2>
                       <span class="month-count">{groupedByMonth[month].length} {groupedByMonth[month].length === 1 ? 'entry' : 'entries'}</span>
                     </div>
-                    <div class="devlog-list">
-                      {groupedByMonth[month].map((post) => (
-                        <div class="timeline-item">
-                          <div class="timeline-marker" aria-hidden="true"></div>
-                          <DevlogCard
-                            title={post.data.title}
-                            description={post.data.description}
-                            slug={post.slug}
-                            weekNumber={post.data.weekNumber}
-                            pubDate={post.data.pubDate}
-                            projects={resolveProjects(post.data.projectSlugs)}
-                          />
-                        </div>
-                      ))}
-                    </div>
+                    <DevlogTimeline
+                      client:visible
+                      devlogs={prepareDevlogData(groupedByMonth[month])}
+                    />
                   </div>
                 ))}
               </div>
@@ -124,42 +123,6 @@ function resolveProjects(slugs?: string[]) {
   body {
     margin: 0;
     padding: 0;
-  }
-
-  .main-content {
-    background: var(--bg-canvas);
-    min-height: 100vh;
-  }
-
-  .container {
-    max-width: var(--yotb-content-max);
-    margin: 0 auto;
-    padding: 0 var(--t-spacing-lg);
-  }
-
-  /* =============================================================================
-     Page Header
-     ============================================================================= */
-
-  .page-header {
-    padding: var(--t-spacing-2xl) 0 var(--t-spacing-xl);
-    border-bottom: 1px solid var(--border-default);
-  }
-
-  .page-title {
-    font-size: var(--t-font-size-2xl);
-    font-weight: 700;
-    line-height: var(--t-line-height-tight);
-    letter-spacing: -0.02em;
-    margin-bottom: var(--t-spacing-sm);
-    color: var(--text-primary);
-  }
-
-  .page-description {
-    font-size: var(--t-font-size-lg);
-    font-weight: 450;
-    color: var(--text-secondary);
-    max-width: 60ch;
   }
 
   /* =============================================================================
@@ -278,34 +241,6 @@ function resolveProjects(slugs?: string[]) {
     color: var(--text-muted);
   }
 
-  .devlog-list {
-    display: flex;
-    flex-direction: column;
-    gap: var(--t-spacing-md);
-    padding-left: var(--t-spacing-lg);
-  }
-
-  .timeline-item {
-    position: relative;
-  }
-
-  .timeline-marker {
-    position: absolute;
-    left: calc(-1 * var(--t-spacing-lg) - 2px);
-    top: var(--t-spacing-md);
-    width: 5px;
-    height: 5px;
-    background: var(--bg-canvas);
-    border: 1px solid var(--border-default);
-    border-radius: 50%;
-    transition: all 0.2s ease;
-  }
-
-  .timeline-item:hover .timeline-marker {
-    border-color: var(--yotb-amber);
-    background: var(--yotb-amber);
-  }
-
   /* =============================================================================
      Responsive
      ============================================================================= */
@@ -330,21 +265,8 @@ function resolveProjects(slugs?: string[]) {
     .month-header {
       padding-left: 0;
     }
-
-    .devlog-list {
-      padding-left: 0;
-    }
-
-    .timeline-marker {
-      display: none;
-    }
   }
 
-  @media (max-width: 600px) {
-    .page-title {
-      font-size: var(--t-font-size-xl);
-    }
-  }
 </style>
 
 <script>

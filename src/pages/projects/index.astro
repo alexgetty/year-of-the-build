@@ -3,11 +3,22 @@ import '@gettymade/construct/styles';
 import '../../styles/theme.css';
 import { SiteHeader } from '../../components/SiteHeader';
 import { SiteFooter } from '../../components/SiteFooter';
-import { ProjectCard } from '../../components/ProjectCard';
+import { PageHeader } from '../../components/PageHeader';
+import { ProjectCardGrid } from '../../components/ProjectCardGrid';
 import { getCollection } from 'astro:content';
 
 const projects = (await getCollection('projects'))
   .sort((a, b) => a.data.monthNumber - b.data.monthNumber);
+
+// Prepare project data for grid component
+const projectsData = projects.map(project => ({
+  title: project.data.title,
+  description: project.data.description,
+  slug: project.slug,
+  status: project.data.status,
+  month: project.data.month,
+  tags: project.data.tags,
+}));
 
 const launchedCount = projects.filter(p => p.data.status === 'launched').length;
 const buildingCount = projects.filter(p => p.data.status === 'building').length;
@@ -35,13 +46,10 @@ const currentMonthText = buildingProject
     <SiteHeader client:load variant="dark" />
 
     <main class="main-content">
-      <!-- Page Header -->
-      <header class="page-header">
-        <div class="container">
-          <h1 class="page-title">All Projects</h1>
-          <p class="page-description">12 projects planned for 2025. Each one gets a month of focused building, a public launch, and an honest post-mortem.</p>
-        </div>
-      </header>
+      <PageHeader
+        title="All Projects"
+        description="12 projects planned for 2025. Each one gets a month of focused building, a public launch, and an honest post-mortem."
+      />
 
       <!-- Progress Section -->
       <section class="progress-section">
@@ -69,21 +77,10 @@ const currentMonthText = buildingProject
       <!-- Projects Grid -->
       <section class="projects-section">
         <div class="container">
-          {projects.length === 0 ? (
+          {projectsData.length === 0 ? (
             <p class="empty-state">Project list coming soon!</p>
           ) : (
-            <div class="project-grid">
-              {projects.map((project) => (
-                <ProjectCard
-                  title={project.data.title}
-                  description={project.data.description}
-                  slug={project.slug}
-                  status={project.data.status}
-                  month={project.data.month}
-                  tags={project.data.tags}
-                />
-              ))}
-            </div>
+            <ProjectCardGrid client:visible projects={projectsData} columns={4} />
           )}
         </div>
       </section>
@@ -97,42 +94,6 @@ const currentMonthText = buildingProject
   body {
     margin: 0;
     padding: 0;
-  }
-
-  .main-content {
-    background: var(--bg-canvas);
-    min-height: 100vh;
-  }
-
-  .container {
-    max-width: var(--yotb-content-max);
-    margin: 0 auto;
-    padding: 0 var(--t-spacing-lg);
-  }
-
-  /* =============================================================================
-     Page Header
-     ============================================================================= */
-
-  .page-header {
-    padding: var(--t-spacing-2xl) 0 var(--t-spacing-xl);
-    border-bottom: 1px solid var(--border-default);
-  }
-
-  .page-title {
-    font-size: var(--t-font-size-2xl);
-    font-weight: 700;
-    line-height: var(--t-line-height-tight);
-    letter-spacing: -0.02em;
-    margin-bottom: var(--t-spacing-sm);
-    color: var(--text-primary);
-  }
-
-  .page-description {
-    font-size: var(--t-font-size-lg);
-    font-weight: 450;
-    color: var(--text-secondary);
-    max-width: 60ch;
   }
 
   /* =============================================================================
@@ -206,40 +167,14 @@ const currentMonthText = buildingProject
     padding: var(--t-spacing-xl) 0;
   }
 
-  .project-grid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: var(--t-spacing-md);
-  }
-
   /* =============================================================================
      Responsive
      ============================================================================= */
 
-  @media (max-width: 1100px) {
-    .project-grid {
-      grid-template-columns: repeat(3, 1fr);
-    }
-  }
-
   @media (max-width: 900px) {
-    .project-grid {
-      grid-template-columns: repeat(2, 1fr);
-    }
-
     .progress-inner {
       grid-template-columns: 1fr;
       gap: var(--t-spacing-md);
-    }
-  }
-
-  @media (max-width: 600px) {
-    .project-grid {
-      grid-template-columns: 1fr;
-    }
-
-    .page-title {
-      font-size: var(--t-font-size-xl);
     }
   }
 </style>

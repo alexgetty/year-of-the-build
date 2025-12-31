@@ -1,0 +1,40 @@
+/* =============================================================================
+   CardGrid Component
+   Animated grid wrapper for card collections
+   ============================================================================= */
+
+.gridThree {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--t-spacing-md);
+}
+
+.gridFour {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--t-spacing-md);
+}
+
+/* =============================================================================
+   Responsive
+   ============================================================================= */
+
+@media (max-width: 1100px) {
+  .gridFour {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 900px) {
+  .gridThree,
+  .gridFour {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 600px) {
+  .gridThree,
+  .gridFour {
+    grid-template-columns: 1fr;
+  }
+}

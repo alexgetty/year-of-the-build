@@ -1,0 +1,46 @@
+/* =============================================================================
+   DevlogTimeline Component
+   Timeline list with staggered animations
+   ============================================================================= */
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--t-spacing-md);
+  padding-left: var(--t-spacing-lg);
+}
+
+.item {
+  position: relative;
+}
+
+.marker {
+  position: absolute;
+  left: calc(-1 * var(--t-spacing-lg) - 2px);
+  top: var(--t-spacing-md);
+  width: 5px;
+  height: 5px;
+  background: var(--bg-canvas);
+  border: 1px solid var(--border-default);
+  border-radius: 50%;
+  transition: all 0.2s ease;
+}
+
+.item:hover .marker {
+  border-color: var(--yotb-amber);
+  background: var(--yotb-amber);
+}
+
+/* =============================================================================
+   Responsive
+   ============================================================================= */
+
+@media (max-width: 900px) {
+  .list {
+    padding-left: 0;
+  }
+
+  .marker {
+    display: none;
+  }
+}

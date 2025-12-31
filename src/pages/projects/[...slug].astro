@@ -3,7 +3,8 @@ import '@gettymade/construct/styles';
 import '../../styles/theme.css';
 import { SiteHeader } from '../../components/SiteHeader';
 import { SiteFooter } from '../../components/SiteFooter';
-import { ProjectCard } from '../../components/ProjectCard';
+import { DevlogCardGrid } from '../../components/DevlogCardGrid';
+import { ProjectCardGrid } from '../../components/ProjectCardGrid';
 import { getCollection } from 'astro:content';
 
 export async function getStaticPaths() {
@@ -30,9 +31,28 @@ for (let i = 1; i <= 3; i++) {
 }
 
 // Get devlogs for this project (many-to-many: devlog can link to multiple projects)
-const allDevlogs = (await getCollection('devlogs'))
+const projectDevlogs = (await getCollection('devlogs'))
   .filter(d => !d.data.isDraft && d.data.projectSlugs?.includes(project.slug))
   .sort((a, b) => b.data.weekNumber - a.data.weekNumber);
+
+// Prepare devlog data for grid component
+const devlogsData = projectDevlogs.map(d => ({
+  title: d.data.title,
+  description: d.data.description,
+  slug: d.slug,
+  weekNumber: d.data.weekNumber,
+  pubDate: d.data.pubDate,
+}));
+
+// Prepare related projects data for grid component
+const relatedProjectsData = relatedProjects.map(p => ({
+  title: p.data.title,
+  description: p.data.description,
+  slug: p.slug,
+  status: p.data.status,
+  month: p.data.month,
+  tags: p.data.tags,
+}));
 
 // Format the project number with leading zero
 const projectNumber = String(project.data.monthNumber).padStart(2, '0');
@@ -41,9 +61,12 @@ const projectNumber = String(project.data.monthNumber).padStart(2, '0');
 const statusText = project.data.status === 'building' ? 'Building' :
                    project.data.status === 'launched' ? 'Live' : 'Planned';
 
-// Check if we have sidebar content
-const hasSidebar = (project.data.features && project.data.features.length > 0) ||
-                   (project.data.stats && project.data.stats.length > 0);
+// Check if we have sidebar content (links, tech, features, stats)
+const hasLinks = project.data.repoUrl || project.data.liveUrl;
+const hasTech = project.data.tags && project.data.tags.length > 0;
+const hasFeatures = project.data.features && project.data.features.length > 0;
+const hasStats = project.data.stats && project.data.stats.length > 0;
+const hasSidebar = hasLinks || hasTech || hasFeatures || hasStats;
 ---
 
 <!doctype html>
@@ -115,7 +138,37 @@ const hasSidebar = (project.data.features && project.data.features.length > 0) |
             </div>
             {hasSidebar && (
               <aside class="about-sidebar">
-                {project.data.features && project.data.features.length > 0 && (
+                {/* Links - Primary actions first */}
+                {hasLinks && (
+                  <div class="sidebar-block">
+                    <div class="sidebar-label">Links</div>
+                    <div class="sidebar-links">
+                      {project.data.liveUrl && (
+                        <a href={project.data.liveUrl} target="_blank" rel="noopener noreferrer" class="sidebar-link sidebar-link--primary">
+                          Visit Live Site →
+                        </a>
+                      )}
+                      {project.data.repoUrl && (
+                        <a href={project.data.repoUrl} target="_blank" rel="noopener noreferrer" class="sidebar-link">
+                          View on GitHub
+                        </a>
+                      )}
+                    </div>
+                  </div>
+                )}
+                {/* Tech Stack */}
+                {hasTech && (
+                  <div class="sidebar-block">
+                    <div class="sidebar-label">Tech Stack</div>
+                    <div class="sidebar-tags">
+                      {project.data.tags.map((tag: string) => (
+                        <span class="sidebar-tag">{tag}</span>
+                      ))}
+                    </div>
+                  </div>
+                )}
+                {/* Key Features */}
+                {hasFeatures && (
                   <div class="sidebar-block">
                     <div class="sidebar-label">Key Features</div>
                     <ul class="feature-list">
@@ -125,7 +178,8 @@ const hasSidebar = (project.data.features && project.data.features.length > 0) |
                     </ul>
                   </div>
                 )}
-                {project.data.stats && project.data.stats.length > 0 && (
+                {/* Launch Stats */}
+                {hasStats && (
                   <div class="sidebar-block">
                     <div class="sidebar-label">Launch Stats</div>
                     <ul class="stats-list">
@@ -141,77 +195,14 @@ const hasSidebar = (project.data.features && project.data.features.length > 0) |
         </div>
       </section>
 
-      <!-- Tech Stack -->
-      {project.data.tags && project.data.tags.length > 0 && (
-        <section class="tech-section">
+      <!-- Devlog -->
+      {devlogsData.length > 0 && (
+        <section class="devlogs-section">
           <div class="container">
             <div class="section-label">
-              <span>Tech Stack</span>
+              <span>Devlog</span>
             </div>
-            <div class="tech-grid">
-              {project.data.tags.map((tag: string) => (
-                <div class="tech-item">
-                  <div class="tech-icon">{tag.charAt(0).toUpperCase()}</div>
-                  <div class="tech-name">{tag}</div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-      )}
-
-      <!-- Links -->
-      {(project.data.repoUrl || project.data.liveUrl) && (
-        <section class="links-section">
-          <div class="container">
-            <div class="section-label">
-              <span>Links</span>
-            </div>
-            <div class="links-grid">
-              {project.data.liveUrl && (
-                <a href={project.data.liveUrl} target="_blank" rel="noopener noreferrer" class="btn btn-primary">
-                  Visit Live Site
-                </a>
-              )}
-              {project.data.repoUrl && (
-                <a href={project.data.repoUrl} target="_blank" rel="noopener noreferrer" class="btn btn-secondary">
-                  View on GitHub
-                </a>
-              )}
-            </div>
-          </div>
-        </section>
-      )}
-
-      <!-- Build Log Timeline -->
-      {allDevlogs.length > 0 && (
-        <section class="timeline-section">
-          <div class="container">
-            <div class="section-label">
-              <span>Build Log</span>
-            </div>
-            <div class="timeline">
-              {allDevlogs.map((devlog) => (
-                <article class="timeline-item">
-                  <div class="timeline-marker">
-                    <span>{String(devlog.data.weekNumber).padStart(2, '0')}</span>
-                  </div>
-                  <div class="timeline-content">
-                    <span class="timeline-date">
-                      {devlog.data.pubDate.toLocaleDateString('en-US', {
-                        month: 'short',
-                        day: 'numeric',
-                        year: 'numeric'
-                      })}
-                    </span>
-                    <h3 class="timeline-title">
-                      <a href={`/devlogs/${devlog.slug}/`}>{devlog.data.title}</a>
-                    </h3>
-                    <p class="timeline-excerpt">{devlog.data.description}</p>
-                  </div>
-                </article>
-              ))}
-            </div>
+            <DevlogCardGrid client:visible devlogs={devlogsData} />
           </div>
         </section>
       )}
@@ -222,18 +213,7 @@ const hasSidebar = (project.data.features && project.data.features.length > 0) |
           <div class="section-label">
             <span>Other Projects</span>
           </div>
-          <div class="related-grid">
-            {relatedProjects.map((related) => (
-              <ProjectCard
-                title={related.data.title}
-                description={related.data.description}
-                slug={related.slug}
-                status={related.data.status}
-                month={related.data.month}
-                tags={related.data.tags}
-              />
-            ))}
-          </div>
+          <ProjectCardGrid client:visible projects={relatedProjectsData} />
         </div>
       </section>
     </main>
@@ -248,23 +228,12 @@ const hasSidebar = (project.data.features && project.data.features.length > 0) |
     padding: 0;
   }
 
-  .main-content {
-    background: var(--bg-canvas);
-  }
-
-  .container {
-    max-width: var(--yotb-content-max);
-    margin: 0 auto;
-    padding: 0 var(--t-spacing-lg);
-  }
-
   /* =============================================================================
      Breadcrumbs
      ============================================================================= */
 
   .breadcrumbs-section {
     padding: var(--t-spacing-md) 0;
-    border-bottom: 1px solid var(--border-default);
     background: var(--bg-canvas);
   }
 
@@ -300,7 +269,6 @@ const hasSidebar = (project.data.features && project.data.features.length > 0) |
 
   .project-hero {
     padding: var(--t-spacing-2xl) 0;
-    border-bottom: 1px solid var(--border-default);
     position: relative;
     overflow: hidden;
   }
@@ -431,11 +399,6 @@ const hasSidebar = (project.data.features && project.data.features.length > 0) |
 
   section {
     padding: var(--t-spacing-xl) 0;
-    border-bottom: 1px solid var(--border-default);
-  }
-
-  section:last-of-type {
-    border-bottom: none;
   }
 
   .section-label {
@@ -574,194 +537,50 @@ const hasSidebar = (project.data.features && project.data.features.length > 0) |
     font-weight: 600;
   }
 
-  /* =============================================================================
-     Tech Stack
-     ============================================================================= */
-
-  .tech-grid {
-    display: flex;
-    flex-wrap: wrap;
-    gap: var(--t-spacing-sm);
-  }
-
-  .tech-item {
-    display: flex;
-    align-items: center;
-    gap: var(--t-spacing-sm);
-    padding: var(--t-spacing-sm) var(--t-spacing-md);
-    background: var(--bg-surface);
-    border: 1px solid var(--border-default);
-  }
-
-  .tech-icon {
-    width: 24px;
-    height: 24px;
-    background: rgba(46, 90, 60, 0.1);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: var(--t-font-size-xs);
-    font-weight: 700;
-    color: var(--t-primary-600);
-  }
-
-  .tech-name {
-    font-size: var(--t-font-size-sm);
-    font-weight: 600;
-    color: var(--text-primary);
-  }
-
-  /* =============================================================================
-     Links
-     ============================================================================= */
-
-  .links-grid {
-    display: flex;
-    gap: var(--t-spacing-md);
-    flex-wrap: wrap;
-  }
-
-  .btn {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: var(--t-spacing-sm);
-    font-family: inherit;
-    font-size: var(--t-font-size-sm);
-    font-weight: 600;
-    text-decoration: none;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    border: 2px solid transparent;
-    padding: var(--t-spacing-xs) var(--t-spacing-md);
-    min-height: 44px;
-  }
-
-  .btn-primary {
-    background: var(--text-primary);
-    color: var(--bg-canvas);
-    border-color: var(--text-primary);
-  }
-
-  .btn-primary:hover {
-    background: var(--text-secondary);
-    border-color: var(--text-secondary);
-  }
-
-  .btn-secondary {
-    background: var(--bg-canvas);
-    color: var(--text-primary);
-    border-color: var(--text-primary);
-  }
-
-  .btn-secondary:hover {
-    background: var(--text-primary);
-    color: var(--bg-canvas);
-  }
-
-  /* =============================================================================
-     Build Log Timeline
-     ============================================================================= */
-
-  .timeline {
+  /* Sidebar Links */
+  .sidebar-links {
     display: flex;
     flex-direction: column;
-    gap: var(--t-spacing-lg);
+    gap: var(--t-spacing-xs);
   }
 
-  .timeline-item {
-    position: relative;
-    padding-left: var(--t-spacing-2xl);
-  }
-
-  .timeline-item::before {
-    content: '';
-    position: absolute;
-    left: 0;
-    top: 0;
-    bottom: 0;
-    width: 3px;
-    background: linear-gradient(to bottom, var(--t-primary-600), rgba(46, 90, 60, 0.2));
-  }
-
-  .timeline-item:last-child::before {
-    bottom: auto;
-    height: var(--t-spacing-xl);
-  }
-
-  .timeline-marker {
-    position: absolute;
-    left: calc((var(--t-spacing-xl) / -2) + 1.5px);
-    top: 0;
-    width: var(--t-spacing-xl);
-    height: var(--t-spacing-xl);
-    background: var(--bg-canvas);
-    border: 3px solid var(--t-primary-600);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transform: rotate(45deg);
-  }
-
-  .timeline-marker span {
-    transform: rotate(-45deg);
-    font-size: var(--t-font-size-xs);
-    font-weight: 700;
-    color: var(--t-primary-600);
-  }
-
-  .timeline-content {
-    background: var(--bg-surface);
-    border: 1px solid var(--border-default);
-    padding: var(--t-spacing-lg);
-    transition: border-color 0.2s ease;
-  }
-
-  .timeline-content:hover {
-    border-color: var(--t-primary-600);
-  }
-
-  .timeline-date {
+  .sidebar-link {
     display: block;
-    font-size: var(--t-font-size-xs);
+    font-size: var(--t-font-size-sm);
     font-weight: 500;
-    color: var(--text-muted);
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    margin-bottom: var(--t-spacing-xs);
-  }
-
-  .timeline-title {
-    font-size: var(--t-font-size-lg);
-    font-weight: 600;
-    margin-bottom: var(--t-spacing-sm);
-    line-height: var(--t-line-height-tight);
-  }
-
-  .timeline-title a {
-    color: inherit;
+    color: var(--text-secondary);
     text-decoration: none;
+    padding: var(--t-spacing-xs) 0;
     transition: color 0.2s ease;
   }
 
-  .timeline-title a:hover {
+  .sidebar-link:hover {
     color: var(--t-primary-600);
   }
 
-  .timeline-excerpt {
-    font-size: var(--t-font-size-sm);
-    color: var(--text-secondary);
-    line-height: var(--t-line-height-normal);
+  .sidebar-link--primary {
+    font-weight: 600;
+    color: var(--t-primary-600);
   }
 
-  /* =============================================================================
-     Related Projects
-     ============================================================================= */
+  .sidebar-link--primary:hover {
+    color: var(--t-primary-700);
+  }
 
-  .related-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: var(--t-spacing-md);
+  /* Sidebar Tags */
+  .sidebar-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--t-spacing-xs);
+  }
+
+  .sidebar-tag {
+    font-size: var(--t-font-size-xs);
+    font-weight: 500;
+    color: var(--text-secondary);
+    background: var(--bg-surface);
+    border: 1px solid var(--border-default);
+    padding: 2px 8px;
   }
 
   /* =============================================================================
@@ -788,33 +607,11 @@ const hasSidebar = (project.data.features && project.data.features.length > 0) |
       border-top: 1px solid var(--border-default);
       padding-top: var(--t-spacing-lg);
     }
-
-    .related-grid {
-      grid-template-columns: 1fr;
-    }
   }
 
   @media (max-width: 600px) {
     .project-hero-title {
       font-size: var(--t-font-size-xl);
-    }
-
-    .links-grid {
-      flex-direction: column;
-    }
-
-    .btn {
-      width: 100%;
-    }
-
-    .timeline-item {
-      padding-left: var(--t-spacing-xl);
-    }
-
-    .timeline-marker {
-      width: var(--t-spacing-lg);
-      height: var(--t-spacing-lg);
-      left: calc((var(--t-spacing-lg) / -2) + 1.5px);
     }
   }
 </style>

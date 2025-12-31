@@ -4,8 +4,8 @@ import '../styles/theme.css';
 import { Hero } from '../components/Hero';
 import { SiteHeader } from '../components/SiteHeader';
 import { SiteFooter } from '../components/SiteFooter';
-import { ProjectCard } from '../components/ProjectCard';
-import { DevlogCard } from '../components/DevlogCard';
+import { DevlogCardGrid } from '../components/DevlogCardGrid';
+import { ProjectCardGrid } from '../components/ProjectCardGrid';
 import { getCollection } from 'astro:content';
 
 const devlogs = (await getCollection('devlogs'))
@@ -18,12 +18,7 @@ const latestDevlog = devlogs[0] ? {
   pubDate: devlogs[0].data.pubDate,
 } : null;
 
-const recentDevlogs = devlogs.slice(0, 3);
-
 const allProjects = await getCollection('projects');
-const projects = allProjects
-  .sort((a, b) => a.data.monthNumber - b.data.monthNumber)
-  .slice(0, 4);
 
 // Project lookup for DevlogCard
 const projectMap = allProjects.reduce((acc, p) => {
@@ -35,6 +30,28 @@ function resolveProjects(slugs?: string[]) {
   if (!slugs) return undefined;
   return slugs.map(slug => projectMap[slug]).filter(Boolean);
 }
+
+// Prepare data for grid components
+const recentDevlogsData = devlogs.slice(0, 3).map(post => ({
+  title: post.data.title,
+  description: post.data.description,
+  slug: post.slug,
+  weekNumber: post.data.weekNumber,
+  pubDate: post.data.pubDate,
+  projects: resolveProjects(post.data.projectSlugs),
+}));
+
+const projectsData = allProjects
+  .sort((a, b) => a.data.monthNumber - b.data.monthNumber)
+  .slice(0, 4)
+  .map(project => ({
+    title: project.data.title,
+    description: project.data.description,
+    slug: project.slug,
+    status: project.data.status,
+    month: project.data.month,
+    tags: project.data.tags,
+  }));
 ---
 
 <!doctype html>
@@ -75,7 +92,7 @@ function resolveProjects(slugs?: string[]) {
             </div>
             <div class="intro-stats">
               <div class="stat">
-                <span class="stat-number">{projects.length}</span>
+                <span class="stat-number">{allProjects.length}</span>
                 <span class="stat-label">Projects</span>
               </div>
               <div class="stat">
@@ -97,21 +114,10 @@ function resolveProjects(slugs?: string[]) {
             <a href="/devlogs/" class="view-all">View all</a>
           </div>
 
-          {recentDevlogs.length === 0 ? (
+          {recentDevlogsData.length === 0 ? (
             <p class="empty-state">No devlogs yet. Check back soon!</p>
           ) : (
-            <div class="devlog-cards">
-              {recentDevlogs.map((post) => (
-                <DevlogCard
-                  title={post.data.title}
-                  description={post.data.description}
-                  slug={post.slug}
-                  weekNumber={post.data.weekNumber}
-                  pubDate={post.data.pubDate}
-                  projects={resolveProjects(post.data.projectSlugs)}
-                />
-              ))}
-            </div>
+            <DevlogCardGrid client:visible devlogs={recentDevlogsData} />
           )}
         </div>
       </section>
@@ -126,18 +132,7 @@ function resolveProjects(slugs?: string[]) {
             <a href="/projects/" class="view-all">View all</a>
           </div>
 
-          <div class="project-grid">
-            {projects.map((project) => (
-              <ProjectCard
-                title={project.data.title}
-                description={project.data.description}
-                slug={project.slug}
-                status={project.data.status}
-                month={project.data.month}
-                tags={project.data.tags}
-              />
-            ))}
-          </div>
+          <ProjectCardGrid client:visible projects={projectsData} columns={4} />
         </div>
       </section>
 
@@ -154,23 +149,8 @@ function resolveProjects(slugs?: string[]) {
     padding: 0;
   }
 
-  .main-content {
-    background: var(--bg-canvas);
-  }
-
-  .container {
-    max-width: var(--yotb-content-max);
-    margin: 0 auto;
-    padding: 0 var(--t-spacing-lg);
-  }
-
   section {
     padding: var(--t-spacing-2xl) 0;
-    border-bottom: 1px solid var(--border-default);
-  }
-
-  section:last-of-type {
-    border-bottom: none;
   }
 
   /* =============================================================================
@@ -302,34 +282,8 @@ function resolveProjects(slugs?: string[]) {
   }
 
   /* =============================================================================
-     Devlog Cards — Corner accent style (amber diagonal stripe)
-     ============================================================================= */
-
-  .devlog-cards {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: var(--t-spacing-md);
-  }
-
-  /* =============================================================================
-     Project Grid
-     ============================================================================= */
-
-  .project-grid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: var(--t-spacing-md);
-  }
-
-  /* =============================================================================
      Responsive
      ============================================================================= */
-
-  @media (max-width: 1100px) {
-    .project-grid {
-      grid-template-columns: repeat(3, 1fr);
-    }
-  }
 
   @media (max-width: 900px) {
     .intro-content {
@@ -341,24 +295,6 @@ function resolveProjects(slugs?: string[]) {
       padding-left: 0;
       border-top: 1px solid var(--border-default);
       padding-top: var(--t-spacing-lg);
-    }
-
-    .devlog-cards {
-      grid-template-columns: 1fr;
-    }
-
-    .project-grid {
-      grid-template-columns: repeat(2, 1fr);
-    }
-  }
-
-  @media (max-width: 600px) {
-    .project-grid {
-      grid-template-columns: 1fr;
-    }
-
-    .devlog-cards {
-      grid-template-columns: 1fr;
     }
   }
 </style>

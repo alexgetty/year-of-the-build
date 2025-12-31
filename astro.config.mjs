@@ -7,4 +7,13 @@ import mdx from '@astrojs/mdx';
 export default defineConfig({
   integrations: [react(), mdx()],
   site: 'https://yearofthebuild.xyz',
+  vite: {
+    // Dedupe React to prevent multiple instances when using linked packages
+    resolve: {
+      dedupe: ['react', 'react-dom', 'framer-motion'],
+    },
+    optimizeDeps: {
+      include: ['react', 'react-dom', 'framer-motion'],
+    },
+  },
 });

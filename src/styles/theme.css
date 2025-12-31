@@ -231,3 +231,21 @@ body {
   background-color: var(--p-forest-200);
   color: var(--p-ink-950);
 }
+
+/* =============================================================================
+   LAYOUT UTILITIES
+   ============================================================================= */
+
+/* Container — max-width wrapper with horizontal padding */
+.container {
+  max-width: var(--yotb-content-max);
+  margin: 0 auto;
+  padding-left: var(--t-spacing-lg);
+  padding-right: var(--t-spacing-lg);
+}
+
+/* Main content wrapper — ensures proper background */
+.main-content {
+  background: var(--bg-canvas);
+  min-height: 100vh;
+}

@@ -1,0 +1,74 @@
+/* =============================================================================
+   PageHeader Component
+   Standardized page header with title, description, and decorative accent
+   ============================================================================= */
+
+.header {
+  position: relative;
+  padding: var(--t-spacing-2xl) 0 var(--t-spacing-xl);
+  overflow: hidden;
+}
+
+.container {
+  max-width: var(--yotb-content-max);
+  margin: 0 auto;
+  padding: 0 var(--t-spacing-lg);
+  position: relative;
+  z-index: 1;
+}
+
+.content {
+  max-width: 720px;
+}
+
+.title {
+  font-size: var(--t-font-size-2xl);
+  font-weight: 700;
+  line-height: var(--t-line-height-tight);
+  letter-spacing: -0.02em;
+  margin-bottom: var(--t-spacing-sm);
+  color: var(--text-primary);
+}
+
+.description {
+  font-size: var(--t-font-size-lg);
+  font-weight: 450;
+  color: var(--text-secondary);
+  line-height: var(--t-line-height-normal);
+  max-width: 60ch;
+}
+
+/* Corner decoration - consistent with project hero */
+.decor {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 200px;
+  height: 200px;
+  background: rgba(46, 90, 60, 0.06);
+  clip-path: polygon(100% 0, 0 0, 100% 100%);
+  pointer-events: none;
+}
+
+/* =============================================================================
+   Responsive
+   ============================================================================= */
+
+@media (max-width: 600px) {
+  .header {
+    padding: var(--t-spacing-xl) 0;
+  }
+
+  .title {
+    font-size: var(--t-font-size-xl);
+  }
+
+  .description {
+    font-size: var(--t-font-size-base);
+  }
+
+  .decor {
+    width: 120px;
+    height: 120px;
+  }
+}
