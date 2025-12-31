@@ -1,0 +1,46 @@
+---
+title: "Prompt Engineering Deep Dive"
+description: "Getting AI to generate consistent, high-quality creature lore took more iteration than expected. Here are the prompting techniques that finally worked."
+pubDate: 2025-01-14
+weekNumber: 2
+isDraft: false
+projectSlugs: ["month-01-tbd"]
+---
+
+## The Problem
+
+Last week's creature outputs were... inconsistent. Some were genuinely creative. Others were generic fantasy tropes. A few were just nonsense.
+
+## What I Tried
+
+### Attempt 1: Simple prompts
+"Generate a mythological creature" produced boring results. Too generic.
+
+### Attempt 2: Structured prompts
+Adding specific fields helped, but the output felt formulaic.
+
+### Attempt 3: Few-shot examples
+This was the breakthrough. By including 3-4 examples of what I wanted, the output quality jumped dramatically.
+
+## The Winning Formula
+
+```
+You are a mythologist creating unique creatures. Each creature should feel like it could exist in real folklore.
+
+[3 example creatures with detailed lore]
+
+Now create a new creature with:
+- Name (invented, not from existing mythology)
+- Origin region and culture
+- Core abilities (2-3)
+- Weakness
+- A short origin myth (2-3 sentences)
+```
+
+## Visual Progress
+
+Also made headway on the procedural visuals. Using SVG patterns with randomized color palettes. It's not art, but it's distinctive.
+
+## Next Week
+
+Building the share functionality. Want users to be able to generate shareable creature cards.

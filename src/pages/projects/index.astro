@@ -1,105 +1,245 @@
 ---
-import BaseLayout from '../../layouts/BaseLayout.astro';
+import '@gettymade/construct/styles';
+import '../../styles/theme.css';
+import { SiteHeader } from '../../components/SiteHeader';
+import { SiteFooter } from '../../components/SiteFooter';
+import { ProjectCard } from '../../components/ProjectCard';
 import { getCollection } from 'astro:content';
 
 const projects = (await getCollection('projects'))
   .sort((a, b) => a.data.monthNumber - b.data.monthNumber);
+
+const launchedCount = projects.filter(p => p.data.status === 'launched').length;
+const buildingCount = projects.filter(p => p.data.status === 'building').length;
+const planningCount = projects.filter(p => p.data.status === 'planning').length;
+const progressPercent = ((launchedCount / 12) * 100).toFixed(1);
+
+// Find current building project for progress bar text
+const buildingProject = projects.find(p => p.data.status === 'building');
+const currentMonthText = buildingProject
+  ? `${buildingProject.data.month} is ${buildingProject.data.title.replace(/^Project \d+: /, '')} month.`
+  : 'Building in progress.';
 ---
 
-<BaseLayout title="Projects" description="Projects built in public - tracking progress and launches">
-  <h1>Projects</h1>
-  <p>Building in public. Public accountability in action.</p>
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="description" content="Projects built in public - tracking progress and launches" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="generator" content={Astro.generator} />
+    <title>Projects - Year of the Build</title>
+  </head>
+  <body>
+    <SiteHeader client:load variant="dark" />
 
-  {projects.length === 0 ? (
-    <p>Project list coming soon!</p>
-  ) : (
-    <ul class="project-grid">
-      {projects.map((project) => (
-        <li class={`status-${project.data.status}`}>
-          <a href={`/projects/${project.slug}/`}>
-            <span class="month">Month {project.data.monthNumber}</span>
-            <h2>{project.data.title}</h2>
-            <p>{project.data.description}</p>
-            <span class="status">{project.data.status}</span>
-          </a>
-        </li>
-      ))}
-    </ul>
-  )}
-</BaseLayout>
+    <main class="main-content">
+      <!-- Page Header -->
+      <header class="page-header">
+        <div class="container">
+          <h1 class="page-title">All Projects</h1>
+          <p class="page-description">12 projects planned for 2025. Each one gets a month of focused building, a public launch, and an honest post-mortem.</p>
+        </div>
+      </header>
+
+      <!-- Progress Section -->
+      <section class="progress-section">
+        <div class="container">
+          <div class="progress-card">
+            <div class="progress-inner">
+              <div class="progress-info">
+                <h3>Year Progress</h3>
+                <p>{launchedCount} of 12 projects shipped. {currentMonthText}</p>
+              </div>
+              <div class="progress-bar-container">
+                <div class="progress-bar">
+                  <div class="progress-fill" style={`width: ${progressPercent}%;`}></div>
+                </div>
+                <div class="progress-label">
+                  <span>{launchedCount} Shipped</span>
+                  <span>{progressPercent}%</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Projects Grid -->
+      <section class="projects-section">
+        <div class="container">
+          {projects.length === 0 ? (
+            <p class="empty-state">Project list coming soon!</p>
+          ) : (
+            <div class="project-grid">
+              {projects.map((project) => (
+                <ProjectCard
+                  title={project.data.title}
+                  description={project.data.description}
+                  slug={project.slug}
+                  status={project.data.status}
+                  month={project.data.month}
+                  tags={project.data.tags}
+                />
+              ))}
+            </div>
+          )}
+        </div>
+      </section>
+    </main>
+
+    <SiteFooter />
+  </body>
+</html>
 
 <style>
-  h1 {
-    font-size: 2.5rem;
-    margin-bottom: 0.5rem;
+  body {
+    margin: 0;
+    padding: 0;
   }
 
-  h1 + p {
-    color: #666;
-    font-size: 1.125rem;
-    margin-bottom: 2rem;
+  .main-content {
+    background: var(--bg-canvas);
+    min-height: 100vh;
+  }
+
+  .container {
+    max-width: var(--yotb-content-max);
+    margin: 0 auto;
+    padding: 0 var(--t-spacing-lg);
+  }
+
+  /* =============================================================================
+     Page Header
+     ============================================================================= */
+
+  .page-header {
+    padding: var(--t-spacing-2xl) 0 var(--t-spacing-xl);
+    border-bottom: 1px solid var(--border-default);
+  }
+
+  .page-title {
+    font-size: var(--t-font-size-2xl);
+    font-weight: 700;
+    line-height: var(--t-line-height-tight);
+    letter-spacing: -0.02em;
+    margin-bottom: var(--t-spacing-sm);
+    color: var(--text-primary);
+  }
+
+  .page-description {
+    font-size: var(--t-font-size-lg);
+    font-weight: 450;
+    color: var(--text-secondary);
+    max-width: 60ch;
+  }
+
+  /* =============================================================================
+     Progress Section
+     ============================================================================= */
+
+  .progress-section {
+    padding: var(--t-spacing-lg) 0;
+    border-bottom: 1px solid var(--border-default);
+  }
+
+  .progress-card {
+    background: var(--bg-surface);
+    border: 1px solid var(--border-default);
+    padding: var(--t-spacing-lg);
+  }
+
+  .progress-inner {
+    display: grid;
+    grid-template-columns: var(--yotb-golden-major) var(--yotb-golden-minor);
+    gap: var(--t-spacing-lg);
+    align-items: center;
+  }
+
+  .progress-info h3 {
+    font-size: var(--t-font-size-base);
+    font-weight: 600;
+    margin-bottom: var(--t-spacing-xs);
+    color: var(--text-primary);
+  }
+
+  .progress-info p {
+    font-size: var(--t-font-size-sm);
+    color: var(--text-secondary);
+  }
+
+  .progress-bar-container {
+    display: flex;
+    flex-direction: column;
+    gap: var(--t-spacing-sm);
+  }
+
+  .progress-bar {
+    height: var(--t-spacing-xs);
+    background: var(--border-default);
+  }
+
+  .progress-fill {
+    height: 100%;
+    background: var(--t-primary-600);
+    transition: width 0.3s ease;
+  }
+
+  .progress-label {
+    display: flex;
+    justify-content: space-between;
+    font-size: var(--t-font-size-xs);
+    color: var(--text-muted);
+  }
+
+  /* =============================================================================
+     Projects Grid
+     ============================================================================= */
+
+  .projects-section {
+    padding: var(--t-spacing-xl) 0 var(--t-spacing-2xl);
+  }
+
+  .empty-state {
+    color: var(--text-muted);
+    padding: var(--t-spacing-xl) 0;
   }
 
   .project-grid {
-    list-style: none;
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 1.5rem;
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--t-spacing-md);
   }
 
-  li a {
-    display: block;
-    height: 100%;
-    padding: 1.5rem;
-    border: 1px solid #ccc;
-    text-decoration: none;
-    color: inherit;
+  /* =============================================================================
+     Responsive
+     ============================================================================= */
+
+  @media (max-width: 1100px) {
+    .project-grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
   }
 
-  li a:hover {
-    border-color: #000;
+  @media (max-width: 900px) {
+    .project-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    .progress-inner {
+      grid-template-columns: 1fr;
+      gap: var(--t-spacing-md);
+    }
   }
 
-  .month {
-    display: block;
-    font-size: 0.875rem;
-    color: #999;
-    margin-bottom: 0.5rem;
-  }
+  @media (max-width: 600px) {
+    .project-grid {
+      grid-template-columns: 1fr;
+    }
 
-  h2 {
-    font-size: 1.5rem;
-    margin-bottom: 0.5rem;
-  }
-
-  p {
-    color: #666;
-    margin-bottom: 1rem;
-    flex-grow: 1;
-  }
-
-  .status {
-    display: inline-block;
-    font-size: 0.75rem;
-    text-transform: uppercase;
-    padding: 0.25rem 0.5rem;
-    border-radius: 2px;
-    background: #f5f5f5;
-    color: #666;
-  }
-
-  .status-launched .status {
-    background: #d4edda;
-    color: #155724;
-  }
-
-  .status-in-progress .status {
-    background: #fff3cd;
-    color: #856404;
-  }
-
-  .status-abandoned .status {
-    background: #f8d7da;
-    color: #721c24;
+    .page-title {
+      font-size: var(--t-font-size-xl);
+    }
   }
 </style>

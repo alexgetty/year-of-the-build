@@ -1,0 +1,117 @@
+.card {
+  position: relative;
+  border: 1px solid var(--border-default);
+  padding: var(--t-spacing-lg);
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+.card:hover {
+  border-color: var(--t-primary-600);
+}
+
+/* Status badges */
+.status {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: var(--t-font-size-xs);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 4px 8px;
+  margin-bottom: var(--t-spacing-sm);
+}
+
+.status::before {
+  content: '';
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+}
+
+.status-launched {
+  background: var(--t-primary-600);
+  color: var(--yotb-light);
+}
+
+.status-launched::before {
+  background: var(--yotb-light);
+  box-shadow: 0 0 0 2px var(--t-primary-600), 0 0 0 4px rgba(255, 255, 255, 0.3);
+}
+
+.status-building {
+  background: var(--yotb-amber);
+  color: var(--yotb-light);
+}
+
+.status-building::before {
+  background: var(--yotb-light);
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+
+.status-planning {
+  background: rgba(28, 25, 23, 0.08);
+  color: var(--text-secondary);
+}
+
+.status-planning::before {
+  background: var(--text-muted);
+}
+
+.title {
+  font-size: var(--t-font-size-base);
+  font-weight: 600;
+  margin-bottom: var(--t-spacing-xs);
+  line-height: var(--t-line-height-tight);
+}
+
+.title a {
+  color: inherit;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+/* Stretch link to cover entire card */
+.title a::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+}
+
+.card:hover .title a {
+  color: var(--t-primary-600);
+}
+
+.description {
+  font-size: var(--t-font-size-sm);
+  color: var(--text-secondary);
+  line-height: var(--t-line-height-normal);
+}
+
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--t-spacing-xs);
+  margin-top: var(--t-spacing-md);
+}
+
+.tag {
+  font-size: var(--t-font-size-xs);
+  color: var(--text-secondary);
+  padding: 2px 8px;
+  border: 1px solid var(--border-default);
+  background: transparent;
+}
+
+.meta {
+  font-size: var(--t-font-size-xs);
+  color: var(--text-muted);
+  margin-top: var(--t-spacing-md);
+}

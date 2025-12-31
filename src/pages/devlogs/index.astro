@@ -1,101 +1,378 @@
 ---
-import BaseLayout from '../../layouts/BaseLayout.astro';
+import '@gettymade/construct/styles';
+import '../../styles/theme.css';
+import { SiteHeader } from '../../components/SiteHeader';
+import { SiteFooter } from '../../components/SiteFooter';
+import { DevlogCard } from '../../components/DevlogCard';
 import { getCollection } from 'astro:content';
 
 const devlogs = (await getCollection('devlogs'))
   .filter(post => !post.data.isDraft)
   .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+
+// Group devlogs by month
+const groupedByMonth = devlogs.reduce((acc, post) => {
+  const monthKey = post.data.pubDate.toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: 'long'
+  });
+  if (!acc[monthKey]) {
+    acc[monthKey] = [];
+  }
+  acc[monthKey].push(post);
+  return acc;
+}, {} as Record<string, typeof devlogs>);
+
+const months = Object.keys(groupedByMonth);
+
+// Get project lookup for resolving projectSlugs
+const allProjects = await getCollection('projects');
+const projectMap = allProjects.reduce((acc, p) => {
+  acc[p.slug] = { slug: p.slug, title: p.data.title.replace(/^Project \d+: /, '') };
+  return acc;
+}, {} as Record<string, { slug: string; title: string }>);
+
+// Helper to resolve projectSlugs to project objects
+function resolveProjects(slugs?: string[]) {
+  if (!slugs) return undefined;
+  return slugs.map(slug => projectMap[slug]).filter(Boolean);
+}
 ---
 
-<BaseLayout title="Devlogs" description="Weekly devlogs documenting the journey of building in public">
-  <h1>Devlogs</h1>
-  <p class="subtitle">Weekly updates on progress, challenges, and learnings.</p>
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="description" content="Weekly devlogs documenting the journey of building in public" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="generator" content={Astro.generator} />
+    <title>Devlog - Year of the Build</title>
+  </head>
+  <body>
+    <SiteHeader client:load variant="dark" />
 
-  {devlogs.length === 0 ? (
-    <p class="empty">No devlogs yet. Check back soon!</p>
-  ) : (
-    <ul class="devlog-list">
-      {devlogs.map((post) => (
-        <li>
-          <a href={`/devlogs/${post.slug}/`} class="devlog-item">
-            <span class="week">Week {post.data.weekNumber}</span>
-            <h2>{post.data.title}</h2>
-            <p>{post.data.description}</p>
-            <time datetime={post.data.pubDate.toISOString()}>
-              {post.data.pubDate.toLocaleDateString('en-US', {
-                year: 'numeric',
-                month: 'long',
-                day: 'numeric'
-              })}
-            </time>
-          </a>
-        </li>
-      ))}
-    </ul>
-  )}
-</BaseLayout>
+    <main class="main-content">
+      <!-- Page Header -->
+      <header class="page-header">
+        <div class="container">
+          <h1 class="page-title">Devlog</h1>
+          <p class="page-description">Weekly updates from the trenches. What worked, what broke, and everything in between.</p>
+        </div>
+      </header>
+
+      <!-- Timeline Section -->
+      <section class="timeline-section">
+        <div class="container">
+          {devlogs.length === 0 ? (
+            <p class="empty-state">No devlogs yet. Check back soon!</p>
+          ) : (
+            <div class="timeline-layout">
+              <!-- Month Navigation -->
+              <aside class="timeline-nav">
+                <nav class="month-nav" aria-label="Jump to month">
+                  {months.map((month, i) => (
+                    <a
+                      href={`#${month.toLowerCase().replace(' ', '-')}`}
+                      class={`month-link ${i === 0 ? 'active' : ''}`}
+                    >
+                      {month}
+                    </a>
+                  ))}
+                </nav>
+              </aside>
+
+              <!-- Timeline Content -->
+              <div class="timeline-content">
+                <div class="timeline-line" aria-hidden="true"></div>
+
+                {months.map((month) => (
+                  <div class="month-group" id={month.toLowerCase().replace(' ', '-')}>
+                    <div class="month-header">
+                      <h2 class="month-title">{month}</h2>
+                      <span class="month-count">{groupedByMonth[month].length} {groupedByMonth[month].length === 1 ? 'entry' : 'entries'}</span>
+                    </div>
+                    <div class="devlog-list">
+                      {groupedByMonth[month].map((post) => (
+                        <div class="timeline-item">
+                          <div class="timeline-marker" aria-hidden="true"></div>
+                          <DevlogCard
+                            title={post.data.title}
+                            description={post.data.description}
+                            slug={post.slug}
+                            weekNumber={post.data.weekNumber}
+                            pubDate={post.data.pubDate}
+                            projects={resolveProjects(post.data.projectSlugs)}
+                          />
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
+      </section>
+    </main>
+
+    <SiteFooter />
+  </body>
+</html>
 
 <style>
-  h1 {
-    font-size: var(--t-font-size-xl);
+  body {
+    margin: 0;
+    padding: 0;
+  }
+
+  .main-content {
+    background: var(--bg-canvas);
+    min-height: 100vh;
+  }
+
+  .container {
+    max-width: var(--yotb-content-max);
+    margin: 0 auto;
+    padding: 0 var(--t-spacing-lg);
+  }
+
+  /* =============================================================================
+     Page Header
+     ============================================================================= */
+
+  .page-header {
+    padding: var(--t-spacing-2xl) 0 var(--t-spacing-xl);
+    border-bottom: 1px solid var(--border-default);
+  }
+
+  .page-title {
+    font-size: var(--t-font-size-2xl);
     font-weight: 700;
-    margin-bottom: var(--t-spacing-xs);
+    line-height: var(--t-line-height-tight);
+    letter-spacing: -0.02em;
+    margin-bottom: var(--t-spacing-sm);
+    color: var(--text-primary);
   }
 
-  .subtitle {
+  .page-description {
+    font-size: var(--t-font-size-lg);
+    font-weight: 450;
     color: var(--text-secondary);
-    font-size: var(--t-font-size-base);
-    margin-bottom: var(--t-spacing-xl);
+    max-width: 60ch;
   }
 
-  .empty {
+  /* =============================================================================
+     Timeline Section
+     ============================================================================= */
+
+  .timeline-section {
+    padding: var(--t-spacing-xl) 0 var(--t-spacing-2xl);
+  }
+
+  .empty-state {
+    color: var(--text-muted);
+    padding: var(--t-spacing-xl) 0;
+  }
+
+  .timeline-layout {
+    display: grid;
+    grid-template-columns: 140px 1fr;
+    gap: var(--t-spacing-xl);
+  }
+
+  /* =============================================================================
+     Month Navigation (Sidebar)
+     ============================================================================= */
+
+  .timeline-nav {
+    position: sticky;
+    top: calc(var(--header-height) + var(--t-spacing-lg));
+    height: fit-content;
+  }
+
+  .month-nav {
+    display: flex;
+    flex-direction: column;
+    gap: var(--t-spacing-xs);
+  }
+
+  .month-link {
+    font-size: var(--t-font-size-sm);
+    font-weight: 500;
+    color: var(--text-muted);
+    text-decoration: none;
+    padding: var(--t-spacing-xs) 0;
+    padding-left: var(--t-spacing-sm);
+    border-left: 1px solid transparent;
+    transition: all 0.2s ease;
+  }
+
+  .month-link:hover {
+    color: var(--text-primary);
+    border-color: var(--border-default);
+  }
+
+  .month-link.active {
+    color: var(--yotb-amber);
+    border-color: var(--yotb-amber);
+    font-weight: 600;
+  }
+
+  /* =============================================================================
+     Timeline Content
+     ============================================================================= */
+
+  .timeline-content {
+    position: relative;
+  }
+
+  .timeline-line {
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 1px;
+    background: var(--border-default);
+  }
+
+  .month-group {
+    margin-bottom: var(--t-spacing-2xl);
+  }
+
+  .month-group:last-child {
+    margin-bottom: 0;
+  }
+
+  .month-header {
+    display: flex;
+    align-items: baseline;
+    gap: var(--t-spacing-md);
+    margin-bottom: var(--t-spacing-lg);
+    padding-left: var(--t-spacing-lg);
+    position: relative;
+  }
+
+  .month-header::before {
+    content: '';
+    position: absolute;
+    left: -3px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 7px;
+    height: 7px;
+    background: var(--bg-canvas);
+    border: 1px solid var(--yotb-amber);
+    border-radius: 50%;
+  }
+
+  .month-title {
+    font-size: var(--t-font-size-base);
+    font-weight: 600;
+    color: var(--text-primary);
+  }
+
+  .month-count {
+    font-size: var(--t-font-size-xs);
+    font-weight: 500;
     color: var(--text-muted);
   }
 
   .devlog-list {
-    list-style: none;
     display: flex;
     flex-direction: column;
     gap: var(--t-spacing-md);
+    padding-left: var(--t-spacing-lg);
   }
 
-  .devlog-item {
-    display: block;
-    padding: var(--t-spacing-lg);
+  .timeline-item {
+    position: relative;
+  }
+
+  .timeline-marker {
+    position: absolute;
+    left: calc(-1 * var(--t-spacing-lg) - 2px);
+    top: var(--t-spacing-md);
+    width: 5px;
+    height: 5px;
+    background: var(--bg-canvas);
     border: 1px solid var(--border-default);
-    text-decoration: none;
-    color: inherit;
-    transition: border-color 0.2s ease;
+    border-radius: 50%;
+    transition: all 0.2s ease;
   }
 
-  .devlog-item:hover {
-    border-color: var(--t-primary-600);
+  .timeline-item:hover .timeline-marker {
+    border-color: var(--yotb-amber);
+    background: var(--yotb-amber);
   }
 
-  .week {
-    display: block;
-    font-size: var(--t-font-size-xs);
-    font-weight: 600;
-    color: var(--t-primary-600);
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    margin-bottom: var(--t-spacing-xs);
+  /* =============================================================================
+     Responsive
+     ============================================================================= */
+
+  @media (max-width: 900px) {
+    .timeline-layout {
+      grid-template-columns: 1fr;
+    }
+
+    .timeline-nav {
+      display: none;
+    }
+
+    .timeline-line {
+      display: none;
+    }
+
+    .month-header::before {
+      display: none;
+    }
+
+    .month-header {
+      padding-left: 0;
+    }
+
+    .devlog-list {
+      padding-left: 0;
+    }
+
+    .timeline-marker {
+      display: none;
+    }
   }
 
-  h2 {
-    font-size: var(--t-font-size-lg);
-    font-weight: 700;
-    margin-bottom: var(--t-spacing-xs);
-  }
-
-  p {
-    color: var(--text-secondary);
-    margin-bottom: var(--t-spacing-xs);
-    line-height: var(--t-line-height-normal);
-  }
-
-  time {
-    font-size: var(--t-font-size-xs);
-    color: var(--text-muted);
+  @media (max-width: 600px) {
+    .page-title {
+      font-size: var(--t-font-size-xl);
+    }
   }
 </style>
+
+<script>
+  // Highlight active month in navigation based on scroll position
+  document.addEventListener('DOMContentLoaded', () => {
+    const monthGroups = document.querySelectorAll('.month-group');
+    const monthLinks = document.querySelectorAll('.month-link');
+
+    if (monthGroups.length === 0 || monthLinks.length === 0) return;
+
+    const observerOptions = {
+      rootMargin: '-20% 0px -70% 0px'
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const id = entry.target.id;
+          monthLinks.forEach(link => {
+            link.classList.remove('active');
+            if (link.getAttribute('href') === '#' + id) {
+              link.classList.add('active');
+            }
+          });
+        }
+      });
+    }, observerOptions);
+
+    monthGroups.forEach(group => observer.observe(group));
+  });
+</script>

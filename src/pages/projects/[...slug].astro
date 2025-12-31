@@ -1,5 +1,9 @@
 ---
-import BaseLayout from '../../layouts/BaseLayout.astro';
+import '@gettymade/construct/styles';
+import '../../styles/theme.css';
+import { SiteHeader } from '../../components/SiteHeader';
+import { SiteFooter } from '../../components/SiteFooter';
+import { ProjectCard } from '../../components/ProjectCard';
 import { getCollection } from 'astro:content';
 
 export async function getStaticPaths() {
@@ -12,180 +16,805 @@ export async function getStaticPaths() {
 
 const project = Astro.props;
 const { Content } = await project.render();
+
+// Get all projects for related section
+const allProjects = (await getCollection('projects'))
+  .sort((a, b) => a.data.monthNumber - b.data.monthNumber);
+
+// Get related projects (next 3 projects, wrapping around)
+const currentIndex = allProjects.findIndex(p => p.slug === project.slug);
+const relatedProjects = [];
+for (let i = 1; i <= 3; i++) {
+  const nextIndex = (currentIndex + i) % allProjects.length;
+  relatedProjects.push(allProjects[nextIndex]);
+}
+
+// Get devlogs for this project (many-to-many: devlog can link to multiple projects)
+const allDevlogs = (await getCollection('devlogs'))
+  .filter(d => !d.data.isDraft && d.data.projectSlugs?.includes(project.slug))
+  .sort((a, b) => b.data.weekNumber - a.data.weekNumber);
+
+// Format the project number with leading zero
+const projectNumber = String(project.data.monthNumber).padStart(2, '0');
+
+// Status display text
+const statusText = project.data.status === 'building' ? 'Building' :
+                   project.data.status === 'launched' ? 'Live' : 'Planned';
+
+// Check if we have sidebar content
+const hasSidebar = (project.data.features && project.data.features.length > 0) ||
+                   (project.data.stats && project.data.stats.length > 0);
 ---
 
-<BaseLayout title={project.data.title} description={project.data.description}>
-  <article>
-    <header>
-      <span class="month">Month {project.data.monthNumber}</span>
-      <h1>{project.data.title}</h1>
-      <p class="description">{project.data.description}</p>
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="description" content={project.data.description} />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="generator" content={Astro.generator} />
+    <title>{project.data.title} - Year of the Build</title>
+  </head>
+  <body>
+    <SiteHeader client:load variant="dark" />
 
-      <div class="meta">
-        <span class={`status status-${project.data.status}`}>{project.data.status}</span>
-        {project.data.launchDate && (
-          <span class="launch-date">
-            Launched: {project.data.launchDate.toLocaleDateString('en-US', {
-              year: 'numeric',
-              month: 'long',
-              day: 'numeric'
-            })}
-          </span>
-        )}
+    <!-- Breadcrumbs -->
+    <div class="breadcrumbs-section">
+      <div class="container">
+        <nav class="breadcrumbs" aria-label="Breadcrumb">
+          <a href="/">Home</a>
+          <span>/</span>
+          <a href="/projects/">Projects</a>
+          <span>/</span>
+          <strong>{project.data.title}</strong>
+        </nav>
       </div>
-
-      {(project.data.repoUrl || project.data.liveUrl) && (
-        <div class="links">
-          {project.data.repoUrl && (
-            <a href={project.data.repoUrl} target="_blank" rel="noopener noreferrer">
-              GitHub Repo &rarr;
-            </a>
-          )}
-          {project.data.liveUrl && (
-            <a href={project.data.liveUrl} target="_blank" rel="noopener noreferrer">
-              Live Site &rarr;
-            </a>
-          )}
-        </div>
-      )}
-    </header>
-
-    <div class="content">
-      <Content />
     </div>
 
-    <footer>
-      <a href="/projects/">&larr; Back to all projects</a>
-    </footer>
-  </article>
-</BaseLayout>
+    <main class="main-content">
+      <!-- Project Hero -->
+      <header class="project-hero">
+        <div class="container">
+          <div class="hero-grid">
+            <div class="project-hero-number">{projectNumber}</div>
+            <div class="project-hero-content">
+              <span class={`project-status status-${project.data.status}`}>{statusText}</span>
+              <h1 class="project-hero-title">{project.data.title}</h1>
+              <p class="project-hero-description">{project.data.description}</p>
+              <div class="project-meta">
+                <div class="project-meta-item">
+                  <span>Month</span>
+                  <strong>{project.data.month} 2025</strong>
+                </div>
+                {project.data.launchDate && (
+                  <div class="project-meta-item">
+                    <span>Launched</span>
+                    <strong>{project.data.launchDate.toLocaleDateString('en-US', {
+                      month: 'short',
+                      day: 'numeric',
+                      year: 'numeric'
+                    })}</strong>
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <!-- About Section -->
+      <section class="about-section">
+        <div class="container">
+          <div class="section-label">
+            <span>About This Project</span>
+          </div>
+          <div class={hasSidebar ? 'about-content about-content--with-sidebar' : 'about-content'}>
+            <div class="about-text">
+              <Content />
+            </div>
+            {hasSidebar && (
+              <aside class="about-sidebar">
+                {project.data.features && project.data.features.length > 0 && (
+                  <div class="sidebar-block">
+                    <div class="sidebar-label">Key Features</div>
+                    <ul class="feature-list">
+                      {project.data.features.map((feature: string) => (
+                        <li>{feature}</li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+                {project.data.stats && project.data.stats.length > 0 && (
+                  <div class="sidebar-block">
+                    <div class="sidebar-label">Launch Stats</div>
+                    <ul class="stats-list">
+                      {project.data.stats.map((stat: { value: string; label: string }) => (
+                        <li><strong>{stat.value}</strong> {stat.label}</li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+              </aside>
+            )}
+          </div>
+        </div>
+      </section>
+
+      <!-- Tech Stack -->
+      {project.data.tags && project.data.tags.length > 0 && (
+        <section class="tech-section">
+          <div class="container">
+            <div class="section-label">
+              <span>Tech Stack</span>
+            </div>
+            <div class="tech-grid">
+              {project.data.tags.map((tag: string) => (
+                <div class="tech-item">
+                  <div class="tech-icon">{tag.charAt(0).toUpperCase()}</div>
+                  <div class="tech-name">{tag}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+
+      <!-- Links -->
+      {(project.data.repoUrl || project.data.liveUrl) && (
+        <section class="links-section">
+          <div class="container">
+            <div class="section-label">
+              <span>Links</span>
+            </div>
+            <div class="links-grid">
+              {project.data.liveUrl && (
+                <a href={project.data.liveUrl} target="_blank" rel="noopener noreferrer" class="btn btn-primary">
+                  Visit Live Site
+                </a>
+              )}
+              {project.data.repoUrl && (
+                <a href={project.data.repoUrl} target="_blank" rel="noopener noreferrer" class="btn btn-secondary">
+                  View on GitHub
+                </a>
+              )}
+            </div>
+          </div>
+        </section>
+      )}
+
+      <!-- Build Log Timeline -->
+      {allDevlogs.length > 0 && (
+        <section class="timeline-section">
+          <div class="container">
+            <div class="section-label">
+              <span>Build Log</span>
+            </div>
+            <div class="timeline">
+              {allDevlogs.map((devlog) => (
+                <article class="timeline-item">
+                  <div class="timeline-marker">
+                    <span>{String(devlog.data.weekNumber).padStart(2, '0')}</span>
+                  </div>
+                  <div class="timeline-content">
+                    <span class="timeline-date">
+                      {devlog.data.pubDate.toLocaleDateString('en-US', {
+                        month: 'short',
+                        day: 'numeric',
+                        year: 'numeric'
+                      })}
+                    </span>
+                    <h3 class="timeline-title">
+                      <a href={`/devlogs/${devlog.slug}/`}>{devlog.data.title}</a>
+                    </h3>
+                    <p class="timeline-excerpt">{devlog.data.description}</p>
+                  </div>
+                </article>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+
+      <!-- Related Projects -->
+      <section class="related-section">
+        <div class="container">
+          <div class="section-label">
+            <span>Other Projects</span>
+          </div>
+          <div class="related-grid">
+            {relatedProjects.map((related) => (
+              <ProjectCard
+                title={related.data.title}
+                description={related.data.description}
+                slug={related.slug}
+                status={related.data.status}
+                month={related.data.month}
+                tags={related.data.tags}
+              />
+            ))}
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <SiteFooter />
+  </body>
+</html>
 
 <style>
-  article {
-    max-width: 720px;
+  body {
+    margin: 0;
+    padding: 0;
   }
 
-  header {
-    margin-bottom: 3rem;
-    padding-bottom: 2rem;
-    border-bottom: 1px solid #ccc;
+  .main-content {
+    background: var(--bg-canvas);
   }
 
-  .month {
-    display: block;
-    font-size: 0.875rem;
-    color: #999;
-    margin-bottom: 0.5rem;
+  .container {
+    max-width: var(--yotb-content-max);
+    margin: 0 auto;
+    padding: 0 var(--t-spacing-lg);
   }
 
-  h1 {
-    font-size: 2.5rem;
-    margin-bottom: 1rem;
-    line-height: 1.2;
+  /* =============================================================================
+     Breadcrumbs
+     ============================================================================= */
+
+  .breadcrumbs-section {
+    padding: var(--t-spacing-md) 0;
+    border-bottom: 1px solid var(--border-default);
+    background: var(--bg-canvas);
   }
 
-  .description {
-    font-size: 1.125rem;
-    color: #666;
-    margin-bottom: 1rem;
-  }
-
-  .meta {
+  .breadcrumbs {
     display: flex;
-    gap: 1rem;
     align-items: center;
-    margin-bottom: 1rem;
+    gap: var(--t-spacing-sm);
+    font-size: var(--t-font-size-sm);
   }
 
-  .status {
-    display: inline-block;
-    font-size: 0.75rem;
+  .breadcrumbs a {
+    color: var(--text-muted);
+    text-decoration: none;
+    transition: color 0.2s ease;
+  }
+
+  .breadcrumbs a:hover {
+    color: var(--text-primary);
+  }
+
+  .breadcrumbs span {
+    color: var(--text-muted);
+  }
+
+  .breadcrumbs strong {
+    color: var(--text-primary);
+    font-weight: 600;
+  }
+
+  /* =============================================================================
+     Project Hero
+     ============================================================================= */
+
+  .project-hero {
+    padding: var(--t-spacing-2xl) 0;
+    border-bottom: 1px solid var(--border-default);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .project-hero::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 400px;
+    height: 400px;
+    background: rgba(46, 90, 60, 0.06);
+    clip-path: polygon(100% 0, 0 0, 100% 100%);
+  }
+
+  .hero-grid {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: var(--t-spacing-xl);
+    align-items: start;
+    position: relative;
+    z-index: 1;
+  }
+
+  .project-hero-number {
+    font-size: 7rem;
+    font-weight: 700;
+    line-height: 0.9;
+    color: var(--t-primary-600);
+    letter-spacing: -0.02em;
+  }
+
+  .project-hero-content {
+    display: flex;
+    flex-direction: column;
+    gap: var(--t-spacing-md);
+  }
+
+  .project-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: var(--t-font-size-xs);
+    font-weight: 600;
     text-transform: uppercase;
-    padding: 0.25rem 0.5rem;
-    border-radius: 2px;
-    background: #f5f5f5;
-    color: #666;
+    letter-spacing: 0.05em;
+    padding: 4px 8px;
+    width: fit-content;
+  }
+
+  .project-status::before {
+    content: '';
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
   }
 
   .status-launched {
-    background: #d4edda;
-    color: #155724;
+    background: var(--t-primary-600);
+    color: var(--yotb-light);
   }
 
-  .status-in-progress {
-    background: #fff3cd;
-    color: #856404;
+  .status-launched::before {
+    background: var(--yotb-light);
+    box-shadow: 0 0 0 2px var(--t-primary-600), 0 0 0 4px rgba(255, 255, 255, 0.3);
   }
 
-  .status-abandoned {
-    background: #f8d7da;
-    color: #721c24;
+  .status-building {
+    background: var(--yotb-amber);
+    color: var(--yotb-light);
   }
 
-  .launch-date {
-    font-size: 0.875rem;
-    color: #666;
+  .status-building::before {
+    background: var(--yotb-light);
+    animation: pulse 1.5s ease-in-out infinite;
   }
 
-  .links {
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
+  }
+
+  .status-planning {
+    background: rgba(28, 25, 23, 0.08);
+    color: var(--text-secondary);
+  }
+
+  .status-planning::before {
+    background: var(--text-muted);
+  }
+
+  .project-hero-title {
+    font-size: var(--t-font-size-2xl);
+    font-weight: 700;
+    line-height: var(--t-line-height-tight);
+    letter-spacing: -0.02em;
+    color: var(--text-primary);
+  }
+
+  .project-hero-description {
+    font-size: var(--t-font-size-lg);
+    font-weight: 450;
+    color: var(--text-secondary);
+    max-width: 55ch;
+  }
+
+  .project-meta {
     display: flex;
-    gap: 1rem;
+    gap: var(--t-spacing-lg);
+    font-size: var(--t-font-size-sm);
+    color: var(--text-muted);
   }
 
-  .links a {
-    padding: 0.5rem 1rem;
-    background: #000;
-    color: white;
+  .project-meta-item {
+    display: flex;
+    align-items: center;
+    gap: var(--t-spacing-xs);
+  }
+
+  .project-meta-item strong {
+    color: var(--text-primary);
+    font-weight: 600;
+  }
+
+  /* =============================================================================
+     Section Styles
+     ============================================================================= */
+
+  section {
+    padding: var(--t-spacing-xl) 0;
+    border-bottom: 1px solid var(--border-default);
+  }
+
+  section:last-of-type {
+    border-bottom: none;
+  }
+
+  .section-label {
+    display: flex;
+    align-items: center;
+    gap: var(--t-spacing-sm);
+    font-size: var(--t-font-size-xs);
+    font-weight: 600;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: var(--t-spacing-lg);
+  }
+
+  .section-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border-default);
+  }
+
+  /* =============================================================================
+     About Section — Golden Ratio Layout
+     ============================================================================= */
+
+  .about-content {
+    max-width: 720px;
+  }
+
+  .about-content--with-sidebar {
+    max-width: none;
+    display: grid;
+    grid-template-columns: var(--yotb-golden-major) var(--yotb-golden-minor);
+    gap: var(--t-spacing-xl);
+  }
+
+  .about-text :global(h2) {
+    font-size: var(--t-font-size-lg);
+    font-weight: 600;
+    margin-top: var(--t-spacing-lg);
+    margin-bottom: var(--t-spacing-sm);
+    color: var(--text-primary);
+  }
+
+  .about-text :global(h2:first-child) {
+    margin-top: 0;
+  }
+
+  .about-text :global(h3) {
+    font-size: var(--t-font-size-base);
+    font-weight: 600;
+    margin-top: var(--t-spacing-md);
+    margin-bottom: var(--t-spacing-xs);
+    color: var(--text-primary);
+  }
+
+  .about-text :global(p) {
+    font-size: var(--t-font-size-base);
+    line-height: var(--t-line-height-normal);
+    color: var(--text-secondary);
+    margin-bottom: var(--t-spacing-md);
+  }
+
+  .about-text :global(ul),
+  .about-text :global(ol) {
+    margin-bottom: var(--t-spacing-md);
+    padding-left: var(--t-spacing-lg);
+  }
+
+  .about-text :global(li) {
+    font-size: var(--t-font-size-base);
+    line-height: var(--t-line-height-normal);
+    color: var(--text-secondary);
+    margin-bottom: var(--t-spacing-xs);
+  }
+
+  /* Sidebar */
+  .about-sidebar {
+    border-left: 1px solid var(--border-default);
+    padding-left: var(--t-spacing-lg);
+  }
+
+  .sidebar-block {
+    margin-bottom: var(--t-spacing-lg);
+  }
+
+  .sidebar-block:last-child {
+    margin-bottom: 0;
+  }
+
+  .sidebar-label {
+    font-size: var(--t-font-size-xs);
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: var(--t-spacing-sm);
+  }
+
+  .feature-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .feature-list li {
+    font-size: var(--t-font-size-sm);
+    color: var(--text-secondary);
+    padding-left: var(--t-spacing-sm);
+    border-left: 2px solid var(--t-primary-600);
+    margin-bottom: var(--t-spacing-xs);
+  }
+
+  .feature-list li:last-child {
+    margin-bottom: 0;
+  }
+
+  .stats-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .stats-list li {
+    font-size: var(--t-font-size-sm);
+    color: var(--text-secondary);
+    margin-bottom: var(--t-spacing-xs);
+  }
+
+  .stats-list li:last-child {
+    margin-bottom: 0;
+  }
+
+  .stats-list strong {
+    color: var(--text-primary);
+    font-weight: 600;
+  }
+
+  /* =============================================================================
+     Tech Stack
+     ============================================================================= */
+
+  .tech-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--t-spacing-sm);
+  }
+
+  .tech-item {
+    display: flex;
+    align-items: center;
+    gap: var(--t-spacing-sm);
+    padding: var(--t-spacing-sm) var(--t-spacing-md);
+    background: var(--bg-surface);
+    border: 1px solid var(--border-default);
+  }
+
+  .tech-icon {
+    width: 24px;
+    height: 24px;
+    background: rgba(46, 90, 60, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: var(--t-font-size-xs);
+    font-weight: 700;
+    color: var(--t-primary-600);
+  }
+
+  .tech-name {
+    font-size: var(--t-font-size-sm);
+    font-weight: 600;
+    color: var(--text-primary);
+  }
+
+  /* =============================================================================
+     Links
+     ============================================================================= */
+
+  .links-grid {
+    display: flex;
+    gap: var(--t-spacing-md);
+    flex-wrap: wrap;
+  }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--t-spacing-sm);
+    font-family: inherit;
+    font-size: var(--t-font-size-sm);
+    font-weight: 600;
     text-decoration: none;
-    border-radius: 2px;
-    font-size: 0.875rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border: 2px solid transparent;
+    padding: var(--t-spacing-xs) var(--t-spacing-md);
+    min-height: 44px;
   }
 
-  .links a:hover {
-    background: #333;
+  .btn-primary {
+    background: var(--text-primary);
+    color: var(--bg-canvas);
+    border-color: var(--text-primary);
   }
 
-  .content {
-    margin-bottom: 3rem;
+  .btn-primary:hover {
+    background: var(--text-secondary);
+    border-color: var(--text-secondary);
   }
 
-  .content :global(h2) {
-    font-size: 1.75rem;
-    margin-top: 2rem;
-    margin-bottom: 1rem;
+  .btn-secondary {
+    background: var(--bg-canvas);
+    color: var(--text-primary);
+    border-color: var(--text-primary);
   }
 
-  .content :global(h3) {
-    font-size: 1.375rem;
-    margin-top: 1.5rem;
-    margin-bottom: 0.75rem;
+  .btn-secondary:hover {
+    background: var(--text-primary);
+    color: var(--bg-canvas);
   }
 
-  .content :global(p) {
-    margin-bottom: 1rem;
+  /* =============================================================================
+     Build Log Timeline
+     ============================================================================= */
+
+  .timeline {
+    display: flex;
+    flex-direction: column;
+    gap: var(--t-spacing-lg);
   }
 
-  .content :global(ul),
-  .content :global(ol) {
-    margin-bottom: 1rem;
-    padding-left: 2rem;
+  .timeline-item {
+    position: relative;
+    padding-left: var(--t-spacing-2xl);
   }
 
-  .content :global(li) {
-    margin-bottom: 0.5rem;
+  .timeline-item::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 3px;
+    background: linear-gradient(to bottom, var(--t-primary-600), rgba(46, 90, 60, 0.2));
   }
 
-  footer {
-    padding-top: 2rem;
-    border-top: 1px solid #ccc;
+  .timeline-item:last-child::before {
+    bottom: auto;
+    height: var(--t-spacing-xl);
   }
 
-  footer a {
-    color: #666;
+  .timeline-marker {
+    position: absolute;
+    left: calc((var(--t-spacing-xl) / -2) + 1.5px);
+    top: 0;
+    width: var(--t-spacing-xl);
+    height: var(--t-spacing-xl);
+    background: var(--bg-canvas);
+    border: 3px solid var(--t-primary-600);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transform: rotate(45deg);
+  }
+
+  .timeline-marker span {
+    transform: rotate(-45deg);
+    font-size: var(--t-font-size-xs);
+    font-weight: 700;
+    color: var(--t-primary-600);
+  }
+
+  .timeline-content {
+    background: var(--bg-surface);
+    border: 1px solid var(--border-default);
+    padding: var(--t-spacing-lg);
+    transition: border-color 0.2s ease;
+  }
+
+  .timeline-content:hover {
+    border-color: var(--t-primary-600);
+  }
+
+  .timeline-date {
+    display: block;
+    font-size: var(--t-font-size-xs);
+    font-weight: 500;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: var(--t-spacing-xs);
+  }
+
+  .timeline-title {
+    font-size: var(--t-font-size-lg);
+    font-weight: 600;
+    margin-bottom: var(--t-spacing-sm);
+    line-height: var(--t-line-height-tight);
+  }
+
+  .timeline-title a {
+    color: inherit;
     text-decoration: none;
+    transition: color 0.2s ease;
   }
 
-  footer a:hover {
-    color: #000;
+  .timeline-title a:hover {
+    color: var(--t-primary-600);
+  }
+
+  .timeline-excerpt {
+    font-size: var(--t-font-size-sm);
+    color: var(--text-secondary);
+    line-height: var(--t-line-height-normal);
+  }
+
+  /* =============================================================================
+     Related Projects
+     ============================================================================= */
+
+  .related-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--t-spacing-md);
+  }
+
+  /* =============================================================================
+     Responsive
+     ============================================================================= */
+
+  @media (max-width: 900px) {
+    .hero-grid {
+      grid-template-columns: 1fr;
+      gap: var(--t-spacing-md);
+    }
+
+    .project-hero-number {
+      font-size: var(--t-font-size-2xl);
+    }
+
+    .about-content--with-sidebar {
+      grid-template-columns: 1fr;
+    }
+
+    .about-sidebar {
+      border-left: none;
+      padding-left: 0;
+      border-top: 1px solid var(--border-default);
+      padding-top: var(--t-spacing-lg);
+    }
+
+    .related-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  @media (max-width: 600px) {
+    .project-hero-title {
+      font-size: var(--t-font-size-xl);
+    }
+
+    .links-grid {
+      flex-direction: column;
+    }
+
+    .btn {
+      width: 100%;
+    }
+
+    .timeline-item {
+      padding-left: var(--t-spacing-xl);
+    }
+
+    .timeline-marker {
+      width: var(--t-spacing-lg);
+      height: var(--t-spacing-lg);
+      left: calc((var(--t-spacing-lg) / -2) + 1.5px);
+    }
   }
 </style>

@@ -4,6 +4,8 @@ import '../styles/theme.css';
 import { Hero } from '../components/Hero';
 import { SiteHeader } from '../components/SiteHeader';
 import { SiteFooter } from '../components/SiteFooter';
+import { ProjectCard } from '../components/ProjectCard';
+import { DevlogCard } from '../components/DevlogCard';
 import { getCollection } from 'astro:content';
 
 const devlogs = (await getCollection('devlogs'))
@@ -18,9 +20,21 @@ const latestDevlog = devlogs[0] ? {
 
 const recentDevlogs = devlogs.slice(0, 3);
 
-const projects = (await getCollection('projects'))
+const allProjects = await getCollection('projects');
+const projects = allProjects
   .sort((a, b) => a.data.monthNumber - b.data.monthNumber)
   .slice(0, 4);
+
+// Project lookup for DevlogCard
+const projectMap = allProjects.reduce((acc, p) => {
+  acc[p.slug] = { slug: p.slug, title: p.data.title.replace(/^Project \d+: /, '') };
+  return acc;
+}, {} as Record<string, { slug: string; title: string }>);
+
+function resolveProjects(slugs?: string[]) {
+  if (!slugs) return undefined;
+  return slugs.map(slug => projectMap[slug]).filter(Boolean);
+}
 ---
 
 <!doctype html>
@@ -88,21 +102,14 @@ const projects = (await getCollection('projects'))
           ) : (
             <div class="devlog-cards">
               {recentDevlogs.map((post) => (
-                <article class="devlog-card">
-                  <span class="devlog-week">Week {post.data.weekNumber}</span>
-                  <h3 class="devlog-title">
-                    <a href={`/devlogs/${post.slug}/`}>{post.data.title}</a>
-                  </h3>
-                  <p class="devlog-excerpt">{post.data.description}</p>
-                  <div class="devlog-meta">
-                    <time datetime={post.data.pubDate.toISOString()}>
-                      {post.data.pubDate.toLocaleDateString('en-US', {
-                        month: 'short',
-                        day: 'numeric'
-                      })}
-                    </time>
-                  </div>
-                </article>
+                <DevlogCard
+                  title={post.data.title}
+                  description={post.data.description}
+                  slug={post.slug}
+                  weekNumber={post.data.weekNumber}
+                  pubDate={post.data.pubDate}
+                  projects={resolveProjects(post.data.projectSlugs)}
+                />
               ))}
             </div>
           )}
@@ -121,27 +128,14 @@ const projects = (await getCollection('projects'))
 
           <div class="project-grid">
             {projects.map((project) => (
-              <article class="project-card">
-                <span class="project-number">{String(project.data.monthNumber).padStart(2, '0')}</span>
-                <span class={`project-status status-${project.data.status}`}>
-                  {project.data.status === 'building' ? 'Building' :
-                   project.data.status === 'launched' ? 'Live' : 'Planned'}
-                </span>
-                <h3 class="project-title">
-                  <a href={`/projects/${project.slug}/`}>{project.data.title}</a>
-                </h3>
-                <p class="project-description">{project.data.description}</p>
-                {project.data.tags && project.data.tags.length > 0 && (
-                  <div class="project-tags">
-                    {project.data.tags.map((tag: string) => (
-                      <span class="project-tag">{tag}</span>
-                    ))}
-                  </div>
-                )}
-                <div class="project-meta">
-                  <span>{project.data.month} 2025</span>
-                </div>
-              </article>
+              <ProjectCard
+                title={project.data.title}
+                description={project.data.description}
+                slug={project.slug}
+                status={project.data.status}
+                month={project.data.month}
+                tags={project.data.tags}
+              />
             ))}
           </div>
         </div>
@@ -162,12 +156,6 @@ const projects = (await getCollection('projects'))
 
   .main-content {
     background: var(--bg-canvas);
-    background-image: radial-gradient(
-      circle,
-      var(--yotb-dot-color) var(--yotb-dot-size),
-      transparent var(--yotb-dot-size)
-    );
-    background-size: var(--yotb-dot-spacing) var(--yotb-dot-spacing);
   }
 
   .container {
@@ -314,7 +302,7 @@ const projects = (await getCollection('projects'))
   }
 
   /* =============================================================================
-     Devlog Cards — Variant 8 style (simple white cards)
+     Devlog Cards — Corner accent style (amber diagonal stripe)
      ============================================================================= */
 
   .devlog-cards {
@@ -323,206 +311,14 @@ const projects = (await getCollection('projects'))
     gap: var(--t-spacing-md);
   }
 
-  .devlog-card {
-    background: var(--bg-surface);
-    border: 1px solid var(--border-default);
-    padding: var(--t-spacing-lg);
-    transition: all 0.2s ease;
-  }
-
-  .devlog-card:hover {
-    border-color: var(--t-primary-600);
-    transform: translateY(-2px);
-  }
-
-  .devlog-week {
-    display: block;
-    font-size: var(--t-font-size-xs);
-    font-weight: 700;
-    color: var(--t-primary-600);
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    margin-bottom: var(--t-spacing-sm);
-  }
-
-  .devlog-title {
-    font-size: var(--t-font-size-base);
-    font-weight: 600;
-    margin-bottom: var(--t-spacing-sm);
-    line-height: var(--t-line-height-tight);
-  }
-
-  .devlog-title a {
-    color: inherit;
-    text-decoration: none;
-    transition: color 0.2s ease;
-  }
-
-  .devlog-title a:hover {
-    color: var(--t-primary-600);
-  }
-
-  .devlog-excerpt {
-    font-size: var(--t-font-size-sm);
-    color: var(--text-secondary);
-    line-height: var(--t-line-height-normal);
-  }
-
-  .devlog-meta {
-    font-size: var(--t-font-size-xs);
-    color: var(--text-muted);
-    margin-top: var(--t-spacing-md);
-    padding-top: var(--t-spacing-sm);
-    border-top: 1px solid var(--border-default);
-  }
-
   /* =============================================================================
-     Project Cards — With corner accent and status tags (from home.html)
+     Project Grid
      ============================================================================= */
 
   .project-grid {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     gap: var(--t-spacing-md);
-  }
-
-  .project-card {
-    position: relative;
-    border: 1px solid var(--border-default);
-    padding: var(--t-spacing-lg);
-    padding-top: var(--t-spacing-xl);
-    overflow: hidden;
-    transition: all 0.2s ease;
-  }
-
-  /* Corner accent triangle */
-  .project-card::before {
-    content: '';
-    position: absolute;
-    top: -1px;
-    right: -1px;
-    width: 120px;
-    height: 120px;
-    background: rgba(46, 90, 60, 0.08);
-    clip-path: polygon(100% 0, 0 0, 100% 100%);
-    transition: all 0.3s ease;
-  }
-
-  .project-card:hover {
-    border-color: var(--t-primary-600);
-  }
-
-  .project-card:hover::before {
-    width: 140px;
-    height: 140px;
-  }
-
-  .project-number {
-    position: absolute;
-    top: var(--t-spacing-sm);
-    right: var(--t-spacing-sm);
-    font-size: var(--t-font-size-lg);
-    font-weight: 700;
-    color: var(--t-primary-600);
-    line-height: 1;
-    z-index: 1;
-  }
-
-  /* Hard-edge status tags */
-  .project-status {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    font-size: var(--t-font-size-xs);
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    padding: 4px 8px;
-    margin-bottom: var(--t-spacing-sm);
-  }
-
-  .project-status::before {
-    content: '';
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-  }
-
-  .status-launched {
-    background: var(--t-primary-600);
-    color: var(--yotb-light);
-  }
-
-  .status-launched::before {
-    background: var(--yotb-light);
-    box-shadow: 0 0 0 2px var(--t-primary-600), 0 0 0 4px rgba(255, 255, 255, 0.3);
-  }
-
-  .status-building {
-    background: var(--yotb-amber);
-    color: var(--yotb-light);
-  }
-
-  .status-building::before {
-    background: var(--yotb-light);
-    animation: pulse 1.5s ease-in-out infinite;
-  }
-
-  @keyframes pulse {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0.4; }
-  }
-
-  .status-planning {
-    background: rgba(28, 25, 23, 0.08);
-    color: var(--text-secondary);
-  }
-
-  .status-planning::before {
-    background: var(--text-muted);
-  }
-
-  .project-title {
-    font-size: var(--t-font-size-base);
-    font-weight: 600;
-    margin-bottom: var(--t-spacing-xs);
-  }
-
-  .project-title a {
-    color: inherit;
-    text-decoration: none;
-    transition: color 0.2s ease;
-  }
-
-  .project-title a:hover {
-    color: var(--t-primary-600);
-  }
-
-  .project-description {
-    font-size: var(--t-font-size-sm);
-    color: var(--text-secondary);
-    line-height: var(--t-line-height-normal);
-  }
-
-  .project-tags {
-    display: flex;
-    flex-wrap: wrap;
-    gap: var(--t-spacing-xs);
-    margin-top: var(--t-spacing-md);
-  }
-
-  .project-tag {
-    font-size: var(--t-font-size-xs);
-    color: var(--text-secondary);
-    padding: 2px 8px;
-    border: 1px solid var(--border-default);
-    background: transparent;
-  }
-
-  .project-meta {
-    font-size: var(--t-font-size-xs);
-    color: var(--text-muted);
-    margin-top: var(--t-spacing-md);
   }
 
   /* =============================================================================
