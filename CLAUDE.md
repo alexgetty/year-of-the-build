@@ -5,14 +5,13 @@
 Public accountability log for building and launching projects in public.
 
 - **Domain:** yearofthebuild.xyz
-- **Business entity:** Getty Made LLC (see repos/gettymade — READONLY)
-- **Individual projects:** Live in their own repos, not here
+- **Business entity:** Gettymade LLC
 
 This repo contains:
 - The YOTB website (Astro + React + MDX)
-- Weekly devlog content (public)
+- Devlog content (public)
 - Draft docs (private)
-- Newsletter via Beehiiv (manual send, content automated)
+- Weekly Newsletter via Beehiiv
 
 ## Tech Stack
 
@@ -50,44 +49,9 @@ This repo contains:
 3. Run `npm run newsletter` to render MDX to paste-ready HTML
 4. Paste into Beehiiv editor, preview, send
 
-### TODO (when site is built)
-- [ ] Create render script (`scripts/newsletter.js`) — converts MDX to clean HTML
-- [ ] Add subscribe component to site layout
-- [ ] Add Beehiiv subscribe link to footer
-
-## Visual Direction
-
-- **Bold.** No constraints. Get weird.
-- Strong typography
-- Exceptional responsive handling
-- Interactive elements encouraged in posts
-- This is NOT gettymade branding — YOTB is its own visual identity
 
 ## Content Cadence
 
-- Weekly devlogs, published consistently
-- Goal: stay 2-3 weeks ahead with queued content
+- Rolling on-demand devlogs
+- Weekly newsletter digest
 - Some weeks heavier than others, but never skip
-
-## Definition of "Launch"
-
-A project is launched when:
-1. Public repo on GitHub
-2. Landing page live
-3. Posted in relevant subreddits
-4. Listed on Product Hunt (if applicable)
-
-## Working Constraints
-
-- `repos/gettymade` is **READONLY** — reference only, never modify
-- Individual project repos are separate — don't try to import their components
-- This site writes *about* projects, it doesn't contain them
-
-## Claude's Role
-
-- Help write devlog content
-- Build and refine interactive components for posts
-- Maintain site infrastructure
-- Build newsletter render script when site is ready
-- Push back on scope creep
-- Keep the weird alive
