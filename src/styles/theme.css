@@ -233,6 +233,39 @@ body {
 }
 
 /* =============================================================================
+   LINK HOVER ANIMATION — Amber underline swipe
+   ============================================================================= */
+
+/*
+ * Universal link hover effect: amber underline that sweeps in from left,
+ * sweeps out to right. Uses transform-origin trick for bidirectional animation.
+ */
+a:not([class*="button"]):not([class*="btn"]):not([class*="card"]):not([class*="Card"]):not([class*="nav"]):not([class*="Nav"]):not([class*="link"]):not([class*="Link"]) {
+  position: relative;
+  text-decoration: none;
+  display: inline-block;
+}
+
+a:not([class*="button"]):not([class*="btn"]):not([class*="card"]):not([class*="Card"]):not([class*="nav"]):not([class*="Nav"]):not([class*="link"]):not([class*="Link"])::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -2px;
+  height: 2px;
+  background: var(--yotb-amber);
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform 0.4s var(--ease-out-expo);
+}
+
+a:not([class*="button"]):not([class*="btn"]):not([class*="card"]):not([class*="Card"]):not([class*="nav"]):not([class*="Nav"]):not([class*="link"]):not([class*="Link"]):hover::after,
+a:not([class*="button"]):not([class*="btn"]):not([class*="card"]):not([class*="Card"]):not([class*="nav"]):not([class*="Nav"]):not([class*="link"]):not([class*="Link"]):focus-visible::after {
+  transform: scaleX(1);
+  transform-origin: left;
+}
+
+/* =============================================================================
    LAYOUT UTILITIES
    ============================================================================= */
 

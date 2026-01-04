@@ -1,11 +1,14 @@
 .card {
   position: relative;
-  border: 1px solid var(--border-default);
+  border: 1px solid rgba(120, 113, 108, 0.2);
   padding: var(--t-spacing-lg);
   padding-top: var(--t-spacing-xl);
   overflow: hidden;
   transition: all 0.2s ease;
   cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
 }
 
 /* Corner accent - amber triangle on right */
@@ -22,7 +25,7 @@
 }
 
 .card:hover {
-  border-color: var(--yotb-amber);
+  border-color: rgba(180, 83, 9, 0.4);
 }
 
 .card:hover::before {
@@ -48,21 +51,21 @@
   line-height: var(--t-line-height-tight);
 }
 
-.title a {
+.cardLink {
   color: inherit;
   text-decoration: none;
   transition: color 0.2s ease;
 }
 
 /* Stretch link to cover entire card */
-.title a::after {
+.cardLink::after {
   content: '';
   position: absolute;
   inset: 0;
   z-index: 1;
 }
 
-.card:hover .title a {
+.card:hover .cardLink {
   color: var(--yotb-amber);
 }
 
@@ -70,6 +73,7 @@
   font-size: var(--t-font-size-sm);
   color: var(--text-secondary);
   line-height: var(--t-line-height-normal);
+  flex: 1;
 }
 
 .footer {
@@ -77,12 +81,25 @@
   align-items: center;
   justify-content: space-between;
   gap: var(--t-spacing-md);
-  margin-top: var(--t-spacing-md);
+  margin-top: auto;
+  padding-top: var(--t-spacing-md);
 }
 
 .date {
   font-size: var(--t-font-size-xs);
   color: var(--text-muted);
+}
+
+.footerRight {
+  display: flex;
+  align-items: center;
+  gap: var(--t-spacing-sm);
+}
+
+.commits {
+  font-size: var(--t-font-size-xs);
+  font-weight: 500;
+  color: var(--p-forest-700);
 }
 
 .project {

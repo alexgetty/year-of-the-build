@@ -1,0 +1,37 @@
+---
+title: "The Construct"
+description: "Components that feel alive."
+status: "building"
+tags: ["React", "TypeScript", "Radix UI", "Framer Motion", "Vite", "Storybook", "SCSS", "CSS Modules", "Design Tokens"]
+features:
+  - "Layered token architecture for extreme themeability"
+  - "Motion as first-class citizen with built-in reduced-motion support"
+  - "Optimistic UI patterns baked into component philosophy"
+  - "Radix UI primitives for battle-tested accessibility"
+  - "Container queries for component-responsive layouts"
+stats:
+  - value: "25+"
+    label: "Components"
+---
+
+  The Construct is a themeable React component library that treats motion, responsiveness, and flexibility as foundational. Built on Radix UI primitives, distributed via GitHub Packages.
+
+  ### The Build
+  React 18+ with TypeScript, Vite in library mode for builds, Storybook for documentation. Styling via SCSS with CSS Modules—styles stay in `.scss` files, not JavaScript. Theming through CSS custom properties means runtime changes without rebuild. Framer Motion handles mount/unmount animations that CSS can't.
+
+  The 5-layer token system (Primitive → Theme → Semantic → Intent → Component) was the architecture bet. Primitives are the raw palette. Theme tokens are the brand layer—the primary customization surface. Semantic tokens map to use cases. Intent tokens (`neutral`, `danger`, `success`, `warning`, `info`) define meaning. Component tokens handle the last mile.
+
+  ### Whats Working
+  - **Limiting the possibility space.** Resctrictions provide a consistent framework for creativity to latch on to.
+  - **Intent + Priority separation** is useful. Structure (primary/secondary/tertiary) stays orthogonal to meaning (danger/success/etc). Any combination works automatically, so no explosion of variant classes.
+  - **Data attributes for variants** mirrors React Aria and Radix—one class, variants via data-*. Prevents impossible states, visible in DevTools, no performance penalty despite the folklore.
+  - **Container queries over media queries** means components respond to their container, not the viewport. Reusability without layout hacks.
+
+### Motion as DNA
+  Building Mythical taught me that perceived performance matters more than actual milliseconds. A button that responds instantly feels fast, even if the API is slow. But making every interaction snappy requires discipline—and retroactively adding animation to a static library is painful.
+
+  The Construct bakes motion in from the start. Nothing appears instantly. Every mount, unmount, and state change involves motion—even if it's subtle. This isn't decoration; it's information architecture. Sliding down means "appearing." Scaling up means "focus." Fading out means "leaving." Direction has meaning.
+
+  The motion token system mirrors the color system: primitive durations and easings feed into theme-level decisions, which feed into semantic presets (`--motion-enter`, `--motion-exit`). Want a bouncier brand? Override one token. Want everything snappier? Override another. Every animation respects `prefers-reduced-motion` automatically.
+
+  This philosophy—motion as information, not ornament—is the DNA I want in every project going forward.

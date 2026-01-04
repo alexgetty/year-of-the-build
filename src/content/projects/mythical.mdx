@@ -1,0 +1,43 @@
+---
+title: "Mythical"
+description: "Scheduling so easy, it feels like magic."
+status: "launched"
+tags: ["Next.js", "React", "Prisma", "OAuth", "Google Calendar API", "Stripe", "Tailwind CSS"]
+features:
+  - "Google Calendar sync with real-time availability"
+  - "Multi-calendar support across accounts"
+  - "Customizable booking page themes"
+  - "Link-in-bio style public profiles"
+  - "Google Meet integration"
+  - "Custom public links"
+stats:
+  - value: "4 Weeks"
+    label: "0 to MVP"
+launchDate: 2026-01-01
+liveUrl: "https://mythical.app"
+---
+
+  Mythical is a scheduling app that lives inside your Google Calendar. No new dashboard to learn, no complex workflows—just connect and start accepting bookings.
+
+  ### The Pitch
+  Calendly charges $10/month for features most people don't need while gatekeeping ones they do. Mythical offers unlimited calendars (from any account), event types, and bookings for free.
+
+  ### The Build
+  Next.js 16 with React 19, PostgreSQL via Prisma, real-time Google Calendar webhooks for instant availability updates. The booking page theming system supports animated backgrounds (shader-based), custom fonts via Google Fonts, and adaptive color schemes.
+
+  ### What Works
+  - Freemium positioning (hopefully) resonates with people paying for bloated features with overpriced competitors
+  - The theme customization with animated backgrounds is unique among peers
+  - No-signup booking flow keeps friction low for guests
+  - The inherent viral sharing model of the platform encourages organic growth with low CAC
+
+  ### What I'd Do Differently
+  - Add Outlook/Apple Calendar support earlier. Or at least done more research into all before setting up just Google. I'm worried I've made one-way door decisions that won't scale to multiple calendar providers easily.
+  - Validate more, launch sooner. I didn't even have a landing page until the MVP was complete.
+
+
+  ### Lasting Legacy: Optimistic UI
+  I wanted Mythical to feel smooth and responsive. Loading times kill conversion. Jagged reloads break flow.
+  Every interaction in Mythical is optimistic by default. Click a button, see the result. The API call happens in the background—if it fails, we roll back and tell you.
+  This wasn't a performance optimization bolted on later, it was a foundational rule from day one: **assume success, handle failure gracefully**. The pattern forced better architecture decisions—local state that can roll back, API responses designed for reconciliation, UI that let's the user get on with it.
+  The discipline required to build this way—and the quality of experience it produces—became the primary inspiration for [the Construct](/projects/construct) a design system and component library that bakes optimistic UI and motion into it's DNA. While Mythical itself isn't built on this system (yet), I plan to use it for as the UI layer for as many of this year's projects as I can.

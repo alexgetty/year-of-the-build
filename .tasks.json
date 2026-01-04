@@ -46,13 +46,38 @@
       "title": "Remove parallax. scroll from hero. Just render \"Year of the build\". no year.",
       "type": "refactor",
       "priority": "medium",
-      "status": "in_progress",
+      "status": "done",
       "tags": [],
       "sortOrder": 0,
       "source": "user",
       "id": "bb331c43-eb6f-4ecd-a2eb-8861fe0d33e8",
       "createdAt": "2025-12-26T04:54:29.431Z",
-      "updatedAt": "2025-12-26T04:54:55.539Z"
+      "updatedAt": "2026-01-02T18:24:34.091Z"
+    },
+    {
+      "title": "Populate Projects",
+      "type": "feature",
+      "priority": "medium",
+      "status": "in_progress",
+      "description": "",
+      "tags": [],
+      "sortOrder": 0,
+      "source": "user",
+      "id": "de4a28b2-2611-4320-8e08-34375ab022d8",
+      "createdAt": "2026-01-02T18:24:50.253Z",
+      "updatedAt": "2026-01-02T18:24:52.510Z"
+    },
+    {
+      "title": "Remove \"month\" property from project",
+      "type": "feature",
+      "priority": "medium",
+      "status": "in_progress",
+      "tags": [],
+      "sortOrder": 1,
+      "source": "user",
+      "id": "025bd342-1b30-4b08-9095-5c8578871231",
+      "createdAt": "2026-01-02T18:30:53.510Z",
+      "updatedAt": "2026-01-02T18:31:16.696Z"
     }
   ]
 }

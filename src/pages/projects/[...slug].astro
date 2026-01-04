@@ -19,8 +19,7 @@ const project = Astro.props;
 const { Content } = await project.render();
 
 // Get all projects for related section
-const allProjects = (await getCollection('projects'))
-  .sort((a, b) => a.data.monthNumber - b.data.monthNumber);
+const allProjects = await getCollection('projects');
 
 // Get related projects (next 3 projects, wrapping around)
 const currentIndex = allProjects.findIndex(p => p.slug === project.slug);
@@ -50,12 +49,8 @@ const relatedProjectsData = relatedProjects.map(p => ({
   description: p.data.description,
   slug: p.slug,
   status: p.data.status,
-  month: p.data.month,
   tags: p.data.tags,
 }));
-
-// Format the project number with leading zero
-const projectNumber = String(project.data.monthNumber).padStart(2, '0');
 
 // Status display text
 const statusText = project.data.status === 'building' ? 'Building' :
@@ -99,29 +94,22 @@ const hasSidebar = hasLinks || hasTech || hasFeatures || hasStats;
       <!-- Project Hero -->
       <header class="project-hero">
         <div class="container">
-          <div class="hero-grid">
-            <div class="project-hero-number">{projectNumber}</div>
-            <div class="project-hero-content">
-              <span class={`project-status status-${project.data.status}`}>{statusText}</span>
-              <h1 class="project-hero-title">{project.data.title}</h1>
-              <p class="project-hero-description">{project.data.description}</p>
+          <div class="hero-content">
+            <span class={`project-status status-${project.data.status}`}>{statusText}</span>
+            <h1 class="project-hero-title">{project.data.title}</h1>
+            <p class="project-hero-description">{project.data.description}</p>
+            {project.data.launchDate && (
               <div class="project-meta">
                 <div class="project-meta-item">
-                  <span>Month</span>
-                  <strong>{project.data.month} 2025</strong>
+                  <span>Launched</span>
+                  <strong>{project.data.launchDate.toLocaleDateString('en-US', {
+                    month: 'short',
+                    day: 'numeric',
+                    year: 'numeric'
+                  })}</strong>
                 </div>
-                {project.data.launchDate && (
-                  <div class="project-meta-item">
-                    <span>Launched</span>
-                    <strong>{project.data.launchDate.toLocaleDateString('en-US', {
-                      month: 'short',
-                      day: 'numeric',
-                      year: 'numeric'
-                    })}</strong>
-                  </div>
-                )}
               </div>
-            </div>
+            )}
           </div>
         </div>
       </header>
@@ -284,27 +272,12 @@ const hasSidebar = hasLinks || hasTech || hasFeatures || hasStats;
     clip-path: polygon(100% 0, 0 0, 100% 100%);
   }
 
-  .hero-grid {
-    display: grid;
-    grid-template-columns: auto 1fr;
-    gap: var(--t-spacing-xl);
-    align-items: start;
-    position: relative;
-    z-index: 1;
-  }
-
-  .project-hero-number {
-    font-size: 7rem;
-    font-weight: 700;
-    line-height: 0.9;
-    color: var(--t-primary-600);
-    letter-spacing: -0.02em;
-  }
-
-  .project-hero-content {
+  .hero-content {
     display: flex;
     flex-direction: column;
     gap: var(--t-spacing-md);
+    position: relative;
+    z-index: 1;
   }
 
   .project-status {
@@ -588,15 +561,6 @@ const hasSidebar = hasLinks || hasTech || hasFeatures || hasStats;
      ============================================================================= */
 
   @media (max-width: 900px) {
-    .hero-grid {
-      grid-template-columns: 1fr;
-      gap: var(--t-spacing-md);
-    }
-
-    .project-hero-number {
-      font-size: var(--t-font-size-2xl);
-    }
-
     .about-content--with-sidebar {
       grid-template-columns: 1fr;
     }

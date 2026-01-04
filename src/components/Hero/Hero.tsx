@@ -1,4 +1,4 @@
-import type { FC } from 'react';
+import { useEffect, useRef, useState, type FC } from 'react';
 import styles from './Hero.module.css';
 
 export interface DevlogData {
@@ -12,35 +12,75 @@ interface HeroProps {
 }
 
 /**
- * Full-viewport hero section with layered depth background.
- * Static — no scroll animations.
+ * Full-viewport hero section with layered parallax background.
+ * Layers move at different speeds based on scroll position.
+ * - Background (big, blurry): slowest
+ * - Mid (medium): medium speed
+ * - Foreground (small, sharp): fastest
  */
 export const Hero: FC<HeroProps> = ({ latestDevlog }) => {
+  const [scrollY, setScrollY] = useState(0);
+  const heroRef = useRef<HTMLElement>(null);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      // Only track scroll while hero is in view
+      if (heroRef.current) {
+        const rect = heroRef.current.getBoundingClientRect();
+        if (rect.bottom > 0) {
+          setScrollY(window.scrollY);
+        }
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
   const formattedDate = latestDevlog?.pubDate.toLocaleDateString('en-US', {
     month: 'short',
     day: 'numeric',
   });
 
+  // Parallax multipliers - smaller = slower movement
+  const bgOffset = scrollY * 0.08;   // Slowest - big blurry shapes
+  const midOffset = scrollY * 0.2;   // Medium
+  const fgOffset = scrollY * 0.35;   // Fastest - small sharp shapes
+
   return (
-    <section className={styles.hero}>
-      {/* Background layer - blurred, far */}
-      <div className={styles.depthBg} aria-hidden="true">
+    <section ref={heroRef} className={styles.hero}>
+      {/* Grain overlay */}
+      <div className={styles.grain} aria-hidden="true" />
+
+      {/* Background layer - big blurred shapes - SLOWEST */}
+      <div
+        className={styles.depthBg}
+        aria-hidden="true"
+        style={{ transform: `translateY(${bgOffset}px)` }}
+      >
         <div className={styles.shapeRing} />
         <div className={styles.shapeSquare} />
       </div>
 
-      {/* Mid layer - slightly blurred */}
-      <div className={styles.depthMid} aria-hidden="true">
+      {/* Mid layer - medium shapes - MEDIUM */}
+      <div
+        className={styles.depthMid}
+        aria-hidden="true"
+        style={{ transform: `translateY(${midOffset}px)` }}
+      >
         <div className={styles.shapeDiamond} />
         <div className={styles.shapeCircle} />
       </div>
 
-      {/* Foreground layer - sharp */}
-      <div className={styles.depthFg} aria-hidden="true">
+      {/* Foreground layer - small sharp shapes - FASTEST */}
+      <div
+        className={styles.depthFg}
+        aria-hidden="true"
+        style={{ transform: `translateY(${fgOffset}px)` }}
+      >
         <div className={styles.shapeDot} />
         <div className={styles.shapeDot} />
         <div className={styles.shapeDot} />
-        <div className={styles.shapeLine} />
       </div>
 
       {/* Content */}

@@ -14,7 +14,6 @@ interface ProjectData {
   description: string;
   slug: string;
   status: 'planning' | 'building' | 'launched' | 'abandoned';
-  month: string;
   tags?: string[];
 }
 
@@ -36,7 +35,6 @@ export function ProjectCardGrid({ projects, columns = 3 }: ProjectCardGridProps)
           description={project.description}
           slug={project.slug}
           status={project.status}
-          month={project.month}
           tags={project.tags}
         />
       ))}

@@ -11,6 +11,35 @@
 }
 
 /* =============================================================================
+   Grain Overlay — Animated noise texture
+   ============================================================================= */
+
+.grain {
+  position: absolute;
+  inset: -100%;
+  z-index: 100;
+  pointer-events: none;
+  opacity: 0.12;
+  background-image: url("data:image/svg+xml,%3Csvg width='128' height='128' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='128' height='128' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+  background-size: 128px 128px;
+  animation: grainShift 0.4s steps(8) infinite;
+}
+
+@keyframes grainShift {
+  0%, 100% { transform: translate(0, 0); }
+  10% { transform: translate(-5%, -10%); }
+  20% { transform: translate(-15%, 5%); }
+  30% { transform: translate(7%, -15%); }
+  40% { transform: translate(-5%, 15%); }
+  50% { transform: translate(-15%, 10%); }
+  60% { transform: translate(15%, 0%); }
+  70% { transform: translate(0%, 10%); }
+  80% { transform: translate(5%, 15%); }
+  90% { transform: translate(-10%, 5%); }
+}
+
+/* =============================================================================
    Background Decorations — Big blurred shapes
    ============================================================================= */
 
@@ -44,9 +73,66 @@
   transform: rotate(15deg);
 }
 
+/* Mid layer - medium shapes */
+.depthMid {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.shapeDiamond {
+  position: absolute;
+  top: 20%;
+  right: 12%;
+  width: clamp(50px, 6vw, 80px);
+  height: clamp(50px, 6vw, 80px);
+  border: 2px solid var(--t-primary-500);
+  transform: rotate(45deg);
+  opacity: 0.4;
+  filter: blur(1px);
+}
+
+.shapeCircle {
+  position: absolute;
+  bottom: 35%;
+  left: 8%;
+  width: clamp(35px, 4vw, 55px);
+  height: clamp(35px, 4vw, 55px);
+  border: 2px solid var(--yotb-amber);
+  border-radius: 50%;
+  opacity: 0.35;
+}
+
+/* Foreground - small shapes */
+.depthFg {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.shapeDot {
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  background: var(--t-primary-500);
+  border-radius: 50%;
+}
+
+.shapeDot:nth-child(1) {
+  top: 30%;
+  left: 25%;
+}
+
+.shapeDot:nth-child(2) {
+  bottom: 40%;
+  right: 28%;
+}
+
 .container {
   position: relative;
-  z-index: 1;
+  z-index: 10;
   max-width: var(--yotb-content-max);
   margin: 0 auto;
   padding: 0 var(--t-spacing-lg);
@@ -157,6 +243,11 @@
 
 /* Responsive */
 @media (max-width: 600px) {
+  .depthMid,
+  .depthFg {
+    display: none;
+  }
+
   .form {
     flex-direction: column;
   }

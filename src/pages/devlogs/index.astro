@@ -24,15 +24,23 @@ function resolveProjects(slugs?: string[]) {
   return slugs.map(slug => projectMap[slug]).filter(Boolean);
 }
 
+// Calculate entry numbers (oldest = 1, newest = highest)
+const totalDevlogs = devlogs.length;
+const entryNumberMap = new Map<string, number>();
+[...devlogs].reverse().forEach((post, index) => {
+  entryNumberMap.set(post.slug, index + 1);
+});
+
 // Prepare devlog data for timeline component
 function prepareDevlogData(posts: typeof devlogs) {
   return posts.map(post => ({
     title: post.data.title,
     description: post.data.description,
     slug: post.slug,
-    weekNumber: post.data.weekNumber,
+    entryNumber: entryNumberMap.get(post.slug) ?? 1,
     pubDate: post.data.pubDate,
     projects: resolveProjects(post.data.projectSlugs),
+    commitCount: post.data.commitCount,
   }));
 }
 
@@ -56,7 +64,7 @@ const months = Object.keys(groupedByMonth);
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="description" content="Weekly devlogs documenting the journey of building in public" />
+    <meta name="description" content="Devlogs documenting the journey of building in public" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="generator" content={Astro.generator} />
@@ -68,7 +76,7 @@ const months = Object.keys(groupedByMonth);
     <main class="main-content">
       <PageHeader
         title="Devlog"
-        description="Weekly updates from the trenches. What worked, what broke, and everything in between."
+        description="Updates from the trenches. What worked, what broke, and everything in between."
       />
 
       <!-- Timeline Section -->

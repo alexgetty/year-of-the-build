@@ -7,8 +7,7 @@ import { PageHeader } from '../../components/PageHeader';
 import { ProjectCardGrid } from '../../components/ProjectCardGrid';
 import { getCollection } from 'astro:content';
 
-const projects = (await getCollection('projects'))
-  .sort((a, b) => a.data.monthNumber - b.data.monthNumber);
+const projects = await getCollection('projects');
 
 // Prepare project data for grid component
 const projectsData = projects.map(project => ({
@@ -16,7 +15,6 @@ const projectsData = projects.map(project => ({
   description: project.data.description,
   slug: project.slug,
   status: project.data.status,
-  month: project.data.month,
   tags: project.data.tags,
 }));
 
@@ -28,7 +26,7 @@ const progressPercent = ((launchedCount / 12) * 100).toFixed(1);
 // Find current building project for progress bar text
 const buildingProject = projects.find(p => p.data.status === 'building');
 const currentMonthText = buildingProject
-  ? `${buildingProject.data.month} is ${buildingProject.data.title.replace(/^Project \d+: /, '')} month.`
+  ? `Currently building: ${buildingProject.data.title.replace(/^Project \d+: /, '')}`
   : 'Building in progress.';
 ---
 

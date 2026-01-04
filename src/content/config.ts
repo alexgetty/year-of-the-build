@@ -6,9 +6,9 @@ const devlogs = defineCollection({
     title: z.string(),
     description: z.string(),
     pubDate: z.date(),
-    weekNumber: z.number(),
     isDraft: z.boolean().default(false),
     projectSlugs: z.array(z.string()).optional(), // Links devlog to projects (many-to-many)
+    commitCount: z.number().default(0), // Total commits across linked projects
   }),
 });
 
@@ -17,8 +17,6 @@ const projects = defineCollection({
   schema: z.object({
     title: z.string(),
     description: z.string(),
-    monthNumber: z.number(),
-    month: z.string(),
     status: z.enum(['planning', 'building', 'launched', 'abandoned']).default('planning'),
     tags: z.array(z.string()).optional(),
     features: z.array(z.string()).optional(), // Key features list

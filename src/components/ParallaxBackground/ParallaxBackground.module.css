@@ -1,0 +1,142 @@
+/* =============================================================================
+   ParallaxBackground — Global background layer with depth-based parallax
+   ============================================================================= */
+
+.background {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+/* =============================================================================
+   Grain Overlay — Animated noise texture
+   ============================================================================= */
+
+.grain {
+  position: absolute;
+  inset: -100%;
+  z-index: 100;
+  pointer-events: none;
+  opacity: 0.08;
+  background-image: url("data:image/svg+xml,%3Csvg width='128' height='128' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='128' height='128' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+  background-size: 128px 128px;
+  animation: grainShift 0.4s steps(8) infinite;
+}
+
+@keyframes grainShift {
+  0%, 100% { transform: translate(0, 0); }
+  10% { transform: translate(-5%, -10%); }
+  20% { transform: translate(-15%, 5%); }
+  30% { transform: translate(7%, -15%); }
+  40% { transform: translate(-5%, 15%); }
+  50% { transform: translate(-15%, 10%); }
+  60% { transform: translate(15%, 0%); }
+  70% { transform: translate(0%, 10%); }
+  80% { transform: translate(5%, 15%); }
+  90% { transform: translate(-10%, 5%); }
+}
+
+/* =============================================================================
+   Depth Layers — Containers for parallax groups
+   ============================================================================= */
+
+.depthFar {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  will-change: transform;
+}
+
+/* =============================================================================
+   Shape Base — Common styles for all shapes
+   ============================================================================= */
+
+.shape {
+  position: absolute;
+  pointer-events: none;
+}
+
+/* =============================================================================
+   Shape Types — Individual shape styles
+   ============================================================================= */
+
+/* Ring — Large amorphous color field */
+.shapeRing {
+  width: clamp(500px, 60vw, 900px);
+  height: clamp(500px, 60vw, 900px);
+  background: var(--t-primary-200);
+  border-radius: 50%;
+  opacity: 0.25;
+  filter: blur(100px);
+  animation: ringDrift 60s ease-in-out infinite;
+}
+
+@keyframes ringDrift {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(30px, -20px) scale(1.05); }
+}
+
+/* Square — Large amorphous warm field */
+.shapeSquare {
+  width: clamp(400px, 50vw, 700px);
+  height: clamp(400px, 50vw, 700px);
+  background: var(--p-amber-200);
+  opacity: 0.2;
+  filter: blur(120px);
+  transform: rotate(15deg);
+  animation: squareDrift 45s ease-in-out infinite;
+}
+
+@keyframes squareDrift {
+  0%, 100% { transform: rotate(15deg) translate(0, 0); }
+  50% { transform: rotate(20deg) translate(-30px, 25px); }
+}
+
+
+/* =============================================================================
+   Reduced Motion — Respect user preferences
+   ============================================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+  .grain {
+    animation: none;
+  }
+
+  .depthFar {
+    transform: none !important;
+  }
+
+  .shapeRing,
+  .shapeSquare {
+    animation: none;
+  }
+}
+
+/* =============================================================================
+   Mobile — Simplify on small screens
+   ============================================================================= */
+
+@media (max-width: 600px) {
+  /* Disable parallax on mobile for performance */
+  .depthFar {
+    transform: none !important;
+  }
+
+  /* Scale down but keep amorphous feel */
+  .shapeRing {
+    width: clamp(300px, 80vw, 500px);
+    height: clamp(300px, 80vw, 500px);
+    opacity: 0.15;
+    filter: blur(80px);
+  }
+
+  .shapeSquare {
+    width: clamp(250px, 70vw, 400px);
+    height: clamp(250px, 70vw, 400px);
+    opacity: 0.12;
+    filter: blur(80px);
+  }
+}

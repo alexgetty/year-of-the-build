@@ -6,11 +6,15 @@ import { SiteHeader } from '../components/SiteHeader';
 import { SiteFooter } from '../components/SiteFooter';
 import { DevlogCardGrid } from '../components/DevlogCardGrid';
 import { ProjectCardGrid } from '../components/ProjectCardGrid';
+import { ParallaxBackground } from '../components/ParallaxBackground';
 import { getCollection } from 'astro:content';
 
 const devlogs = (await getCollection('devlogs'))
   .filter(post => !post.data.isDraft)
   .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+
+// Sum total commits across all devlogs
+const totalCommits = devlogs.reduce((sum, post) => sum + (post.data.commitCount || 0), 0);
 
 const latestDevlog = devlogs[0] ? {
   title: devlogs[0].data.title,
@@ -39,17 +43,16 @@ const recentDevlogsData = devlogs.slice(0, 3).map(post => ({
   weekNumber: post.data.weekNumber,
   pubDate: post.data.pubDate,
   projects: resolveProjects(post.data.projectSlugs),
+  commitCount: post.data.commitCount,
 }));
 
 const projectsData = allProjects
-  .sort((a, b) => a.data.monthNumber - b.data.monthNumber)
   .slice(0, 4)
   .map(project => ({
     title: project.data.title,
     description: project.data.description,
     slug: project.slug,
     status: project.data.status,
-    month: project.data.month,
     tags: project.data.tags,
   }));
 ---
@@ -65,11 +68,14 @@ const projectsData = allProjects
     <title>Year of the Build</title>
   </head>
   <body>
+    <!-- Global parallax background layer -->
+    <ParallaxBackground client:load />
+
     <!-- Sticky header - appears after scrolling past hero -->
     <SiteHeader client:load showAfterHero={true} variant="dark" />
 
-    <!-- Full-viewport hero -->
-    <Hero latestDevlog={latestDevlog} />
+    <!-- Full-viewport hero with parallax -->
+    <Hero client:load latestDevlog={latestDevlog} />
 
     <!-- Main Content -->
     <main class="main-content">
@@ -98,6 +104,10 @@ const projectsData = allProjects
               <div class="stat">
                 <span class="stat-number">{devlogs.length}</span>
                 <span class="stat-label">Devlogs</span>
+              </div>
+              <div class="stat">
+                <span class="stat-number">{totalCommits}</span>
+                <span class="stat-label">Commits</span>
               </div>
             </div>
           </div>
@@ -255,14 +265,17 @@ const projectsData = allProjects
 
   .intro-stats {
     display: flex;
-    gap: var(--t-spacing-lg);
-    border-left: 1px solid var(--border-default);
-    padding-left: var(--t-spacing-lg);
+    gap: var(--t-spacing-md);
   }
 
   .stat {
-    padding-left: var(--t-spacing-sm);
-    border-left: 2px solid var(--t-primary-600);
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    background: var(--p-ink-50);
+    border: 1px solid var(--p-ink-200);
+    padding: var(--t-spacing-sm) var(--t-spacing-md);
+    min-width: 90px;
   }
 
   .stat-number {
@@ -270,15 +283,16 @@ const projectsData = allProjects
     font-size: var(--t-font-size-xl);
     font-weight: 700;
     line-height: 1;
-    color: var(--text-primary);
+    color: var(--p-ink-950);
   }
 
   .stat-label {
     font-size: var(--t-font-size-xs);
     font-weight: 500;
-    color: var(--text-muted);
+    color: var(--p-ink-500);
     text-transform: uppercase;
-    letter-spacing: 0.05em;
+    letter-spacing: 0.1em;
+    margin-top: 2px;
   }
 
   /* =============================================================================
@@ -291,10 +305,7 @@ const projectsData = allProjects
     }
 
     .intro-stats {
-      border-left: none;
-      padding-left: 0;
-      border-top: 1px solid var(--border-default);
-      padding-top: var(--t-spacing-lg);
+      justify-content: flex-start;
     }
   }
 </style>

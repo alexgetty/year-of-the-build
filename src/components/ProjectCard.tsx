@@ -5,11 +5,10 @@ interface ProjectCardProps {
   description: string;
   slug: string;
   status: 'planning' | 'building' | 'launched' | 'abandoned';
-  month: string;
   tags?: string[];
 }
 
-export function ProjectCard({ title, description, slug, status, month, tags }: ProjectCardProps) {
+export function ProjectCard({ title, description, slug, status, tags }: ProjectCardProps) {
   const statusText = status === 'building' ? 'Building' :
                      status === 'launched' ? 'Live' : 'Planned';
 
@@ -19,7 +18,7 @@ export function ProjectCard({ title, description, slug, status, month, tags }: P
         {statusText}
       </span>
       <h3 className={styles.title}>
-        <a href={`/projects/${slug}/`}>{title}</a>
+        <a href={`/projects/${slug}/`} className={styles.cardLink}>{title}</a>
       </h3>
       <p className={styles.description}>{description}</p>
       {tags && tags.length > 0 && (
@@ -29,9 +28,6 @@ export function ProjectCard({ title, description, slug, status, month, tags }: P
           ))}
         </div>
       )}
-      <div className={styles.meta}>
-        <span>{month} 2025</span>
-      </div>
     </article>
   );
 }

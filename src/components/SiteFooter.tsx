@@ -15,10 +15,25 @@ export const SiteFooter: FC<SiteFooterProps> = ({
 }) => {
   return (
     <footer className={styles.footer}>
+      {/* Grain overlay */}
+      <div className={styles.grain} aria-hidden="true" />
+
       {/* Background decorations - big blurred shapes */}
       <div className={styles.decorations} aria-hidden="true">
         <div className={styles.shapeRing} />
         <div className={styles.shapeSquare} />
+      </div>
+
+      {/* Mid layer - medium shapes */}
+      <div className={styles.depthMid} aria-hidden="true">
+        <div className={styles.shapeDiamond} />
+        <div className={styles.shapeCircle} />
+      </div>
+
+      {/* Foreground - small shapes */}
+      <div className={styles.depthFg} aria-hidden="true">
+        <div className={styles.shapeDot} />
+        <div className={styles.shapeDot} />
       </div>
 
       <div className={styles.container}>

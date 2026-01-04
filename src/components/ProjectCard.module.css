@@ -1,13 +1,16 @@
 .card {
   position: relative;
-  border: 1px solid var(--border-default);
+  border: 1px solid rgba(120, 113, 108, 0.2);
   padding: var(--t-spacing-lg);
   transition: all 0.2s ease;
   cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
 }
 
 .card:hover {
-  border-color: var(--t-primary-600);
+  border-color: rgba(46, 90, 60, 0.4);
 }
 
 /* Status badges */
@@ -71,21 +74,21 @@
   line-height: var(--t-line-height-tight);
 }
 
-.title a {
+.cardLink {
   color: inherit;
   text-decoration: none;
   transition: color 0.2s ease;
 }
 
 /* Stretch link to cover entire card */
-.title a::after {
+.cardLink::after {
   content: '';
   position: absolute;
   inset: 0;
   z-index: 1;
 }
 
-.card:hover .title a {
+.card:hover .cardLink {
   color: var(--t-primary-600);
 }
 
@@ -93,6 +96,7 @@
   font-size: var(--t-font-size-sm);
   color: var(--text-secondary);
   line-height: var(--t-line-height-normal);
+  flex: 1;
 }
 
 .tags {
@@ -106,12 +110,13 @@
   font-size: var(--t-font-size-xs);
   color: var(--text-secondary);
   padding: 2px 8px;
-  border: 1px solid var(--border-default);
+  border: 1px solid rgba(120, 113, 108, 0.2);
   background: transparent;
 }
 
 .meta {
   font-size: var(--t-font-size-xs);
   color: var(--text-muted);
-  margin-top: var(--t-spacing-md);
+  margin-top: auto;
+  padding-top: var(--t-spacing-md);
 }

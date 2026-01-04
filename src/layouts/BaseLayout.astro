@@ -3,6 +3,7 @@ import '@gettymade/construct/styles';
 import '../styles/theme.css';
 import { SiteHeader } from '../components/SiteHeader';
 import { SiteFooter } from '../components/SiteFooter';
+import { ParallaxBackground } from '../components/ParallaxBackground';
 
 interface Props {
   title: string;
@@ -23,6 +24,9 @@ const { title, description = "Year of the Build - Building in public, one projec
     <title>{title} - YOTB</title>
   </head>
   <body>
+    <!-- Global parallax background layer -->
+    <ParallaxBackground client:load />
+
     <!-- Sticky header for non-homepage -->
     <SiteHeader client:load variant="dark" />
 
