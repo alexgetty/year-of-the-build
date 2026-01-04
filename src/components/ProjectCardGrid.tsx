@@ -5,7 +5,9 @@
  * Applies staggered entrance animations.
  */
 
-import { Stagger } from '@gettymade/construct';
+// TODO: Uncomment when @gettymade/construct is published to npm
+// import { Stagger } from '@gettymade/construct';
+import { Stagger } from './Stagger';
 import { ProjectCard } from './ProjectCard';
 import styles from './CardGrid.module.css';
 
