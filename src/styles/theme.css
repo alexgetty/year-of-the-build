@@ -213,9 +213,9 @@ html {
 }
 
 body {
-  font-family: var(--font-family-base);
+  font-family: var(--t-font-family-base);
   font-weight: 450;
-  line-height: var(--line-height-normal);
+  line-height: var(--t-line-height-normal);
   color: var(--text-primary);
   background-color: var(--bg-canvas);
 }
