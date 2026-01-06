@@ -21,8 +21,8 @@ stats:
 
   The 5-layer token system (Primitive → Theme → Semantic → Intent → Component) was the architecture bet. Primitives are the raw palette. Theme tokens are the brand layer—the primary customization surface. Semantic tokens map to use cases. Intent tokens (`neutral`, `danger`, `success`, `warning`, `info`) define meaning. Component tokens handle the last mile.
 
-  ### Whats Working
-  - **Limiting the possibility space.** Resctrictions provide a consistent framework for creativity to latch on to.
+  ### What's Working
+  - **Limiting the possibility space.** Restrictions provide a consistent framework for creativity to latch on to.
   - **Intent + Priority separation** is useful. Structure (primary/secondary/tertiary) stays orthogonal to meaning (danger/success/etc). Any combination works automatically, so no explosion of variant classes.
   - **Data attributes for variants** mirrors React Aria and Radix—one class, variants via data-*. Prevents impossible states, visible in DevTools, no performance penalty despite the folklore.
   - **Container queries over media queries** means components respond to their container, not the viewport. Reusability without layout hacks.

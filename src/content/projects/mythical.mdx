@@ -32,12 +32,12 @@ liveUrl: "https://mythical.app"
   - The inherent viral sharing model of the platform encourages organic growth with low CAC
 
   ### What I'd Do Differently
-  - Add Outlook/Apple Calendar support earlier. Or at least done more research into all before setting up just Google. I'm worried I've made one-way door decisions that won't scale to multiple calendar providers easily.
+  - Add Outlook/Apple Calendar support earlier. Or at least have done more research into all before setting up just Google. I'm worried I've made one-way door decisions that won't scale to multiple calendar providers easily.
   - Validate more, launch sooner. I didn't even have a landing page until the MVP was complete.
 
 
   ### Lasting Legacy: Optimistic UI
   I wanted Mythical to feel smooth and responsive. Loading times kill conversion. Jagged reloads break flow.
   Every interaction in Mythical is optimistic by default. Click a button, see the result. The API call happens in the background—if it fails, we roll back and tell you.
-  This wasn't a performance optimization bolted on later, it was a foundational rule from day one: **assume success, handle failure gracefully**. The pattern forced better architecture decisions—local state that can roll back, API responses designed for reconciliation, UI that let's the user get on with it.
-  The discipline required to build this way—and the quality of experience it produces—became the primary inspiration for [the Construct](/projects/construct) a design system and component library that bakes optimistic UI and motion into it's DNA. While Mythical itself isn't built on this system (yet), I plan to use it for as the UI layer for as many of this year's projects as I can.
+  This wasn't a performance optimization bolted on later, it was a foundational rule from day one: **assume success, handle failure gracefully**. The pattern forced better architecture decisions—local state that can roll back, API responses designed for reconciliation, UI that lets the user get on with it.
+  The discipline required to build this way—and the quality of experience it produces—became the primary inspiration for [the Construct](/projects/the-construct) a design system and component library that bakes optimistic UI and motion into its DNA. While Mythical itself isn't built on this system (yet), I plan to use it as the UI layer for as many of this year's projects as I can.
