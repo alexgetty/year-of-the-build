@@ -44,24 +44,14 @@ export const SiteFooter: FC<SiteFooterProps> = ({
             Weekly devlogs delivered to your inbox. No fluff, no spam.
             Just honest updates from the trenches.
           </p>
-          <form
-            className={styles.form}
-            action={beehiivUrl}
-            method="get"
+          <a
+            href={beehiivUrl}
             target="_blank"
+            rel="noopener noreferrer"
+            className={styles.button}
           >
-            <input
-              type="email"
-              name="email"
-              className={styles.input}
-              placeholder="you@example.com"
-              required
-              aria-label="Email address"
-            />
-            <button type="submit" className={styles.button}>
-              Subscribe
-            </button>
-          </form>
+            Subscribe
+          </a>
           <p className={styles.hint}>
             Unsubscribe anytime. Your inbox deserves respect.
           </p>
