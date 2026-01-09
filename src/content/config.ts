@@ -16,7 +16,7 @@ const digests = defineCollection({
   schema: z.object({
     title: z.string(),
     description: z.string(),
-    weekOf: z.date(), // Monday of the digest week
+    pubDate: z.date(), // Sunday publish date
     isDraft: z.boolean().default(false),
   }),
 });

@@ -4,16 +4,16 @@ interface DigestCardProps {
   title: string;
   description: string;
   slug: string;
-  weekOf: Date;
+  pubDate: Date;
 }
 
 export function DigestCard({
   title,
   description,
   slug,
-  weekOf,
+  pubDate,
 }: DigestCardProps) {
-  const formattedWeek = weekOf.toLocaleDateString('en-US', {
+  const formattedDate = pubDate.toLocaleDateString('en-US', {
     month: 'short',
     day: 'numeric',
     year: 'numeric',
@@ -28,8 +28,8 @@ export function DigestCard({
       </h3>
       <p className={styles.excerpt}>{description}</p>
       <div className={styles.footer}>
-        <time className={styles.date} dateTime={weekOf.toISOString()}>
-          Week of {formattedWeek}
+        <time className={styles.date} dateTime={pubDate.toISOString()}>
+          {formattedDate}
         </time>
         <div className={styles.footerRight}>
           <span className={styles.project}>Weekly Digest</span>

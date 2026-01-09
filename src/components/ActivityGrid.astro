@@ -4,8 +4,8 @@
  * Displays a grid of contribution squares with CSS-only hover tooltips
  * Data fetched at build time via GitHub GraphQL API
  *
- * Squares scale to fit container width. Tooltips have edge detection
- * to prevent clipping on left/right edges.
+ * Uses container queries to show 4/2/1 quarters based on available width.
+ * Weeks are grouped into quarters for responsive hiding.
  */
 import {
   fetchGitHubContributions,
@@ -25,67 +25,101 @@ const data = await fetchGitHubContributions(username);
 const weeks = data?.calendar.weeks ?? [];
 const totalWeeks = weeks.length;
 
-// Flatten all days for rendering
+// Process days with levels
 type DayWithLevel = ContributionDay & { level: 0 | 1 | 2 | 3 | 4 };
 
-const allDays: DayWithLevel[][] = weeks.map((week) =>
+const allWeeks: DayWithLevel[][] = weeks.map((week) =>
   week.contributionDays.map((day) => ({
     ...day,
     level: getContributionLevel(day.contributionCount),
   }))
 );
 
-// Edge detection: first 6 weeks align tooltip left, last 6 align right
-function getTooltipPosition(weekIndex: number, totalWeeks: number): 'left' | 'center' | 'right' {
-  if (weekIndex < 6) return 'left';
-  if (weekIndex >= totalWeeks - 6) return 'right';
+// Split into 4 quarters (~13 weeks each)
+const weeksPerQuarter = Math.ceil(totalWeeks / 4);
+const quarters = [
+  allWeeks.slice(0, weeksPerQuarter),
+  allWeeks.slice(weeksPerQuarter, weeksPerQuarter * 2),
+  allWeeks.slice(weeksPerQuarter * 2, weeksPerQuarter * 3),
+  allWeeks.slice(weeksPerQuarter * 3),
+];
+
+// Tooltip positioning - left edge for first weeks, right edge for last weeks
+function getTooltipPosition(weekIndexInQuarter: number, quarterIndex: number, weeksInQuarter: number): 'left' | 'center' | 'right' {
+  const isFirstQuarter = quarterIndex === 0;
+  const isLastQuarter = quarterIndex === 3;
+  const isNearStart = weekIndexInQuarter < 3;
+  const isNearEnd = weekIndexInQuarter >= weeksInQuarter - 3;
+
+  if (isFirstQuarter && isNearStart) return 'left';
+  if (isLastQuarter && isNearEnd) return 'right';
   return 'center';
 }
 ---
 
 <div class="activity-container">
   <div class="activity-grid">
-    {allDays.map((week, weekIndex) =>
-      week.map((day) => (
-        <div
-          class="day"
-          data-level={day.level}
-          data-tooltip-pos={getTooltipPosition(weekIndex, totalWeeks)}
-        >
-          <span class="tooltip">
-            {day.contributionCount === 0
-              ? 'No contributions'
-              : day.contributionCount === 1
-                ? '1 contribution'
-                : `${day.contributionCount} contributions`}
-            <br />
-            <span class="tooltip-date">{formatContributionDate(day.date)}</span>
-          </span>
-        </div>
-      ))
-    )}
+    {quarters.map((quarter, qIndex) => (
+      <div class="quarter" data-quarter={qIndex + 1}>
+        {quarter.map((week, weekIndex) => (
+          <div class="week">
+            {week.map((day) => (
+              <div
+                class="day"
+                data-level={day.level}
+                data-tooltip-pos={getTooltipPosition(weekIndex, qIndex, quarter.length)}
+              >
+                <span class="tooltip">
+                  {day.contributionCount === 0
+                    ? 'No contributions'
+                    : day.contributionCount === 1
+                      ? '1 contribution'
+                      : `${day.contributionCount} contributions`}
+                  <br />
+                  <span class="tooltip-date">{formatContributionDate(day.date)}</span>
+                </span>
+              </div>
+            ))}
+          </div>
+        ))}
+      </div>
+    ))}
   </div>
 </div>
 
 <style>
   .activity-container {
+    container-type: inline-size;
     background: var(--p-ink-50);
     border: 1px solid var(--p-ink-200);
     padding: 1px;
     overflow: visible;
+    max-width: 100%;
   }
 
   .activity-grid {
-    display: grid;
-    grid-template-rows: repeat(7, 1fr);
-    grid-auto-flow: column;
-    grid-auto-columns: 1fr;
+    display: flex;
     gap: 1px;
-    width: 100%;
     aspect-ratio: 53 / 7;
   }
 
+  .quarter {
+    display: flex;
+    gap: 1px;
+    flex: 1;
+    min-width: 0;
+  }
+
+  .week {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+    flex: 1;
+    min-width: 0;
+  }
+
   .day {
+    flex: 1;
     border-radius: 1px;
     position: relative;
   }
@@ -111,7 +145,39 @@ function getTooltipPosition(weekIndex: number, totalWeeks: number): 'left' | 'ce
     background-color: var(--p-forest-800);
   }
 
-  /* Tooltip base */
+  /* =============================================================================
+     Container Queries — Show 4/2/1 quarters based on container width
+     ============================================================================= */
+
+  /* Medium container: 6 months (hide Q1 & Q2, show Q3 & Q4) */
+  @container (max-width: 450px) {
+    .activity-grid {
+      aspect-ratio: 26 / 7;
+    }
+
+    .quarter[data-quarter='1'],
+    .quarter[data-quarter='2'] {
+      display: none;
+    }
+  }
+
+  /* Small container: 3 months (hide Q1, Q2, Q3, show only Q4) */
+  @container (max-width: 220px) {
+    .activity-grid {
+      aspect-ratio: 13 / 7;
+    }
+
+    .quarter[data-quarter='1'],
+    .quarter[data-quarter='2'],
+    .quarter[data-quarter='3'] {
+      display: none;
+    }
+  }
+
+  /* =============================================================================
+     Tooltip Styles
+     ============================================================================= */
+
   .tooltip {
     position: absolute;
     bottom: calc(100% + 8px);
@@ -130,7 +196,6 @@ function getTooltipPosition(weekIndex: number, totalWeeks: number): 'left' | 'ce
     text-align: center;
   }
 
-  /* Tooltip arrow base */
   .tooltip::after {
     content: '';
     position: absolute;

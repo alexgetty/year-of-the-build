@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState, type FC } from 'react';
 import styles from './Hero.module.css';
+import { NAV_LINKS } from '../navLinks';
 
 export interface DevlogData {
   title: string;
@@ -97,20 +98,18 @@ export const Hero: FC<HeroProps> = ({ latestDevlog }) => {
       <div className={styles.bottomBar}>
         {/* Latest devlog shortcut */}
         {latestDevlog && (
-          <div className={styles.latest}>
+          <a href={`/devlogs/${latestDevlog.slug}/`} className={styles.latest}>
             <span className={styles.latestLabel}>Latest</span>
-            <a href={`/devlogs/${latestDevlog.slug}/`} className={styles.latestLink}>
-              <span className={styles.latestTitle}>{latestDevlog.title}</span>
-              <span className={styles.latestDate}>{formattedDate}</span>
-            </a>
-          </div>
+            <span className={styles.latestTitle}>{latestDevlog.title}</span>
+            <span className={styles.latestDate}>{formattedDate}</span>
+          </a>
         )}
 
         {/* Nav links */}
         <nav className={styles.nav} aria-label="Main navigation">
-          <a href="/devlogs/" className={styles.navLink}>Devlogs</a>
-          <a href="/projects/" className={styles.navLink}>Projects</a>
-          <a href="/about/" className={styles.navLink}>About</a>
+          {NAV_LINKS.map(({ href, label }) => (
+            <a key={href} href={href} className={styles.navLink}>{label}</a>
+          ))}
         </nav>
       </div>
     </section>

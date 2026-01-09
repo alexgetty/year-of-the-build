@@ -18,7 +18,7 @@ const devlogs = (await getCollection('devlogs'))
 
 const digests = (await getCollection('digests'))
   .filter(post => !post.data.isDraft)
-  .sort((a, b) => b.data.weekOf.valueOf() - a.data.weekOf.valueOf());
+  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
 
 // Calculate entry numbers (oldest = 1, newest = highest)
 const entryNumberMap = new Map<string, number>();
@@ -36,7 +36,7 @@ const latestDigest = digests[0] ? {
   title: digests[0].data.title,
   description: digests[0].data.description,
   slug: digests[0].slug,
-  weekOf: digests[0].data.weekOf,
+  pubDate: digests[0].data.pubDate,
 } : null;
 
 const allProjects = await getCollection('projects');
@@ -90,7 +90,7 @@ const projectsData = allProjects
     <ParallaxBackground client:load />
 
     <!-- Sticky header - appears after scrolling past hero -->
-    <SiteHeader client:load showAfterHero={true} variant="dark" />
+    <SiteHeader client:load showAfterHero={true} variant="light" />
 
     <!-- Full-viewport hero with parallax -->
     <Hero client:load latestDevlog={latestDevlog} />
@@ -154,7 +154,7 @@ const projectsData = allProjects
               title={latestDigest.title}
               description={latestDigest.description}
               slug={latestDigest.slug}
-              weekOf={latestDigest.weekOf}
+              pubDate={latestDigest.pubDate}
             />
           ) : (
             <p class="empty-state">No digests yet. Check back soon!</p>
@@ -362,6 +362,8 @@ const projectsData = allProjects
     display: flex;
     flex-direction: column;
     gap: var(--t-spacing-md);
+    min-width: 0; /* Prevent grid blowout */
+    max-width: 100%;
   }
 
   /* =============================================================================
@@ -372,9 +374,20 @@ const projectsData = allProjects
     .intro-content {
       grid-template-columns: 1fr;
     }
+  }
 
-    .intro-stats {
-      justify-content: flex-start;
+  @media (max-width: 600px) {
+    .intro-headline {
+      font-size: var(--t-font-size-lg);
+    }
+
+    .stat {
+      flex: 1;
+      padding: var(--t-spacing-xs) var(--t-spacing-sm);
+    }
+
+    .stat-number {
+      font-size: var(--t-font-size-lg);
     }
   }
 </style>

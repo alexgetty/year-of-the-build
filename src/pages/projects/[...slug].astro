@@ -76,7 +76,7 @@ const hasSidebar = hasLinks || hasTech || hasFeatures || hasStats;
     <title>{project.data.title} - Year of the Build</title>
   </head>
   <body>
-    <SiteHeader client:load variant="dark" />
+    <SiteHeader client:load variant="light" />
 
     <!-- Breadcrumbs -->
     <div class="breadcrumbs-section">
@@ -216,6 +216,13 @@ const hasSidebar = hasLinks || hasTech || hasFeatures || hasStats;
   body {
     margin: 0;
     padding: 0;
+    padding-top: var(--header-height, 60px);
+  }
+
+  .container {
+    max-width: var(--yotb-content-max);
+    margin: 0 auto;
+    padding: 0 var(--t-spacing-lg);
   }
 
   /* =============================================================================
@@ -576,6 +583,10 @@ const hasSidebar = hasLinks || hasTech || hasFeatures || hasStats;
   }
 
   @media (max-width: 600px) {
+    .container {
+      padding: 0 var(--t-spacing-md);
+    }
+
     .project-hero-title {
       font-size: var(--t-font-size-xl);
     }

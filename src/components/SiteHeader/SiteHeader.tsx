@@ -1,5 +1,6 @@
 import { type FC, useState, useEffect } from 'react';
 import styles from './SiteHeader.module.css';
+import { NAV_LINKS } from '../navLinks';
 
 export interface SiteHeaderProps {
   /** On homepage, header appears after scrolling past hero */
@@ -56,21 +57,13 @@ export const SiteHeader: FC<SiteHeaderProps> = ({
 
         <nav className={styles.nav} aria-label="Main navigation">
           <ul className={styles.navList}>
-            <li>
-              <a href="/devlogs/" className={styles.navLink}>
-                Devlogs
-              </a>
-            </li>
-            <li>
-              <a href="/projects/" className={styles.navLink}>
-                Projects
-              </a>
-            </li>
-            <li>
-              <a href="/about/" className={styles.navLink}>
-                About
-              </a>
-            </li>
+            {NAV_LINKS.map(({ href, label }) => (
+              <li key={href}>
+                <a href={href} className={styles.navLink}>
+                  {label}
+                </a>
+              </li>
+            ))}
           </ul>
         </nav>
       </div>
