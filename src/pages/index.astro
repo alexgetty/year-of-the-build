@@ -9,6 +9,7 @@ import { DevlogCardGrid } from '../components/DevlogCardGrid';
 import { DigestCard } from '../components/DigestCard';
 import { ProjectCardGrid } from '../components/ProjectCardGrid';
 import { ParallaxBackground } from '../components/ParallaxBackground';
+import ActivityGrid from '../components/ActivityGrid.astro';
 import { getCollection } from 'astro:content';
 
 const devlogs = (await getCollection('devlogs'))
@@ -113,39 +114,23 @@ const projectsData = allProjects
               </p>
               <a href="/about/" class="intro-link">Learn more about the project &rarr;</a>
             </div>
-            <div class="intro-stats">
-              <div class="stat">
-                <span class="stat-number">{allProjects.filter(p => p.slug !== 'yotb').length}</span>
-                <span class="stat-label">Projects</span>
+            <div class="intro-right">
+              <div class="intro-stats">
+                <div class="stat">
+                  <span class="stat-number">{allProjects.filter(p => p.slug !== 'yotb').length}</span>
+                  <span class="stat-label">Projects</span>
+                </div>
+                <div class="stat">
+                  <span class="stat-number">{devlogs.length}</span>
+                  <span class="stat-label">Devlogs</span>
+                </div>
+                <div class="stat">
+                  <span class="stat-number">{digests.length}</span>
+                  <span class="stat-label">Digests</span>
+                </div>
               </div>
-              <div class="stat">
-                <span class="stat-number">{devlogs.length}</span>
-                <span class="stat-label">Devlogs</span>
-              </div>
-              <div class="stat">
-                <span class="stat-number">{digests.length}</span>
-                <span class="stat-label">Digests</span>
-              </div>
+              <ActivityGrid username="alexgetty" />
             </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- GitHub Activity -->
-      <section class="activity-section">
-        <div class="container">
-          <div class="section-label">
-            <span>Activity</span>
-          </div>
-          <p class="section-description">
-            Proof of work. Every green square is progress.
-          </p>
-          <div class="activity-graph">
-            <img
-              src="https://ghchart.rshah.org/b45309/alexgetty"
-              alt="alexgetty's GitHub contribution chart"
-              loading="lazy"
-            />
           </div>
         </div>
       </section>
@@ -372,23 +357,11 @@ const projectsData = allProjects
     margin-top: 2px;
   }
 
-  /* =============================================================================
-     Activity Section
-     ============================================================================= */
-
-  .activity-section {
-    background: var(--bg-canvas);
-  }
-
-  .activity-graph {
-    overflow-x: auto;
-    padding: var(--t-spacing-md) 0;
-  }
-
-  .activity-graph img {
-    display: block;
-    max-width: 100%;
-    height: auto;
+  /* Right column — Stats + Activity stacked */
+  .intro-right {
+    display: flex;
+    flex-direction: column;
+    gap: var(--t-spacing-md);
   }
 
   /* =============================================================================
