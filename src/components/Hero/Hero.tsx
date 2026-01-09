@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState, type FC } from 'react';
 import styles from './Hero.module.css';
+import { NAV_LINKS } from '../navLinks';
 
 export interface DevlogData {
   title: string;
@@ -108,9 +109,9 @@ export const Hero: FC<HeroProps> = ({ latestDevlog }) => {
 
         {/* Nav links */}
         <nav className={styles.nav} aria-label="Main navigation">
-          <a href="/devlogs/" className={styles.navLink}>Devlogs</a>
-          <a href="/projects/" className={styles.navLink}>Projects</a>
-          <a href="/about/" className={styles.navLink}>About</a>
+          {NAV_LINKS.map(({ href, label }) => (
+            <a key={href} href={href} className={styles.navLink}>{label}</a>
+          ))}
         </nav>
       </div>
     </section>
