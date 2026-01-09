@@ -8,6 +8,7 @@ import { PageHeader } from '../../components/PageHeader';
 import { DigestCard } from '../../components/DigestCard';
 import { Stagger } from '../../components/Stagger';
 import { getCollection } from 'astro:content';
+import { copy } from '../../lib/copy';
 
 const digests = (await getCollection('digests'))
   .filter(post => !post.data.isDraft)
@@ -30,7 +31,7 @@ const years = Object.keys(groupedByYear).sort((a, b) => Number(b) - Number(a));
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="description" content="Weekly digests summarizing progress across all projects" />
+    <meta name="description" content={copy.digests.description} />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="generator" content={Astro.generator} />
@@ -42,13 +43,15 @@ const years = Object.keys(groupedByYear).sort((a, b) => Number(b) - Number(a));
     <main class="main-content">
       <PageHeader
         title="Weekly Digests"
-        description="Weekly summaries of progress across all projects. Subscribe to get these in your inbox."
+        description={copy.digests.description}
+        cta={copy.digests.cta}
+        ctaHref="https://yotb.beehiiv.com"
       />
 
       <section class="digests-section">
         <div class="container">
           {digests.length === 0 ? (
-            <p class="empty-state">No digests yet. Check back soon!</p>
+            <p class="empty-state">{copy.empty("digests")}</p>
           ) : (
             <div class="digests-layout">
               {years.map((year) => (

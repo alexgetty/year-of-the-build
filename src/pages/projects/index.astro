@@ -7,6 +7,7 @@ import { SiteFooter } from '../../components/SiteFooter';
 import { PageHeader } from '../../components/PageHeader';
 import { ProjectCardGrid } from '../../components/ProjectCardGrid';
 import { getCollection } from 'astro:content';
+import { copy } from '../../lib/copy';
 
 const projects = await getCollection('projects');
 
@@ -35,7 +36,7 @@ const currentMonthText = buildingProject
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="description" content="Projects built in public - tracking progress and launches" />
+    <meta name="description" content={copy.projects.description} />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="generator" content={Astro.generator} />
@@ -47,7 +48,7 @@ const currentMonthText = buildingProject
     <main class="main-content">
       <PageHeader
         title="All Projects"
-        description="12 projects planned for 2025. Each one gets a month of focused building, a public launch, and an honest post-mortem."
+        description={copy.projects.description}
       />
 
       <!-- Progress Section -->
@@ -77,7 +78,7 @@ const currentMonthText = buildingProject
       <section class="projects-section">
         <div class="container">
           {projectsData.length === 0 ? (
-            <p class="empty-state">Project list coming soon!</p>
+            <p class="empty-state">{copy.empty("projects")}</p>
           ) : (
             <ProjectCardGrid client:visible projects={projectsData} columns={4} />
           )}

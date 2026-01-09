@@ -7,6 +7,7 @@ import { SiteFooter } from '../../components/SiteFooter';
 import { PageHeader } from '../../components/PageHeader';
 import { DevlogTimeline } from '../../components/DevlogTimeline';
 import { getCollection } from 'astro:content';
+import { copy } from '../../lib/copy';
 
 const devlogs = (await getCollection('devlogs'))
   .filter(post => !post.data.isDraft)
@@ -66,7 +67,7 @@ const months = Object.keys(groupedByMonth);
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="description" content="Devlogs documenting the journey of building in public" />
+    <meta name="description" content={copy.devlogs.description} />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="generator" content={Astro.generator} />
@@ -78,14 +79,14 @@ const months = Object.keys(groupedByMonth);
     <main class="main-content">
       <PageHeader
         title="Devlog"
-        description="Updates from the trenches. What worked, what broke, and everything in between."
+        description={copy.devlogs.description}
       />
 
       <!-- Timeline Section -->
       <section class="timeline-section">
         <div class="container">
           {devlogs.length === 0 ? (
-            <p class="empty-state">No devlogs yet. Check back soon!</p>
+            <p class="empty-state">{copy.empty("devlogs")}</p>
           ) : (
             <div class="timeline-layout">
               <!-- Month Navigation -->

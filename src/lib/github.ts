@@ -44,16 +44,16 @@ const CONTRIBUTION_QUERY = `
 
 /**
  * Fetches GitHub contribution data for a user
- * Requires GITHUB_TOKEN environment variable
+ * Requires GH_TOKEN environment variable
  */
 export async function fetchGitHubContributions(
   username: string
 ): Promise<GitHubContributionData | null> {
-  const token = import.meta.env.GITHUB_TOKEN || process.env.GITHUB_TOKEN;
+  const token = import.meta.env.GH_TOKEN || process.env.GH_TOKEN;
 
   if (!token) {
     console.warn(
-      '[ActivityGrid] GITHUB_TOKEN not found. Contribution grid will be empty.'
+      '[ActivityGrid] GH_TOKEN not found. Contribution grid will be empty.'
     );
     return null;
   }

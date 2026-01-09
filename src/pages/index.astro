@@ -11,6 +11,7 @@ import { ProjectCardGrid } from '../components/ProjectCardGrid';
 import { ParallaxBackground } from '../components/ParallaxBackground';
 import ActivityGrid from '../components/ActivityGrid.astro';
 import { getCollection } from 'astro:content';
+import { copy } from '../lib/copy';
 
 const devlogs = (await getCollection('devlogs'))
   .filter(post => !post.data.isDraft)
@@ -79,7 +80,7 @@ const projectsData = allProjects
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="description" content="Year of the Build - Building in public, one project at a time" />
+    <meta name="description" content={copy.site.tagline} />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="generator" content={Astro.generator} />
@@ -106,11 +107,9 @@ const projectsData = allProjects
           </div>
           <div class="intro-content">
             <div class="intro-text">
-              <p class="intro-headline">Building in public. No excuses.</p>
+              <p class="intro-headline">Hey there, I'm Alex. I make things and then write about it.</p>
               <p class="intro-body">
-                A public accountability log for building and shipping real products.
-                No vaporware. No "coming soon" pages that never arrive. Just raw creation,
-                documented in real-time. Each week brings progress. The work speaks for itself.
+                Rolling devlogs + weekly digests. Follow the trainwreck.
               </p>
               <a href="/about/" class="intro-link">Learn more about the project &rarr;</a>
             </div>
@@ -144,9 +143,8 @@ const projectsData = allProjects
             </div>
             <a href="/digests/" class="view-all">View all</a>
           </div>
-          <p class="section-description">
-            Weekly summaries of progress across all projects. Subscribe to get these in your inbox.
-          </p>
+          <p class="section-description">{copy.digests.description}</p>
+          <a href="https://yotb.beehiiv.com" class="section-cta">{copy.digests.cta}</a>
 
           {latestDigest ? (
             <DigestCard
@@ -157,7 +155,7 @@ const projectsData = allProjects
               pubDate={latestDigest.pubDate}
             />
           ) : (
-            <p class="empty-state">No digests yet. Check back soon!</p>
+            <p class="empty-state">{copy.empty("digests")}</p>
           )}
         </div>
       </section>
@@ -172,11 +170,11 @@ const projectsData = allProjects
             <a href="/devlogs/" class="view-all">View all</a>
           </div>
           <p class="section-description">
-            Deep dives into individual projects. Technical details, design decisions, and lessons learned.
+            {copy.devlogs.description}
           </p>
 
           {recentDevlogsData.length === 0 ? (
-            <p class="empty-state">No devlogs yet. Check back soon!</p>
+            <p class="empty-state">{copy.empty("devlogs")}</p>
           ) : (
             <DevlogCardGrid client:visible devlogs={recentDevlogsData} />
           )}
@@ -193,7 +191,7 @@ const projectsData = allProjects
             <a href="/projects/" class="view-all">View all</a>
           </div>
           <p class="section-description">
-            What's being built. Each project gets its own devlogs tracking progress from idea to launch.
+            {copy.projects.description}
           </p>
 
           <ProjectCardGrid client:visible projects={projectsData} columns={4} />
@@ -273,8 +271,16 @@ const projectsData = allProjects
     font-size: var(--t-font-size-sm);
     color: var(--text-secondary);
     margin-top: calc(-1 * var(--t-spacing-sm));
-    margin-bottom: var(--t-spacing-lg);
+    margin-bottom: var(--t-spacing-xs);
     max-width: 500px;
+  }
+
+  .section-cta {
+    display: block;
+    font-size: var(--t-font-size-sm);
+    color: var(--text-secondary);
+    margin-bottom: var(--t-spacing-lg);
+    width: fit-content;
   }
 
   /* =============================================================================
@@ -300,6 +306,7 @@ const projectsData = allProjects
     font-size: var(--t-font-size-xl);
     font-weight: 700;
     line-height: var(--t-line-height-tight);
+    margin-top: 0;
     margin-bottom: var(--t-spacing-sm);
     color: var(--text-primary);
   }
