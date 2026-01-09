@@ -13,27 +13,26 @@ Throwing more features on the pile before addressing fundamental issues is a rec
 
 ## Bugs
 The MVP is live and functional, but the only users are people I personally know that are helping me bug test. Annoyingly, they have been quite proficient at finding bugs, so I've been dealing with those:
-- Fixed an issue where users got stuck in an infinite redirect loop when finishing onboarding. This as a pretty high priority. Not the best first impression...
+- Fixed an issue where users got stuck in an infinite redirect loop when finishing onboarding. This was a pretty high priority. Not the best first impression...
 - Fixed an issue where onboarding skipped the "create new calendar" step when chosen.
-- Fixed an issue where calendar's were not being properly disconnected
-* Updated auth logic to avoid silent failures when unauthenticated visitors try to use the sign in instead of sign up button. Now, new users get automatically routed into onboarding if they try to sign in without an existing account.
-* A long tail of minor tweaks and styling fixes too long or boring to enumerate here.
+- Fixed an issue where calendars were not being properly disconnected
+- Updated auth logic to avoid silent failures when unauthenticated visitors try to use the sign in instead of sign up button. Now, new users get automatically routed into onboarding if they try to sign in without an existing account.
+- A long tail of minor tweaks and styling fixes too long or boring to enumerate here.
 
 Some of these were issues that I could not reproduce in a local environment, so troubleshooting production issues has been a learning experience for me. While some of these issues were glaringly obvious and the problem was clearly me not testing thoroughly enough, I'm pretty happy with how smooth my first "real" product launch went. I'm sure as more users join, more bugs will reveal themselves, but things seem relatively stable right now.
 
 ## Refactoring
-You know what they say, "Move fast and leave a bunch of dead code in your production app." Well I followed that sage wisdom. I built this in a very iterative way, prototyping and exploring core functionality as I went. I made some big decisions early on about what would be handle in app and what wouldn't be, but neglected to fully clean up after myself. I've already found and removed a LOT of orphaned components, unused calls, and entire chunks of functionality, and I'm sure there is more. I am going to take another few days to clean up and refactor my existing code before I start layering on new stuff. I don't have customers breaking down my door asking where pro features are, so I can afford to take my time and build a solid foundation.
+You know what they say, "Move fast and leave a bunch of dead code in your production app." Well I followed that sage wisdom. I built this in a very iterative way, prototyping and exploring core functionality as I went. I made some big decisions early on about what would be handled in app and what wouldn't be, but neglected to fully clean up after myself. I've already found and removed a LOT of orphaned components, unused calls, and entire chunks of functionality, and I'm sure there is more. I am going to take another few days to clean up and refactor my existing code before I start layering on new stuff. I don't have customers breaking down my door asking where pro features are, so I can afford to take my time and build a solid foundation.
 
 ## Testing
-I have unit tests set up, but I haven't exactly been consistent in my maintenance of them. I need to take a pass and ensure better coverage. Also, unit tests don't catch everything. I need to build more resiliency (and better logging for when that things still fail).
+I have unit tests set up, but I haven't exactly been consistent in my maintenance of them. I need to take a pass and ensure better coverage. Also, unit tests don't catch everything. I need to build more resiliency (and better logging for when things still fail).
 
 I also need to establish a better system for QA. My chaos-fueled artist brain is not good at systematic testing practices, but thoughts of regressions will keep me up at night if I don't address this sooner rather than later.
 
 ## Deployment
 Despite having like... 25 years of experience writing code in a hobbyist capacity, most of my projects were simple static sites or react/express apps that I only ever ran locally. All this deployment, migration, CI, etc. stuff is relatively new to me. I've been _around_ it for the majority of my career as a product designer, but I was never the one setting it up or managing it.
 
-Right now, deployment is pretty straightforward. I push my main branch, Github does linting/type checking and builds the project, then Vercel deploys it. No separate staging environment, no complex migration processes. Easy peasy. But that won't last for long. I already have a list of schema changes that need to be made in order to accomodate multiple calendar integrations, so I'm going to have to figure out a deployment and migration process that safely and reliably gets these changes out there. That will be one of the topics for my next research sprint.
-
+Right now, deployment is pretty straightforward. I push my main branch, Github does linting/type checking and builds the project, then Vercel deploys it. No separate staging environment, no complex migration processes. Easy peasy. But that won't last for long. I already have a list of schema changes that need to be made in order to accommodate multiple calendar integrations, so I'm going to have to figure out a deployment and migration process that safely and reliably gets these changes out there. That will be one of the topics for my next research sprint.
 
 ## Closing Out
 I really wish I could be talking about fun new feature developments and creative problem solving, but the fact is that this boring stuff HAS to be dealt with and it has to be done before more users join and features are added. Energy put into anything else right now won't just be less efficient, it will actively make these problems worse.

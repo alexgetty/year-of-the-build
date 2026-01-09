@@ -195,14 +195,8 @@
   gap: var(--t-spacing-sm);
   padding: var(--t-spacing-sm) var(--t-spacing-md);
   margin: calc(-1 * var(--t-spacing-sm)) calc(-1 * var(--t-spacing-md));
-  border-radius: var(--t-radius-sm);
   text-decoration: none;
   color: var(--yotb-light);
-  transition: background-color 0.2s ease;
-}
-
-.latest:hover {
-  background-color: rgba(255, 255, 255, 0.08);
 }
 
 .latestLabel {
@@ -215,9 +209,29 @@
 }
 
 .latestTitle {
+  position: relative;
   font-size: var(--t-font-size-sm);
   font-weight: 500;
   margin-right: var(--t-spacing-sm);
+}
+
+.latestTitle::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -5px;
+  height: 2px;
+  background: var(--yotb-amber);
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform 0.4s var(--ease-out-expo);
+}
+
+.latest:hover .latestTitle::after,
+.latest:focus-visible .latestTitle::after {
+  transform: scaleX(1);
+  transform-origin: left;
 }
 
 .latestDate {
@@ -232,6 +246,7 @@
 }
 
 .navLink {
+  position: relative;
   font-size: var(--t-font-size-sm);
   font-weight: 500;
   text-decoration: none;
@@ -240,8 +255,27 @@
   transition: opacity 0.2s ease;
 }
 
+.navLink::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -5px;
+  height: 2px;
+  background: var(--yotb-amber);
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform 0.4s var(--ease-out-expo);
+}
+
 .navLink:hover {
   opacity: 1;
+}
+
+.navLink:hover::after,
+.navLink:focus-visible::after {
+  transform: scaleX(1);
+  transform-origin: left;
 }
 
 /* =============================================================================

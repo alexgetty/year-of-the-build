@@ -106,6 +106,7 @@
 }
 
 .navLink {
+  position: relative;
   font-size: var(--t-font-size-sm);
   font-weight: 500;
   text-decoration: none;
@@ -113,8 +114,27 @@
   transition: color 0.2s ease;
 }
 
+.navLink::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -5px;
+  height: 2px;
+  background: var(--yotb-amber);
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform 0.4s var(--ease-out-expo);
+}
+
 .navLink:hover {
   color: var(--yotb-light);
+}
+
+.navLink:hover::after,
+.navLink:focus-visible::after {
+  transform: scaleX(1);
+  transform-origin: left;
 }
 
 /* =============================================================================

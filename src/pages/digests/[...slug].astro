@@ -13,7 +13,7 @@ export async function getStaticPaths() {
 const post = Astro.props;
 const { Content } = await post.render();
 
-const formattedWeek = post.data.weekOf.toLocaleDateString('en-US', {
+const formattedDate = post.data.pubDate.toLocaleDateString('en-US', {
   year: 'numeric',
   month: 'long',
   day: 'numeric',
@@ -25,8 +25,8 @@ const formattedWeek = post.data.weekOf.toLocaleDateString('en-US', {
   <article>
     <header>
       <div class="meta">
-        <time datetime={post.data.weekOf.toISOString()}>
-          Week of {formattedWeek}
+        <time datetime={post.data.pubDate.toISOString()}>
+          {formattedDate}
         </time>
         <span class="digest-badge">Weekly Digest</span>
       </div>

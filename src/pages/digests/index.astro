@@ -11,11 +11,11 @@ import { getCollection } from 'astro:content';
 
 const digests = (await getCollection('digests'))
   .filter(post => !post.data.isDraft)
-  .sort((a, b) => b.data.weekOf.valueOf() - a.data.weekOf.valueOf());
+  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
 
 // Group digests by year
 const groupedByYear = digests.reduce((acc, post) => {
-  const year = post.data.weekOf.getFullYear().toString();
+  const year = post.data.pubDate.getFullYear().toString();
   if (!acc[year]) {
     acc[year] = [];
   }
@@ -63,7 +63,7 @@ const years = Object.keys(groupedByYear).sort((a, b) => Number(b) - Number(a));
                         title={digest.data.title}
                         description={digest.data.description}
                         slug={digest.slug}
-                        weekOf={digest.data.weekOf}
+                        pubDate={digest.data.pubDate}
                       />
                     ))}
                   </Stagger>

@@ -18,7 +18,7 @@ const devlogs = (await getCollection('devlogs'))
 
 const digests = (await getCollection('digests'))
   .filter(post => !post.data.isDraft)
-  .sort((a, b) => b.data.weekOf.valueOf() - a.data.weekOf.valueOf());
+  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
 
 // Calculate entry numbers (oldest = 1, newest = highest)
 const entryNumberMap = new Map<string, number>();
@@ -36,7 +36,7 @@ const latestDigest = digests[0] ? {
   title: digests[0].data.title,
   description: digests[0].data.description,
   slug: digests[0].slug,
-  weekOf: digests[0].data.weekOf,
+  pubDate: digests[0].data.pubDate,
 } : null;
 
 const allProjects = await getCollection('projects');
@@ -154,7 +154,7 @@ const projectsData = allProjects
               title={latestDigest.title}
               description={latestDigest.description}
               slug={latestDigest.slug}
-              weekOf={latestDigest.weekOf}
+              pubDate={latestDigest.pubDate}
             />
           ) : (
             <p class="empty-state">No digests yet. Check back soon!</p>
