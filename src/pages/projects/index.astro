@@ -42,7 +42,7 @@ const currentMonthText = buildingProject
     <title>Projects - Year of the Build</title>
   </head>
   <body>
-    <SiteHeader client:load variant="dark" />
+    <SiteHeader client:load variant="light" />
 
     <main class="main-content">
       <PageHeader
@@ -93,6 +93,13 @@ const currentMonthText = buildingProject
   body {
     margin: 0;
     padding: 0;
+    padding-top: var(--header-height, 60px);
+  }
+
+  .container {
+    max-width: var(--yotb-content-max);
+    margin: 0 auto;
+    padding: 0 var(--t-spacing-lg);
   }
 
   /* =============================================================================
@@ -174,6 +181,12 @@ const currentMonthText = buildingProject
     .progress-inner {
       grid-template-columns: 1fr;
       gap: var(--t-spacing-md);
+    }
+  }
+
+  @media (max-width: 600px) {
+    .container {
+      padding: 0 var(--t-spacing-md);
     }
   }
 </style>

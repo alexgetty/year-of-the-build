@@ -138,10 +138,10 @@
 }
 
 /* =============================================================================
-   Light Variant — For non-homepage pages
+   Light Variant — Respects data-visible state
    ============================================================================= */
 
-.header[data-variant="light"] {
+.header[data-variant="light"][data-visible="true"] {
   pointer-events: auto;
   background: rgba(253, 251, 247, 0.9);
   backdrop-filter: blur(12px);
@@ -149,8 +149,8 @@
   border-bottom: 1px solid var(--border-default);
 }
 
-.header[data-variant="light"] .logo,
-.header[data-variant="light"] .nav {
+.header[data-variant="light"][data-visible="true"] .logo,
+.header[data-variant="light"][data-visible="true"] .nav {
   opacity: 1;
 }
 

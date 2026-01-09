@@ -29,7 +29,7 @@ const { title, description = "Year of the Build - Building in public, one projec
     <ParallaxBackground client:load />
 
     <!-- Sticky header for non-homepage -->
-    <SiteHeader client:load variant="dark" />
+    <SiteHeader client:load variant="light" />
 
     <div class="site-container">
       <main>
@@ -50,11 +50,21 @@ const { title, description = "Year of the Build - Building in public, one projec
   .site-container {
     max-width: var(--yotb-content-max);
     margin: 0 auto;
-    padding: 0 var(--inset-lg);
+    padding: 0 var(--t-spacing-lg);
   }
 
   main {
     min-height: 60vh;
-    padding: var(--stack-lg) 0;
+    padding: var(--t-spacing-2xl) 0;
+  }
+
+  @media (max-width: 600px) {
+    .site-container {
+      padding: 0 var(--t-spacing-md);
+    }
+
+    main {
+      padding: var(--t-spacing-xl) 0;
+    }
   }
 </style>

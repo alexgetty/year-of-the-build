@@ -37,7 +37,7 @@ const years = Object.keys(groupedByYear).sort((a, b) => Number(b) - Number(a));
     <title>Digests - Year of the Build</title>
   </head>
   <body>
-    <SiteHeader client:load variant="dark" />
+    <SiteHeader client:load variant="light" />
 
     <main class="main-content">
       <PageHeader
@@ -83,6 +83,13 @@ const years = Object.keys(groupedByYear).sort((a, b) => Number(b) - Number(a));
   body {
     margin: 0;
     padding: 0;
+    padding-top: var(--header-height, 60px);
+  }
+
+  .container {
+    max-width: var(--yotb-content-max);
+    margin: 0 auto;
+    padding: 0 var(--t-spacing-lg);
   }
 
   .digests-section {
@@ -136,6 +143,10 @@ const years = Object.keys(groupedByYear).sort((a, b) => Number(b) - Number(a));
   }
 
   @media (max-width: 600px) {
+    .container {
+      padding: 0 var(--t-spacing-md);
+    }
+
     .digest-grid {
       grid-template-columns: 1fr;
     }
