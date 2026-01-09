@@ -151,7 +151,19 @@
    ============================================================================= */
 
 @media (max-width: 600px) {
+  .container {
+    padding: 0 var(--t-spacing-md);
+  }
+
+  .logo {
+    font-size: var(--t-font-size-base);
+  }
+
   .navList {
-    display: none;
+    gap: var(--t-spacing-sm);
+  }
+
+  .navLink {
+    font-size: var(--t-font-size-xs);
   }
 }
