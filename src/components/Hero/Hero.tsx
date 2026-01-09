@@ -98,13 +98,11 @@ export const Hero: FC<HeroProps> = ({ latestDevlog }) => {
       <div className={styles.bottomBar}>
         {/* Latest devlog shortcut */}
         {latestDevlog && (
-          <div className={styles.latest}>
+          <a href={`/devlogs/${latestDevlog.slug}/`} className={styles.latest}>
             <span className={styles.latestLabel}>Latest</span>
-            <a href={`/devlogs/${latestDevlog.slug}/`} className={styles.latestLink}>
-              <span className={styles.latestTitle}>{latestDevlog.title}</span>
-              <span className={styles.latestDate}>{formattedDate}</span>
-            </a>
-          </div>
+            <span className={styles.latestTitle}>{latestDevlog.title}</span>
+            <span className={styles.latestDate}>{formattedDate}</span>
+          </a>
         )}
 
         {/* Nav links */}

@@ -73,6 +73,7 @@ function getTooltipPosition(weekIndex: number, totalWeeks: number): 'left' | 'ce
     border: 1px solid var(--p-ink-200);
     padding: 1px;
     overflow: visible;
+    max-width: 100%;
   }
 
   .activity-grid {
@@ -181,5 +182,11 @@ function getTooltipPosition(weekIndex: number, totalWeeks: number): 'left' | 'ce
   .day:hover .tooltip {
     opacity: 1;
     visibility: visible;
+  }
+
+  @media (max-width: 600px) {
+    .activity-container {
+      display: none;
+    }
   }
 </style>
