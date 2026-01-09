@@ -20,10 +20,9 @@ interface DevlogData {
   title: string;
   description: string;
   slug: string;
-  weekNumber: number;
+  entryNumber: number;
   pubDate: Date;
   projects?: LinkedProject[];
-  commitCount?: number;
 }
 
 interface DevlogCardGridProps {
@@ -39,10 +38,9 @@ export function DevlogCardGrid({ devlogs }: DevlogCardGridProps) {
           title={devlog.title}
           description={devlog.description}
           slug={devlog.slug}
-          weekNumber={devlog.weekNumber}
+          entryNumber={devlog.entryNumber}
           pubDate={devlog.pubDate}
           projects={devlog.projects}
-          commitCount={devlog.commitCount}
         />
       ))}
     </Stagger>

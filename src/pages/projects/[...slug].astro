@@ -106,7 +106,8 @@ const hasSidebar = hasLinks || hasTech || hasFeatures || hasStats;
                   <strong>{project.data.launchDate.toLocaleDateString('en-US', {
                     month: 'short',
                     day: 'numeric',
-                    year: 'numeric'
+                    year: 'numeric',
+                    timeZone: 'UTC',
                   })}</strong>
                 </div>
               </div>

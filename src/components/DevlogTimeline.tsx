@@ -23,7 +23,6 @@ interface DevlogData {
   entryNumber: number;
   pubDate: Date;
   projects?: LinkedProject[];
-  commitCount?: number;
 }
 
 interface DevlogTimelineProps {
@@ -43,7 +42,6 @@ export function DevlogTimeline({ devlogs }: DevlogTimelineProps) {
             entryNumber={devlog.entryNumber}
             pubDate={devlog.pubDate}
             projects={devlog.projects}
-            commitCount={devlog.commitCount}
           />
         </div>
       ))}

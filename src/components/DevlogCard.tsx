@@ -12,7 +12,6 @@ interface DevlogCardProps {
   entryNumber: number;
   pubDate: Date;
   projects?: LinkedProject[];
-  commitCount?: number;
 }
 
 export function DevlogCard({
@@ -22,12 +21,12 @@ export function DevlogCard({
   entryNumber,
   pubDate,
   projects,
-  commitCount
 }: DevlogCardProps) {
   const formattedDate = pubDate.toLocaleDateString('en-US', {
     month: 'short',
     day: 'numeric',
-    year: 'numeric'
+    year: 'numeric',
+    timeZone: 'UTC',
   });
 
   return (
@@ -42,9 +41,6 @@ export function DevlogCard({
           {formattedDate}
         </time>
         <div className={styles.footerRight}>
-          {commitCount !== undefined && commitCount > 0 && (
-            <span className={styles.commits}>{commitCount} commits</span>
-          )}
           {projects && projects.length > 0 && (
             <span className={styles.project}>
               {projects.map(p => p.title).join(', ')}

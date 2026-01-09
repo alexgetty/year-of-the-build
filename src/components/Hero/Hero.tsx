@@ -40,6 +40,7 @@ export const Hero: FC<HeroProps> = ({ latestDevlog }) => {
   const formattedDate = latestDevlog?.pubDate.toLocaleDateString('en-US', {
     month: 'short',
     day: 'numeric',
+    timeZone: 'UTC',
   });
 
   // Parallax multipliers - smaller = slower movement

@@ -96,12 +96,6 @@
   gap: var(--t-spacing-sm);
 }
 
-.commits {
-  font-size: var(--t-font-size-xs);
-  font-weight: 500;
-  color: var(--p-forest-700);
-}
-
 .project {
   font-size: var(--t-font-size-xs);
   font-weight: 600;

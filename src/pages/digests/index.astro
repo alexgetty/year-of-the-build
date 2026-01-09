@@ -1,0 +1,143 @@
+---
+// TODO: Uncomment when @gettymade/construct is published to npm
+// import '@gettymade/construct/styles';
+import '../../styles/theme.css';
+import { SiteHeader } from '../../components/SiteHeader';
+import { SiteFooter } from '../../components/SiteFooter';
+import { PageHeader } from '../../components/PageHeader';
+import { DigestCard } from '../../components/DigestCard';
+import { Stagger } from '../../components/Stagger';
+import { getCollection } from 'astro:content';
+
+const digests = (await getCollection('digests'))
+  .filter(post => !post.data.isDraft)
+  .sort((a, b) => b.data.weekOf.valueOf() - a.data.weekOf.valueOf());
+
+// Group digests by year
+const groupedByYear = digests.reduce((acc, post) => {
+  const year = post.data.weekOf.getFullYear().toString();
+  if (!acc[year]) {
+    acc[year] = [];
+  }
+  acc[year].push(post);
+  return acc;
+}, {} as Record<string, typeof digests>);
+
+const years = Object.keys(groupedByYear).sort((a, b) => Number(b) - Number(a));
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="description" content="Weekly digests summarizing progress across all projects" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="generator" content={Astro.generator} />
+    <title>Digests - Year of the Build</title>
+  </head>
+  <body>
+    <SiteHeader client:load variant="dark" />
+
+    <main class="main-content">
+      <PageHeader
+        title="Weekly Digests"
+        description="Weekly summaries of progress across all projects. Subscribe to get these in your inbox."
+      />
+
+      <section class="digests-section">
+        <div class="container">
+          {digests.length === 0 ? (
+            <p class="empty-state">No digests yet. Check back soon!</p>
+          ) : (
+            <div class="digests-layout">
+              {years.map((year) => (
+                <div class="year-group" id={year}>
+                  <div class="year-header">
+                    <h2 class="year-title">{year}</h2>
+                    <span class="year-count">{groupedByYear[year].length} {groupedByYear[year].length === 1 ? 'digest' : 'digests'}</span>
+                  </div>
+                  <Stagger client:visible animation="slideUp" className="digest-grid">
+                    {groupedByYear[year].map((digest) => (
+                      <DigestCard
+                        title={digest.data.title}
+                        description={digest.data.description}
+                        slug={digest.slug}
+                        weekOf={digest.data.weekOf}
+                      />
+                    ))}
+                  </Stagger>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      </section>
+    </main>
+
+    <SiteFooter />
+  </body>
+</html>
+
+<style>
+  body {
+    margin: 0;
+    padding: 0;
+  }
+
+  .digests-section {
+    padding: var(--t-spacing-xl) 0 var(--t-spacing-2xl);
+  }
+
+  .empty-state {
+    color: var(--text-muted);
+    padding: var(--t-spacing-xl) 0;
+  }
+
+  .digests-layout {
+    display: flex;
+    flex-direction: column;
+    gap: var(--t-spacing-2xl);
+  }
+
+  .year-group {
+    margin-bottom: var(--t-spacing-xl);
+  }
+
+  .year-group:last-child {
+    margin-bottom: 0;
+  }
+
+  .year-header {
+    display: flex;
+    align-items: baseline;
+    gap: var(--t-spacing-md);
+    margin-bottom: var(--t-spacing-lg);
+    padding-bottom: var(--t-spacing-sm);
+    border-bottom: 1px solid var(--border-default);
+  }
+
+  .year-title {
+    font-size: var(--t-font-size-lg);
+    font-weight: 600;
+    color: var(--text-primary);
+  }
+
+  .year-count {
+    font-size: var(--t-font-size-xs);
+    font-weight: 500;
+    color: var(--text-muted);
+  }
+
+  .digest-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: var(--t-spacing-lg);
+  }
+
+  @media (max-width: 600px) {
+    .digest-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

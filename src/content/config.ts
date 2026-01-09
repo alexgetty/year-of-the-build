@@ -7,8 +7,17 @@ const devlogs = defineCollection({
     description: z.string(),
     pubDate: z.date(),
     isDraft: z.boolean().default(false),
-    projectSlugs: z.array(z.string()).optional(), // Links devlog to projects (many-to-many)
-    commitCount: z.number().default(0), // Total commits across linked projects
+    project: z.string(), // Slug reference to a project (required)
+  }),
+});
+
+const digests = defineCollection({
+  type: 'content',
+  schema: z.object({
+    title: z.string(),
+    description: z.string(),
+    weekOf: z.date(), // Monday of the digest week
+    isDraft: z.boolean().default(false),
   }),
 });
 
@@ -30,4 +39,4 @@ const projects = defineCollection({
   }),
 });
 
-export const collections = { devlogs, projects };
+export const collections = { devlogs, digests, projects };

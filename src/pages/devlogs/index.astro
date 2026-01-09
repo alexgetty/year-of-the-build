@@ -12,17 +12,18 @@ const devlogs = (await getCollection('devlogs'))
   .filter(post => !post.data.isDraft)
   .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
 
-// Get project lookup for resolving projectSlugs
+// Get project lookup for resolving project slug
 const allProjects = await getCollection('projects');
 const projectMap = allProjects.reduce((acc, p) => {
   acc[p.slug] = { slug: p.slug, title: p.data.title.replace(/^Project \d+: /, '') };
   return acc;
 }, {} as Record<string, { slug: string; title: string }>);
 
-// Helper to resolve projectSlugs to project objects
-function resolveProjects(slugs?: string[]) {
-  if (!slugs) return undefined;
-  return slugs.map(slug => projectMap[slug]).filter(Boolean);
+// Helper to resolve project slug to project object
+function resolveProject(slug?: string) {
+  if (!slug) return undefined;
+  const project = projectMap[slug];
+  return project ? [project] : undefined;
 }
 
 // Calculate entry numbers (oldest = 1, newest = highest)
@@ -40,8 +41,7 @@ function prepareDevlogData(posts: typeof devlogs) {
     slug: post.slug,
     entryNumber: entryNumberMap.get(post.slug) ?? 1,
     pubDate: post.data.pubDate,
-    projects: resolveProjects(post.data.projectSlugs),
-    commitCount: post.data.commitCount,
+    projects: resolveProject(post.data.project),
   }));
 }
 
@@ -49,7 +49,8 @@ function prepareDevlogData(posts: typeof devlogs) {
 const groupedByMonth = devlogs.reduce((acc, post) => {
   const monthKey = post.data.pubDate.toLocaleDateString('en-US', {
     year: 'numeric',
-    month: 'long'
+    month: 'long',
+    timeZone: 'UTC',
   });
   if (!acc[monthKey]) {
     acc[monthKey] = [];

@@ -6,6 +6,7 @@ import { Hero } from '../components/Hero';
 import { SiteHeader } from '../components/SiteHeader';
 import { SiteFooter } from '../components/SiteFooter';
 import { DevlogCardGrid } from '../components/DevlogCardGrid';
+import { DigestCard } from '../components/DigestCard';
 import { ProjectCardGrid } from '../components/ProjectCardGrid';
 import { ParallaxBackground } from '../components/ParallaxBackground';
 import { getCollection } from 'astro:content';
@@ -14,13 +15,27 @@ const devlogs = (await getCollection('devlogs'))
   .filter(post => !post.data.isDraft)
   .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
 
-// Sum total commits across all devlogs
-const totalCommits = devlogs.reduce((sum, post) => sum + (post.data.commitCount || 0), 0);
+const digests = (await getCollection('digests'))
+  .filter(post => !post.data.isDraft)
+  .sort((a, b) => b.data.weekOf.valueOf() - a.data.weekOf.valueOf());
+
+// Calculate entry numbers (oldest = 1, newest = highest)
+const entryNumberMap = new Map<string, number>();
+[...devlogs].reverse().forEach((post, index) => {
+  entryNumberMap.set(post.slug, index + 1);
+});
 
 const latestDevlog = devlogs[0] ? {
   title: devlogs[0].data.title,
   slug: devlogs[0].slug,
   pubDate: devlogs[0].data.pubDate,
+} : null;
+
+const latestDigest = digests[0] ? {
+  title: digests[0].data.title,
+  description: digests[0].data.description,
+  slug: digests[0].slug,
+  weekOf: digests[0].data.weekOf,
 } : null;
 
 const allProjects = await getCollection('projects');
@@ -31,9 +46,10 @@ const projectMap = allProjects.reduce((acc, p) => {
   return acc;
 }, {} as Record<string, { slug: string; title: string }>);
 
-function resolveProjects(slugs?: string[]) {
-  if (!slugs) return undefined;
-  return slugs.map(slug => projectMap[slug]).filter(Boolean);
+function resolveProject(slug?: string) {
+  if (!slug) return undefined;
+  const project = projectMap[slug];
+  return project ? [project] : undefined;
 }
 
 // Prepare data for grid components
@@ -41,13 +57,13 @@ const recentDevlogsData = devlogs.slice(0, 3).map(post => ({
   title: post.data.title,
   description: post.data.description,
   slug: post.slug,
-  weekNumber: post.data.weekNumber,
+  entryNumber: entryNumberMap.get(post.slug) ?? 1,
   pubDate: post.data.pubDate,
-  projects: resolveProjects(post.data.projectSlugs),
-  commitCount: post.data.commitCount,
+  projects: resolveProject(post.data.project),
 }));
 
 const projectsData = allProjects
+  .filter(p => p.slug !== 'yotb') // Exclude YOTB meta-project from homepage
   .slice(0, 4)
   .map(project => ({
     title: project.data.title,
@@ -99,7 +115,7 @@ const projectsData = allProjects
             </div>
             <div class="intro-stats">
               <div class="stat">
-                <span class="stat-number">{allProjects.length}</span>
+                <span class="stat-number">{allProjects.filter(p => p.slug !== 'yotb').length}</span>
                 <span class="stat-label">Projects</span>
               </div>
               <div class="stat">
@@ -107,11 +123,57 @@ const projectsData = allProjects
                 <span class="stat-label">Devlogs</span>
               </div>
               <div class="stat">
-                <span class="stat-number">{totalCommits}</span>
-                <span class="stat-label">Commits</span>
+                <span class="stat-number">{digests.length}</span>
+                <span class="stat-label">Digests</span>
               </div>
             </div>
           </div>
+        </div>
+      </section>
+
+      <!-- GitHub Activity -->
+      <section class="activity-section">
+        <div class="container">
+          <div class="section-label">
+            <span>Activity</span>
+          </div>
+          <p class="section-description">
+            Proof of work. Every green square is progress.
+          </p>
+          <div class="activity-graph">
+            <img
+              src="https://ghchart.rshah.org/b45309/alexgetty"
+              alt="alexgetty's GitHub contribution chart"
+              loading="lazy"
+            />
+          </div>
+        </div>
+      </section>
+
+      <!-- Latest Digest -->
+      <section class="digests-section">
+        <div class="container">
+          <div class="section-header">
+            <div class="section-label">
+              <span>Latest Digest</span>
+            </div>
+            <a href="/digests/" class="view-all">View all</a>
+          </div>
+          <p class="section-description">
+            Weekly summaries of progress across all projects. Subscribe to get these in your inbox.
+          </p>
+
+          {latestDigest ? (
+            <DigestCard
+              client:visible
+              title={latestDigest.title}
+              description={latestDigest.description}
+              slug={latestDigest.slug}
+              weekOf={latestDigest.weekOf}
+            />
+          ) : (
+            <p class="empty-state">No digests yet. Check back soon!</p>
+          )}
         </div>
       </section>
 
@@ -124,6 +186,9 @@ const projectsData = allProjects
             </div>
             <a href="/devlogs/" class="view-all">View all</a>
           </div>
+          <p class="section-description">
+            Deep dives into individual projects. Technical details, design decisions, and lessons learned.
+          </p>
 
           {recentDevlogsData.length === 0 ? (
             <p class="empty-state">No devlogs yet. Check back soon!</p>
@@ -142,6 +207,9 @@ const projectsData = allProjects
             </div>
             <a href="/projects/" class="view-all">View all</a>
           </div>
+          <p class="section-description">
+            What's being built. Each project gets its own devlogs tracking progress from idea to launch.
+          </p>
 
           <ProjectCardGrid client:visible projects={projectsData} columns={4} />
         </div>
@@ -214,6 +282,14 @@ const projectsData = allProjects
   .empty-state {
     color: var(--text-muted);
     padding: var(--t-spacing-xl) 0;
+  }
+
+  .section-description {
+    font-size: var(--t-font-size-sm);
+    color: var(--text-secondary);
+    margin-top: calc(-1 * var(--t-spacing-sm));
+    margin-bottom: var(--t-spacing-lg);
+    max-width: 500px;
   }
 
   /* =============================================================================
@@ -294,6 +370,25 @@ const projectsData = allProjects
     text-transform: uppercase;
     letter-spacing: 0.1em;
     margin-top: 2px;
+  }
+
+  /* =============================================================================
+     Activity Section
+     ============================================================================= */
+
+  .activity-section {
+    background: var(--bg-canvas);
+  }
+
+  .activity-graph {
+    overflow-x: auto;
+    padding: var(--t-spacing-md) 0;
+  }
+
+  .activity-graph img {
+    display: block;
+    max-width: 100%;
+    height: auto;
   }
 
   /* =============================================================================

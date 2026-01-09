@@ -3,8 +3,8 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import { getCollection } from 'astro:content';
 
 export async function getStaticPaths() {
-  const devlogs = await getCollection('devlogs');
-  return devlogs.map((post) => ({
+  const digests = await getCollection('digests');
+  return digests.map((post) => ({
     params: { slug: post.slug },
     props: post,
   }));
@@ -12,20 +12,23 @@ export async function getStaticPaths() {
 
 const post = Astro.props;
 const { Content } = await post.render();
+
+const formattedWeek = post.data.weekOf.toLocaleDateString('en-US', {
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric',
+  timeZone: 'UTC',
+});
 ---
 
 <BaseLayout title={post.data.title} description={post.data.description}>
   <article>
     <header>
       <div class="meta">
-        <time datetime={post.data.pubDate.toISOString()}>
-          {post.data.pubDate.toLocaleDateString('en-US', {
-            year: 'numeric',
-            month: 'long',
-            day: 'numeric',
-            timeZone: 'UTC',
-          })}
+        <time datetime={post.data.weekOf.toISOString()}>
+          Week of {formattedWeek}
         </time>
+        <span class="digest-badge">Weekly Digest</span>
       </div>
       <h1>{post.data.title}</h1>
     </header>
@@ -35,7 +38,7 @@ const { Content } = await post.render();
     </div>
 
     <footer>
-      <a href="/devlogs/">&larr; Back to all devlogs</a>
+      <a href="/digests/">&larr; Back to all digests</a>
     </footer>
   </article>
 </BaseLayout>
@@ -61,6 +64,17 @@ const { Content } = await post.render();
   .meta time {
     font-size: 0.875rem;
     color: #999;
+  }
+
+  .digest-badge {
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--yotb-amber);
+    background: color-mix(in srgb, var(--yotb-amber) 10%, transparent);
+    padding: 0.25rem 0.5rem;
+    border-radius: 2px;
   }
 
   h1 {
