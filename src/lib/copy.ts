@@ -3,7 +3,8 @@ export const copy = {
     tagline: "Year of the Build",
   },
   about: {
-    headline: "Hey there, I'm Alex. I make things and then write about it.",
+    headline: `Hey there, I'm Alex.
+I make things and then write about it.`,
   },
   digests: {
     description: "Weekly summaries of progress across all projects.",

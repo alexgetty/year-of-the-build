@@ -31,7 +31,7 @@ export const SiteFooter: FC<SiteFooterProps> = ({
           <div className={styles.newsletterText}>
             <h3 className={styles.newsletterTitle}>Follow the Build</h3>
             <p className={styles.newsletterDesc}>
-              Weekly devlogs delivered to your inbox. Unsubscribe anytime.
+              Weekly digests delivered to your inbox every Sunday. Unsubscribe anytime.
             </p>
           </div>
           <a
