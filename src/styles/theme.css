@@ -172,8 +172,8 @@
 
   /* Layout */
   --yotb-content-max: 1200px;
-  --yotb-golden-major: 61.8%;
-  --yotb-golden-minor: 38.2%;
+  --yotb-golden-major: 1.618fr;
+  --yotb-golden-minor: 1fr;
 
   /* ===========================================================================
      LAYOUT — Structural measurements
