@@ -24,47 +24,30 @@ export const SiteFooter: FC<SiteFooterProps> = ({
         <div className={styles.shapeSquare} />
       </div>
 
-      {/* Mid layer - medium shapes */}
-      <div className={styles.depthMid} aria-hidden="true">
-        <div className={styles.shapeDiamond} />
-        <div className={styles.shapeCircle} />
-      </div>
-
-      {/* Foreground - small shapes */}
-      <div className={styles.depthFg} aria-hidden="true">
-        <div className={styles.shapeDot} />
-        <div className={styles.shapeDot} />
-      </div>
 
       <div className={styles.container}>
         {/* Newsletter Section */}
         <div className={styles.newsletter}>
-          <h3 className={styles.newsletterTitle}>Follow the Build</h3>
-          <p className={styles.newsletterDesc}>
-            Weekly devlogs delivered to your inbox. No fluff, no spam.
-            Just honest updates from the trenches.
-          </p>
+          <div className={styles.newsletterText}>
+            <h3 className={styles.newsletterTitle}>Follow the Build</h3>
+            <p className={styles.newsletterDesc}>
+              Weekly devlogs delivered to your inbox. Unsubscribe anytime.
+            </p>
+          </div>
           <a
             href={beehiivUrl}
             target="_blank"
             rel="noopener noreferrer"
             className={styles.button}
           >
-            Subscribe
+            Subscribe to the Newsletter
           </a>
-          <p className={styles.hint}>
-            Unsubscribe anytime. Your inbox deserves respect.
-          </p>
         </div>
 
         {/* Footer Info */}
         <div className={styles.info}>
           <div className={styles.brand}>YOTB</div>
-          <div className={styles.meta}>
-            <span>Getty Made LLC</span>
-            <span className={styles.separator}>·</span>
-            <span>2025</span>
-          </div>
+          <div className={styles.meta}>Alex Getty 2026</div>
         </div>
       </div>
     </footer>

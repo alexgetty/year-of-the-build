@@ -73,63 +73,6 @@
   transform: rotate(15deg);
 }
 
-/* Mid layer - medium shapes */
-.depthMid {
-  position: absolute;
-  inset: 0;
-  z-index: 1;
-  pointer-events: none;
-}
-
-.shapeDiamond {
-  position: absolute;
-  top: 20%;
-  right: 12%;
-  width: clamp(50px, 6vw, 80px);
-  height: clamp(50px, 6vw, 80px);
-  border: 2px solid var(--t-primary-500);
-  transform: rotate(45deg);
-  opacity: 0.4;
-  filter: blur(1px);
-}
-
-.shapeCircle {
-  position: absolute;
-  bottom: 35%;
-  left: 8%;
-  width: clamp(35px, 4vw, 55px);
-  height: clamp(35px, 4vw, 55px);
-  border: 2px solid var(--yotb-amber);
-  border-radius: 50%;
-  opacity: 0.35;
-}
-
-/* Foreground - small shapes */
-.depthFg {
-  position: absolute;
-  inset: 0;
-  z-index: 2;
-  pointer-events: none;
-}
-
-.shapeDot {
-  position: absolute;
-  width: 6px;
-  height: 6px;
-  background: var(--t-primary-500);
-  border-radius: 50%;
-}
-
-.shapeDot:nth-child(1) {
-  top: 30%;
-  left: 25%;
-}
-
-.shapeDot:nth-child(2) {
-  bottom: 40%;
-  right: 28%;
-}
-
 .container {
   position: relative;
   z-index: 10;
@@ -140,8 +83,15 @@
 
 /* Newsletter section */
 .newsletter {
-  max-width: 600px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--t-spacing-lg);
   margin-bottom: var(--t-spacing-xl);
+}
+
+.newsletterText {
+  flex: 1;
 }
 
 .newsletterTitle {
@@ -155,7 +105,7 @@
 .newsletterDesc {
   font-size: var(--t-font-size-sm);
   color: var(--p-ink-500);
-  margin: 0 0 var(--t-spacing-md);
+  margin: 0;
   line-height: var(--t-line-height-normal);
 }
 
@@ -184,12 +134,6 @@
   outline-offset: 2px;
 }
 
-.hint {
-  font-size: var(--t-font-size-xs);
-  color: var(--p-ink-600);
-  margin: var(--t-spacing-sm) 0 0;
-}
-
 /* Footer info */
 .info {
   display: flex;
@@ -208,20 +152,13 @@
 .meta {
   font-size: var(--t-font-size-sm);
   color: var(--p-ink-500);
-  display: flex;
-  align-items: center;
-  gap: var(--t-spacing-xs);
-}
-
-.separator {
-  opacity: 0.5;
 }
 
 /* Responsive */
 @media (max-width: 600px) {
-  .depthMid,
-  .depthFg {
-    display: none;
+  .newsletter {
+    flex-direction: column;
+    align-items: flex-start;
   }
 
   .info {
