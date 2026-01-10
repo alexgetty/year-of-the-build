@@ -60,7 +60,7 @@ function getTooltipPosition(weekIndexInQuarter: number, quarterIndex: number, we
 <div class="activity-container">
   <div class="activity-grid">
     {quarters.map((quarter, qIndex) => (
-      <div class="quarter" data-quarter={qIndex + 1}>
+      <div class="quarter" data-quarter={qIndex + 1} style={`flex: ${quarter.length}`}>
         {quarter.map((week, weekIndex) => (
           <div class="week">
             {week.map((day) => (
@@ -79,6 +79,10 @@ function getTooltipPosition(weekIndexInQuarter: number, quarterIndex: number, we
                   <span class="tooltip-date">{formatContributionDate(day.date)}</span>
                 </span>
               </div>
+            ))}
+            {/* Pad incomplete weeks with empty placeholders */}
+            {Array.from({ length: 7 - week.length }).map(() => (
+              <div class="day day--placeholder" />
             ))}
           </div>
         ))}
@@ -106,8 +110,8 @@ function getTooltipPosition(weekIndexInQuarter: number, quarterIndex: number, we
   .quarter {
     display: flex;
     gap: 1px;
-    flex: 1;
     min-width: 0;
+    /* flex value set inline based on week count */
   }
 
   .week {
@@ -122,6 +126,11 @@ function getTooltipPosition(weekIndexInQuarter: number, quarterIndex: number, we
     flex: 1;
     border-radius: 1px;
     position: relative;
+  }
+
+  .day--placeholder {
+    background: transparent !important;
+    pointer-events: none;
   }
 
   /* Contribution levels — Forest gradient */
