@@ -6,11 +6,12 @@ import { Hero } from '../components/Hero';
 import { SiteHeader } from '../components/SiteHeader';
 import { SiteFooter } from '../components/SiteFooter';
 import { DevlogCardGrid } from '../components/DevlogCardGrid';
-import { DigestCard } from '../components/DigestCard';
+import { DigestCardGrid } from '../components/DigestCardGrid';
 import { ProjectCardGrid } from '../components/ProjectCardGrid';
 import { ParallaxBackground } from '../components/ParallaxBackground';
 import ActivityGrid from '../components/ActivityGrid.astro';
 import { getCollection } from 'astro:content';
+import { copy } from '../lib/copy';
 
 const devlogs = (await getCollection('devlogs'))
   .filter(post => !post.data.isDraft)
@@ -21,9 +22,14 @@ const digests = (await getCollection('digests'))
   .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
 
 // Calculate entry numbers (oldest = 1, newest = highest)
-const entryNumberMap = new Map<string, number>();
+const devlogEntryNumberMap = new Map<string, number>();
 [...devlogs].reverse().forEach((post, index) => {
-  entryNumberMap.set(post.slug, index + 1);
+  devlogEntryNumberMap.set(post.slug, index + 1);
+});
+
+const digestEntryNumberMap = new Map<string, number>();
+[...digests].reverse().forEach((post, index) => {
+  digestEntryNumberMap.set(post.slug, index + 1);
 });
 
 const latestDevlog = devlogs[0] ? {
@@ -32,20 +38,42 @@ const latestDevlog = devlogs[0] ? {
   pubDate: devlogs[0].data.pubDate,
 } : null;
 
-const latestDigest = digests[0] ? {
-  title: digests[0].data.title,
-  description: digests[0].data.description,
-  slug: digests[0].slug,
-  pubDate: digests[0].data.pubDate,
-} : null;
-
 const allProjects = await getCollection('projects');
 
-// Project lookup for DevlogCard
+// Project lookup for resolving slugs to titles
 const projectMap = allProjects.reduce((acc, p) => {
   acc[p.slug] = { slug: p.slug, title: p.data.title.replace(/^Project \d+: /, '') };
   return acc;
 }, {} as Record<string, { slug: string; title: string }>);
+
+// Get projects covered in a digest's week (7 days ending on pubDate)
+function getDigestProjects(digestPubDate: Date) {
+  const endDate = new Date(digestPubDate);
+  const startDate = new Date(digestPubDate);
+  startDate.setDate(startDate.getDate() - 6); // 7 day window ending on pubDate
+
+  const projectSlugs = new Set<string>();
+  devlogs.forEach(devlog => {
+    const devlogDate = devlog.data.pubDate;
+    if (devlogDate >= startDate && devlogDate <= endDate && devlog.data.project) {
+      projectSlugs.add(devlog.data.project);
+    }
+  });
+
+  return Array.from(projectSlugs)
+    .map(slug => projectMap[slug])
+    .filter(Boolean);
+}
+
+// Prepare data for recent digests (up to 3)
+const recentDigestsData = digests.slice(0, 3).map(digest => ({
+  title: digest.data.title,
+  description: digest.data.description,
+  slug: digest.slug,
+  entryNumber: digestEntryNumberMap.get(digest.slug) ?? 1,
+  pubDate: digest.data.pubDate,
+  projects: getDigestProjects(digest.data.pubDate),
+}));
 
 function resolveProject(slug?: string) {
   if (!slug) return undefined;
@@ -58,14 +86,13 @@ const recentDevlogsData = devlogs.slice(0, 3).map(post => ({
   title: post.data.title,
   description: post.data.description,
   slug: post.slug,
-  entryNumber: entryNumberMap.get(post.slug) ?? 1,
+  entryNumber: devlogEntryNumberMap.get(post.slug) ?? 1,
   pubDate: post.data.pubDate,
   projects: resolveProject(post.data.project),
 }));
 
 const projectsData = allProjects
-  .filter(p => p.slug !== 'yotb') // Exclude YOTB meta-project from homepage
-  .slice(0, 4)
+  .filter(p => p.data.featured)
   .map(project => ({
     title: project.data.title,
     description: project.data.description,
@@ -79,7 +106,7 @@ const projectsData = allProjects
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="description" content="Year of the Build - Building in public, one project at a time" />
+    <meta name="description" content={copy.site.tagline} />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="generator" content={Astro.generator} />
@@ -106,28 +133,26 @@ const projectsData = allProjects
           </div>
           <div class="intro-content">
             <div class="intro-text">
-              <p class="intro-headline">Building in public. No excuses.</p>
+              <p class="intro-headline">{copy.about.headline}</p>
               <p class="intro-body">
-                A public accountability log for building and shipping real products.
-                No vaporware. No "coming soon" pages that never arrive. Just raw creation,
-                documented in real-time. Each week brings progress. The work speaks for itself.
+                Rolling devlogs + weekly digests. Follow the trainwreck.
               </p>
               <a href="/about/" class="intro-link">Learn more about the project &rarr;</a>
             </div>
             <div class="intro-right">
               <div class="intro-stats">
-                <div class="stat">
-                  <span class="stat-number">{allProjects.filter(p => p.slug !== 'yotb').length}</span>
+                <a href="/projects/" class="stat">
+                  <span class="stat-number">{allProjects.length}</span>
                   <span class="stat-label">Projects</span>
-                </div>
-                <div class="stat">
+                </a>
+                <a href="/devlogs/" class="stat">
                   <span class="stat-number">{devlogs.length}</span>
                   <span class="stat-label">Devlogs</span>
-                </div>
-                <div class="stat">
+                </a>
+                <a href="/digests/" class="stat">
                   <span class="stat-number">{digests.length}</span>
                   <span class="stat-label">Digests</span>
-                </div>
+                </a>
               </div>
               <ActivityGrid username="alexgetty" />
             </div>
@@ -135,35 +160,26 @@ const projectsData = allProjects
         </div>
       </section>
 
-      <!-- Latest Digest -->
-      <section class="digests-section">
+      <!-- Latest Digests -->
+      <section class="latest-section">
         <div class="container">
           <div class="section-header">
             <div class="section-label">
-              <span>Latest Digest</span>
+              <span>Latest Digests</span>
             </div>
             <a href="/digests/" class="view-all">View all</a>
           </div>
-          <p class="section-description">
-            Weekly summaries of progress across all projects. Subscribe to get these in your inbox.
-          </p>
-
-          {latestDigest ? (
-            <DigestCard
-              client:visible
-              title={latestDigest.title}
-              description={latestDigest.description}
-              slug={latestDigest.slug}
-              pubDate={latestDigest.pubDate}
-            />
+          <p class="section-tagline">{copy.digests.description}</p>
+          {recentDigestsData.length === 0 ? (
+            <p class="empty-state">{copy.empty("digests")}</p>
           ) : (
-            <p class="empty-state">No digests yet. Check back soon!</p>
+            <DigestCardGrid client:visible digests={recentDigestsData} />
           )}
         </div>
       </section>
 
       <!-- Latest Devlogs -->
-      <section class="devlogs-section">
+      <section class="latest-section">
         <div class="container">
           <div class="section-header">
             <div class="section-label">
@@ -171,12 +187,9 @@ const projectsData = allProjects
             </div>
             <a href="/devlogs/" class="view-all">View all</a>
           </div>
-          <p class="section-description">
-            Deep dives into individual projects. Technical details, design decisions, and lessons learned.
-          </p>
-
+          <p class="section-tagline">{copy.devlogs.description}</p>
           {recentDevlogsData.length === 0 ? (
-            <p class="empty-state">No devlogs yet. Check back soon!</p>
+            <p class="empty-state">{copy.empty("devlogs")}</p>
           ) : (
             <DevlogCardGrid client:visible devlogs={recentDevlogsData} />
           )}
@@ -184,18 +197,15 @@ const projectsData = allProjects
       </section>
 
       <!-- Projects Section -->
-      <section class="projects-section">
+      <section class="latest-section">
         <div class="container">
           <div class="section-header">
             <div class="section-label">
-              <span>Projects</span>
+              <span>Featured Projects</span>
             </div>
             <a href="/projects/" class="view-all">View all</a>
           </div>
-          <p class="section-description">
-            What's being built. Each project gets its own devlogs tracking progress from idea to launch.
-          </p>
-
+          <p class="section-tagline">{copy.projects.description}</p>
           <ProjectCardGrid client:visible projects={projectsData} columns={4} />
         </div>
       </section>
@@ -213,18 +223,30 @@ const projectsData = allProjects
     padding: 0;
   }
 
-  section {
-    padding: var(--t-spacing-2xl) 0;
+  .main-content {
+    padding-bottom: var(--t-spacing-xl);
   }
 
   /* =============================================================================
-     Section Label — With extending line (from Codex)
+     Latest Sections — Consistent structure for digests/devlogs/projects
      ============================================================================= */
+
+  .latest-section {
+    padding: var(--t-spacing-xl) 0;
+  }
+
+  .section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
 
   .section-label {
     display: flex;
     align-items: center;
     gap: var(--t-spacing-sm);
+    flex: 1;
+    margin-right: var(--t-spacing-lg);
     font-size: var(--t-font-size-xs);
     font-weight: 600;
     letter-spacing: 0.15em;
@@ -237,18 +259,6 @@ const projectsData = allProjects
     flex: 1;
     height: 1px;
     background: var(--border-default);
-  }
-
-  .section-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: var(--t-spacing-lg);
-  }
-
-  .section-header .section-label {
-    flex: 1;
-    margin-right: var(--t-spacing-lg);
   }
 
   .view-all {
@@ -264,17 +274,16 @@ const projectsData = allProjects
     color: var(--t-primary-600);
   }
 
-  .empty-state {
-    color: var(--text-muted);
-    padding: var(--t-spacing-xl) 0;
-  }
-
-  .section-description {
+  .section-tagline {
     font-size: var(--t-font-size-sm);
     color: var(--text-secondary);
-    margin-top: calc(-1 * var(--t-spacing-sm));
-    margin-bottom: var(--t-spacing-lg);
+    margin: var(--t-spacing-xs) 0 var(--t-spacing-md);
     max-width: 500px;
+  }
+
+  .empty-state {
+    color: var(--text-muted);
+    padding: var(--t-spacing-lg) 0;
   }
 
   /* =============================================================================
@@ -282,11 +291,12 @@ const projectsData = allProjects
      ============================================================================= */
 
   .intro-section {
+    padding: var(--t-spacing-xl) 0;
     background: var(--bg-canvas);
   }
 
   .intro-section .section-label {
-    margin-bottom: var(--t-spacing-lg);
+    margin-bottom: var(--t-spacing-md);
   }
 
   .intro-content {
@@ -300,8 +310,10 @@ const projectsData = allProjects
     font-size: var(--t-font-size-xl);
     font-weight: 700;
     line-height: var(--t-line-height-tight);
+    margin-top: 0;
     margin-bottom: var(--t-spacing-sm);
     color: var(--text-primary);
+    white-space: pre-line;
   }
 
   .intro-body {
@@ -338,6 +350,17 @@ const projectsData = allProjects
     border: 1px solid var(--p-ink-200);
     padding: var(--t-spacing-sm) var(--t-spacing-md);
     min-width: 90px;
+    text-decoration: none;
+    transition: border-color 0.2s ease, background-color 0.2s ease;
+  }
+
+  .stat:hover {
+    border-color: var(--t-primary-400);
+    background: var(--p-ink-100);
+  }
+
+  .stat:hover .stat-number {
+    color: var(--t-primary-600);
   }
 
   .stat-number {
@@ -346,6 +369,7 @@ const projectsData = allProjects
     font-weight: 700;
     line-height: 1;
     color: var(--p-ink-950);
+    transition: color 0.2s ease;
   }
 
   .stat-label {
@@ -374,9 +398,21 @@ const projectsData = allProjects
     .intro-content {
       grid-template-columns: 1fr;
     }
+
+    .stat {
+      flex: 1;
+    }
   }
 
   @media (max-width: 600px) {
+    .main-content {
+      padding-bottom: var(--t-spacing-md);
+    }
+
+    .latest-section {
+      padding: var(--t-spacing-md) 0;
+    }
+
     .intro-headline {
       font-size: var(--t-font-size-lg);
     }

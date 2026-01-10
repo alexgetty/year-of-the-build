@@ -1,5 +1,6 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import { ProjectCard } from '../../components/ProjectCard';
 import { getCollection } from 'astro:content';
 
 export async function getStaticPaths() {
@@ -12,10 +13,21 @@ export async function getStaticPaths() {
 
 const post = Astro.props;
 const { Content } = await post.render();
+
+// Get the associated project
+const projects = await getCollection('projects');
+const project = projects.find(p => p.slug === post.data.project);
 ---
 
-<BaseLayout title={post.data.title} description={post.data.description}>
-  <article>
+<BaseLayout
+  title={post.data.title}
+  description={post.data.description}
+  breadcrumbs={[
+    { label: 'Devlogs', href: '/devlogs/' },
+    { label: post.data.title }
+  ]}
+>
+  <article class={project ? 'article--with-sidebar' : ''}>
     <header>
       <div class="meta">
         <time datetime={post.data.pubDate.toISOString()}>
@@ -26,12 +38,37 @@ const { Content } = await post.render();
             timeZone: 'UTC',
           })}
         </time>
+        {project && (
+          <>
+            <span class="meta-separator">·</span>
+            <a href={`/projects/${project.slug}/`} class="project-link">
+              {project.data.title}
+            </a>
+          </>
+        )}
       </div>
       <h1>{post.data.title}</h1>
     </header>
 
-    <div class="content">
-      <Content />
+    <div class={project ? 'body body--with-sidebar' : 'body'}>
+      <div class="content">
+        <Content />
+      </div>
+
+      {project && (
+        <aside class="sidebar">
+          <div class="sidebar-block">
+            <div class="sidebar-label">Project</div>
+            <ProjectCard
+              title={project.data.title}
+              description={project.data.description}
+              slug={project.slug}
+              status={project.data.status}
+              tags={project.data.tags}
+            />
+          </div>
+        </aside>
+      )}
     </div>
 
     <footer>
@@ -43,12 +80,21 @@ const { Content } = await post.render();
 <style>
   article {
     max-width: 720px;
+    padding-bottom: var(--t-spacing-2xl);
+  }
+
+  article.article--with-sidebar {
+    max-width: none;
   }
 
   header {
-    margin-bottom: var(--t-spacing-xl);
-    padding-bottom: var(--t-spacing-lg);
+    min-height: var(--page-header-min-height);
+    padding: var(--page-header-padding-top) 0 var(--page-header-padding-bottom);
+    margin-bottom: var(--t-spacing-lg);
     border-bottom: 1px solid var(--border-default);
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
   }
 
   .meta {
@@ -63,6 +109,22 @@ const { Content } = await post.render();
     color: var(--text-muted);
   }
 
+  .meta-separator {
+    color: var(--text-muted);
+    opacity: 0.5;
+  }
+
+  .project-link {
+    font-size: var(--t-font-size-sm);
+    font-weight: 500;
+    color: var(--t-primary-600);
+    text-decoration: none;
+  }
+
+  .project-link:hover {
+    color: var(--t-primary-700);
+  }
+
   h1 {
     font-size: var(--t-font-size-xl);
     font-weight: 700;
@@ -71,8 +133,19 @@ const { Content } = await post.render();
     margin: 0;
   }
 
-  .content {
+  /* Body layout */
+  .body {
     margin-bottom: var(--t-spacing-xl);
+  }
+
+  .body--with-sidebar {
+    display: grid;
+    grid-template-columns: var(--yotb-golden-major) var(--yotb-golden-minor);
+    gap: var(--t-spacing-xl);
+  }
+
+  .content {
+    min-width: 0; /* Prevent grid blowout */
   }
 
   .content :global(h2) {
@@ -84,7 +157,7 @@ const { Content } = await post.render();
   }
 
   .content :global(h3) {
-    font-size: var(--t-font-size-base);
+    font-size: var(--t-font-size-md);
     font-weight: 600;
     margin-top: var(--t-spacing-lg);
     margin-bottom: var(--t-spacing-sm);
@@ -137,6 +210,41 @@ const { Content } = await post.render();
     border: none;
     border-top: 1px solid var(--border-default);
     margin: var(--t-spacing-xl) 0;
+  }
+
+  /* Sidebar */
+  .sidebar {
+    align-self: start;
+    position: sticky;
+    top: calc(var(--header-height, 60px) + var(--t-spacing-lg));
+  }
+
+  .sidebar-block {
+    margin-bottom: var(--t-spacing-lg);
+  }
+
+  .sidebar-label {
+    font-size: var(--t-font-size-xs);
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: var(--t-spacing-sm);
+  }
+
+  /* Responsive */
+  @media (max-width: 900px) {
+    article.article--with-sidebar {
+      max-width: 720px;
+    }
+
+    .body--with-sidebar {
+      display: block;
+    }
+
+    .sidebar {
+      display: none;
+    }
   }
 
   footer {

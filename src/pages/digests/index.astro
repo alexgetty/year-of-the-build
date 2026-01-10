@@ -5,32 +5,85 @@ import '../../styles/theme.css';
 import { SiteHeader } from '../../components/SiteHeader';
 import { SiteFooter } from '../../components/SiteFooter';
 import { PageHeader } from '../../components/PageHeader';
-import { DigestCard } from '../../components/DigestCard';
-import { Stagger } from '../../components/Stagger';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import { DigestTimeline } from '../../components/DigestTimeline';
 import { getCollection } from 'astro:content';
+import { copy } from '../../lib/copy';
 
 const digests = (await getCollection('digests'))
   .filter(post => !post.data.isDraft)
   .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
 
-// Group digests by year
-const groupedByYear = digests.reduce((acc, post) => {
-  const year = post.data.pubDate.getFullYear().toString();
-  if (!acc[year]) {
-    acc[year] = [];
+// Calculate entry numbers (oldest = 1, newest = highest)
+const digestEntryNumberMap = new Map<string, number>();
+[...digests].reverse().forEach((post, index) => {
+  digestEntryNumberMap.set(post.slug, index + 1);
+});
+
+const devlogs = (await getCollection('devlogs'))
+  .filter(post => !post.data.isDraft);
+
+const allProjects = await getCollection('projects');
+
+// Project lookup for resolving slugs to titles
+const projectMap = allProjects.reduce((acc, p) => {
+  acc[p.slug] = { slug: p.slug, title: p.data.title.replace(/^Project \d+: /, '') };
+  return acc;
+}, {} as Record<string, { slug: string; title: string }>);
+
+// Get projects covered in a digest's week (7 days ending on pubDate)
+function getDigestProjects(digestPubDate: Date) {
+  const endDate = new Date(digestPubDate);
+  const startDate = new Date(digestPubDate);
+  startDate.setDate(startDate.getDate() - 6);
+
+  const projectSlugs = new Set<string>();
+  devlogs.forEach(devlog => {
+    const devlogDate = devlog.data.pubDate;
+    if (devlogDate >= startDate && devlogDate <= endDate && devlog.data.project) {
+      projectSlugs.add(devlog.data.project);
+    }
+  });
+
+  return Array.from(projectSlugs)
+    .map(slug => projectMap[slug])
+    .filter(Boolean);
+}
+
+// Prepare digest data for timeline component
+function prepareDigestData(posts: typeof digests) {
+  return posts.map(post => ({
+    title: post.data.title,
+    description: post.data.description,
+    slug: post.slug,
+    entryNumber: digestEntryNumberMap.get(post.slug) ?? 1,
+    pubDate: post.data.pubDate,
+    projects: getDigestProjects(post.data.pubDate),
+  }));
+}
+
+// Group digests by month
+const groupedByMonth = digests.reduce((acc, post) => {
+  const monthKey = post.data.pubDate.toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: 'long',
+    timeZone: 'UTC',
+  });
+  if (!acc[monthKey]) {
+    acc[monthKey] = [];
   }
-  acc[year].push(post);
+  acc[monthKey].push(post);
   return acc;
 }, {} as Record<string, typeof digests>);
 
-const years = Object.keys(groupedByYear).sort((a, b) => Number(b) - Number(a));
+const months = Object.keys(groupedByMonth);
 ---
 
 <!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="description" content="Weekly digests summarizing progress across all projects" />
+    <meta name="description" content={copy.digests.description} />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="generator" content={Astro.generator} />
@@ -39,36 +92,54 @@ const years = Object.keys(groupedByYear).sort((a, b) => Number(b) - Number(a));
   <body>
     <SiteHeader client:load variant="light" />
 
+    <Breadcrumbs paths={[{ label: 'Digests' }]} />
+
     <main class="main-content">
       <PageHeader
-        title="Weekly Digests"
-        description="Weekly summaries of progress across all projects. Subscribe to get these in your inbox."
+        title="Digests"
+        description={copy.digests.description}
+        cta={copy.digests.cta}
+        ctaHref="https://yotb.beehiiv.com"
       />
 
-      <section class="digests-section">
+      <!-- Timeline Section -->
+      <section class="timeline-section">
         <div class="container">
           {digests.length === 0 ? (
-            <p class="empty-state">No digests yet. Check back soon!</p>
+            <p class="empty-state">{copy.empty("digests")}</p>
           ) : (
-            <div class="digests-layout">
-              {years.map((year) => (
-                <div class="year-group" id={year}>
-                  <div class="year-header">
-                    <h2 class="year-title">{year}</h2>
-                    <span class="year-count">{groupedByYear[year].length} {groupedByYear[year].length === 1 ? 'digest' : 'digests'}</span>
+            <div class="timeline-layout">
+              <!-- Month Navigation -->
+              <aside class="timeline-nav">
+                <nav class="month-nav" aria-label="Jump to month">
+                  {months.map((month, i) => (
+                    <a
+                      href={`#${month.toLowerCase().replace(' ', '-')}`}
+                      class={`month-link ${i === 0 ? 'active' : ''}`}
+                    >
+                      {month}
+                    </a>
+                  ))}
+                </nav>
+              </aside>
+
+              <!-- Timeline Content -->
+              <div class="timeline-content">
+                <div class="timeline-line" aria-hidden="true"></div>
+
+                {months.map((month) => (
+                  <div class="month-group" id={month.toLowerCase().replace(' ', '-')}>
+                    <div class="month-header">
+                      <h2 class="month-title">{month}</h2>
+                      <span class="month-count">{groupedByMonth[month].length} {groupedByMonth[month].length === 1 ? 'digest' : 'digests'}</span>
+                    </div>
+                    <DigestTimeline
+                      client:visible
+                      digests={prepareDigestData(groupedByMonth[month])}
+                    />
                   </div>
-                  <Stagger client:visible animation="slideUp" className="digest-grid">
-                    {groupedByYear[year].map((digest) => (
-                      <DigestCard
-                        title={digest.data.title}
-                        description={digest.data.description}
-                        slug={digest.slug}
-                        pubDate={digest.data.pubDate}
-                      />
-                    ))}
-                  </Stagger>
-                </div>
-              ))}
+                ))}
+              </div>
             </div>
           )}
         </div>
@@ -92,7 +163,11 @@ const years = Object.keys(groupedByYear).sort((a, b) => Number(b) - Number(a));
     padding: 0 var(--t-spacing-lg);
   }
 
-  .digests-section {
+  /* =============================================================================
+     Timeline Section
+     ============================================================================= */
+
+  .timeline-section {
     padding: var(--t-spacing-xl) 0 var(--t-spacing-2xl);
   }
 
@@ -101,45 +176,135 @@ const years = Object.keys(groupedByYear).sort((a, b) => Number(b) - Number(a));
     padding: var(--t-spacing-xl) 0;
   }
 
-  .digests-layout {
+  .timeline-layout {
+    display: grid;
+    grid-template-columns: 140px 1fr;
+    gap: var(--t-spacing-xl);
+  }
+
+  /* =============================================================================
+     Month Navigation (Sidebar)
+     ============================================================================= */
+
+  .timeline-nav {
+    position: sticky;
+    top: calc(var(--header-height) + var(--t-spacing-lg));
+    height: fit-content;
+  }
+
+  .month-nav {
     display: flex;
     flex-direction: column;
-    gap: var(--t-spacing-2xl);
+    gap: var(--t-spacing-xs);
   }
 
-  .year-group {
-    margin-bottom: var(--t-spacing-xl);
+  .month-link {
+    font-size: var(--t-font-size-sm);
+    font-weight: 500;
+    color: var(--text-muted);
+    text-decoration: none;
+    padding: var(--t-spacing-xs) 0;
+    padding-left: var(--t-spacing-sm);
+    border-left: 1px solid transparent;
+    transition: all 0.2s ease;
   }
 
-  .year-group:last-child {
+  .month-link:hover {
+    color: var(--text-primary);
+    border-color: var(--border-default);
+  }
+
+  .month-link.active {
+    color: var(--yotb-amber);
+    border-color: var(--yotb-amber);
+    font-weight: 600;
+  }
+
+  /* =============================================================================
+     Timeline Content
+     ============================================================================= */
+
+  .timeline-content {
+    position: relative;
+  }
+
+  .timeline-line {
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 1px;
+    background: var(--border-default);
+  }
+
+  .month-group {
+    margin-bottom: var(--t-spacing-2xl);
+  }
+
+  .month-group:last-child {
     margin-bottom: 0;
   }
 
-  .year-header {
+  .month-header {
     display: flex;
     align-items: baseline;
     gap: var(--t-spacing-md);
     margin-bottom: var(--t-spacing-lg);
-    padding-bottom: var(--t-spacing-sm);
-    border-bottom: 1px solid var(--border-default);
+    padding-left: var(--t-spacing-lg);
+    position: relative;
   }
 
-  .year-title {
-    font-size: var(--t-font-size-lg);
+  .month-header::before {
+    content: '';
+    position: absolute;
+    left: -3px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 7px;
+    height: 7px;
+    background: var(--bg-canvas);
+    border: 1px solid var(--yotb-amber);
+    border-radius: 50%;
+  }
+
+  .month-title {
+    font-size: var(--t-font-size-xs);
     font-weight: 600;
-    color: var(--text-primary);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-muted);
   }
 
-  .year-count {
+  .month-count {
     font-size: var(--t-font-size-xs);
     font-weight: 500;
     color: var(--text-muted);
   }
 
-  .digest-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-    gap: var(--t-spacing-lg);
+  /* =============================================================================
+     Responsive
+     ============================================================================= */
+
+  @media (max-width: 900px) {
+    .timeline-layout {
+      grid-template-columns: 1fr;
+    }
+
+    .timeline-nav {
+      display: none;
+    }
+
+    .timeline-line {
+      display: none;
+    }
+
+    .month-header::before {
+      display: none;
+    }
+
+    .month-header {
+      padding-left: 0;
+    }
   }
 
   @media (max-width: 600px) {
@@ -147,8 +312,39 @@ const years = Object.keys(groupedByYear).sort((a, b) => Number(b) - Number(a));
       padding: 0 var(--t-spacing-md);
     }
 
-    .digest-grid {
-      grid-template-columns: 1fr;
+    .timeline-section {
+      padding: var(--t-spacing-md) 0 var(--t-spacing-lg);
     }
   }
+
 </style>
+
+<script>
+  // Highlight active month in navigation based on scroll position
+  document.addEventListener('DOMContentLoaded', () => {
+    const monthGroups = document.querySelectorAll('.month-group');
+    const monthLinks = document.querySelectorAll('.month-link');
+
+    if (monthGroups.length === 0 || monthLinks.length === 0) return;
+
+    const observerOptions = {
+      rootMargin: '-20% 0px -70% 0px'
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const id = entry.target.id;
+          monthLinks.forEach(link => {
+            link.classList.remove('active');
+            if (link.getAttribute('href') === '#' + id) {
+              link.classList.add('active');
+            }
+          });
+        }
+      });
+    }, observerOptions);
+
+    monthGroups.forEach(group => observer.observe(group));
+  });
+</script>

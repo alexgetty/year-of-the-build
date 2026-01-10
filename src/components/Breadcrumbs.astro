@@ -1,0 +1,87 @@
+---
+/**
+ * Breadcrumbs
+ *
+ * Navigation breadcrumb trail. Home is always included automatically.
+ *
+ * @example
+ * <Breadcrumbs paths={[
+ *   { label: 'Projects', href: '/projects/' },
+ *   { label: 'Mythical' }
+ * ]} />
+ */
+
+interface BreadcrumbItem {
+  label: string;
+  href?: string;
+}
+
+interface Props {
+  paths: BreadcrumbItem[];
+}
+
+const { paths } = Astro.props;
+---
+
+<div class="breadcrumbs-section">
+  <div class="container">
+    <nav class="breadcrumbs" aria-label="Breadcrumb">
+      <a href="/">Home</a>
+      {paths.map((item) => (
+        <>
+          <span class="separator">/</span>
+          {item.href ? (
+            <a href={item.href}>{item.label}</a>
+          ) : (
+            <strong>{item.label}</strong>
+          )}
+        </>
+      ))}
+    </nav>
+  </div>
+</div>
+
+<style>
+  .breadcrumbs-section {
+    padding: var(--t-spacing-md) 0;
+    background: var(--bg-canvas);
+  }
+
+  .container {
+    max-width: var(--yotb-content-max);
+    margin: 0 auto;
+    padding: 0 var(--t-spacing-lg);
+  }
+
+  .breadcrumbs {
+    display: flex;
+    align-items: center;
+    gap: var(--t-spacing-sm);
+    font-size: var(--t-font-size-sm);
+  }
+
+  .breadcrumbs a {
+    color: var(--text-muted);
+    text-decoration: none;
+    transition: color 0.2s ease;
+  }
+
+  .breadcrumbs a:hover {
+    color: var(--text-primary);
+  }
+
+  .separator {
+    color: var(--text-muted);
+  }
+
+  .breadcrumbs strong {
+    color: var(--text-primary);
+    font-weight: 600;
+  }
+
+  @media (max-width: 600px) {
+    .container {
+      padding: 0 var(--t-spacing-md);
+    }
+  }
+</style>

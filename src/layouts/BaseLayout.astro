@@ -5,13 +5,20 @@ import '../styles/theme.css';
 import { SiteHeader } from '../components/SiteHeader';
 import { SiteFooter } from '../components/SiteFooter';
 import { ParallaxBackground } from '../components/ParallaxBackground';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
+
+interface BreadcrumbItem {
+  label: string;
+  href?: string;
+}
 
 interface Props {
   title: string;
   description?: string;
+  breadcrumbs?: BreadcrumbItem[];
 }
 
-const { title, description = "Year of the Build - Building in public, one project at a time" } = Astro.props;
+const { title, description = "Year of the Build - Building in public, one project at a time", breadcrumbs } = Astro.props;
 ---
 
 <!doctype html>
@@ -31,6 +38,8 @@ const { title, description = "Year of the Build - Building in public, one projec
     <!-- Sticky header for non-homepage -->
     <SiteHeader client:load variant="light" />
 
+    {breadcrumbs && <Breadcrumbs paths={breadcrumbs} />}
+
     <div class="site-container">
       <main>
         <slot />
@@ -43,6 +52,8 @@ const { title, description = "Year of the Build - Building in public, one projec
 
 <style>
   body {
+    margin: 0;
+    padding: 0;
     /* Account for sticky header height */
     padding-top: var(--header-height, 60px);
   }
@@ -55,16 +66,11 @@ const { title, description = "Year of the Build - Building in public, one projec
 
   main {
     min-height: 60vh;
-    padding: var(--t-spacing-2xl) 0;
   }
 
   @media (max-width: 600px) {
     .site-container {
       padding: 0 var(--t-spacing-md);
-    }
-
-    main {
-      padding: var(--t-spacing-xl) 0;
     }
   }
 </style>

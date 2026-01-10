@@ -20,13 +20,8 @@ interface ParallaxBackgroundProps {
   shapes?: ShapeConfig[];
 }
 
-/** Default shape configuration - large blurry shapes for light content area */
-const defaultShapes: ShapeConfig[] = [
-  // Far layer only - big blurred shapes visible on light background
-  { type: 'ring', depth: 'far', position: { top: '60vh', right: '-8%' } },
-  { type: 'square', depth: 'far', position: { top: '120vh', left: '-5%' } },
-  { type: 'ring', depth: 'far', position: { top: '200vh', left: '60%' } },
-];
+/** Default shape configuration - empty to keep body clean, header/footer have their own */
+const defaultShapes: ShapeConfig[] = [];
 
 const shapeClassMap: Record<ShapeType, string> = {
   ring: styles.shapeRing,

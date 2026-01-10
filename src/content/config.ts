@@ -21,12 +21,20 @@ const digests = defineCollection({
   }),
 });
 
+const pages = defineCollection({
+  type: 'content',
+  schema: z.object({
+    title: z.string(),
+  }),
+});
+
 const projects = defineCollection({
   type: 'content',
   schema: z.object({
     title: z.string(),
     description: z.string(),
     status: z.enum(['planning', 'building', 'launched', 'abandoned']).default('planning'),
+    featured: z.boolean().default(false),
     tags: z.array(z.string()).optional(),
     features: z.array(z.string()).optional(), // Key features list
     stats: z.array(z.object({
@@ -39,4 +47,4 @@ const projects = defineCollection({
   }),
 });
 
-export const collections = { devlogs, digests, projects };
+export const collections = { devlogs, digests, pages, projects };

@@ -5,13 +5,19 @@ import '../styles/theme.css';
 import { SiteHeader } from '../components/SiteHeader';
 import { SiteFooter } from '../components/SiteFooter';
 import { PageHeader } from '../components/PageHeader';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
+import { copy } from '../lib/copy';
+import { getEntry } from 'astro:content';
+
+const about = await getEntry('pages', 'about');
+const { Content } = await about.render();
 ---
 
 <!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="description" content="About Year of the Build - Building in public, one project at a time" />
+    <meta name="description" content={`About - ${copy.site.tagline}`} />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="generator" content={Astro.generator} />
@@ -20,71 +26,19 @@ import { PageHeader } from '../components/PageHeader';
   <body>
     <SiteHeader client:load variant="light" />
 
+    <Breadcrumbs paths={[{ label: 'About' }]} />
+
     <main class="main-content">
       <PageHeader
-        title="About Year of the Build"
-        description="Build and launch real projects. Continuously. Forever. Public accountability log documenting the entire journey."
+        title={copy.about.headline}
+        description="Follow along as I embark on a year of building."
       />
 
       <article class="article-content">
         <div class="container">
-          <section class="content-section">
-            <div class="section-label">
-              <span>The Rules</span>
-            </div>
-            <div class="section-content">
-              <h2>What Counts as a Launch?</h2>
-              <p>A project is considered "launched" when:</p>
-              <ul>
-                <li>Public GitHub repository exists</li>
-                <li>Landing page is live</li>
-                <li>Posted in relevant subreddits</li>
-                <li>Listed on Product Hunt (if applicable)</li>
-              </ul>
-            </div>
-          </section>
-
-          <section class="content-section">
-            <div class="section-label">
-              <span>The Philosophy</span>
-            </div>
-            <div class="section-content">
-              <h2>Why This Exists</h2>
-              <p>
-                Ship consistently. Learn rapidly. Build a portfolio of real, launched products.
-                No tutorial hell. No analysis paralysis. Just building and launching.
-              </p>
-              <p>
-                Every week brings a devlog. Every month brings a launch. The work speaks for itself.
-              </p>
-            </div>
-          </section>
-
-          <section class="content-section">
-            <div class="section-label">
-              <span>Stay Updated</span>
-            </div>
-            <div class="section-content">
-              <h2>Follow Along</h2>
-              <p>
-                Subscribe to the newsletter to get weekly devlog updates delivered to your inbox.
-                Each week includes progress updates, technical challenges, and lessons learned.
-              </p>
-            </div>
-          </section>
-
-          <section class="content-section">
-            <div class="section-label">
-              <span>The Builder</span>
-            </div>
-            <div class="section-content">
-              <h2>About Me</h2>
-              <p>
-                I'm Alex Getty, founder of Getty Made LLC. This is my public commitment to
-                build consistently and ship real products.
-              </p>
-            </div>
-          </section>
+          <div class="prose">
+            <Content />
+          </div>
         </div>
       </article>
     </main>
@@ -106,89 +60,32 @@ import { PageHeader } from '../components/PageHeader';
     padding: 0 var(--t-spacing-lg);
   }
 
-  /* =============================================================================
-     Article Content
-     ============================================================================= */
-
   .article-content {
     padding: var(--t-spacing-xl) 0 var(--t-spacing-2xl);
   }
 
-  .content-section {
-    padding: var(--t-spacing-xl) 0;
+  .prose {
+    max-width: 640px;
   }
 
-  /* Section Label with extending line */
-  .section-label {
-    display: flex;
-    align-items: center;
-    gap: var(--t-spacing-sm);
-    font-size: var(--t-font-size-xs);
-    font-weight: 600;
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-    color: var(--text-muted);
-    margin-bottom: var(--t-spacing-lg);
-  }
-
-  .section-label::after {
-    content: '';
-    flex: 1;
-    height: 1px;
-    background: var(--border-default);
-  }
-
-  .section-content {
-    max-width: 720px;
-  }
-
-  .section-content h2 {
-    font-size: var(--t-font-size-lg);
-    font-weight: 600;
-    color: var(--text-primary);
-    margin-bottom: var(--t-spacing-md);
-  }
-
-  .section-content p {
+  .prose :global(p) {
     font-size: var(--t-font-size-base);
-    line-height: var(--t-line-height-normal);
+    line-height: var(--t-line-height-relaxed);
     color: var(--text-secondary);
     margin-bottom: var(--t-spacing-md);
   }
 
-  .section-content p:last-child {
+  .prose :global(p:last-child) {
     margin-bottom: 0;
   }
-
-  .section-content ul {
-    margin: 0;
-    padding-left: var(--t-spacing-lg);
-    margin-bottom: var(--t-spacing-md);
-  }
-
-  .section-content li {
-    font-size: var(--t-font-size-base);
-    line-height: var(--t-line-height-normal);
-    color: var(--text-secondary);
-    margin-bottom: var(--t-spacing-xs);
-    padding-left: var(--t-spacing-xs);
-  }
-
-  .section-content li::marker {
-    color: var(--t-primary-600);
-  }
-
-  /* =============================================================================
-     Responsive
-     ============================================================================= */
 
   @media (max-width: 600px) {
     .container {
       padding: 0 var(--t-spacing-md);
     }
 
-    .content-section {
-      padding: var(--t-spacing-lg) 0;
+    .article-content {
+      padding: var(--t-spacing-md) 0 var(--t-spacing-lg);
     }
   }
 </style>

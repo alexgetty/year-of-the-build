@@ -102,6 +102,7 @@
   --t-font-size-xs: 0.625rem;   /* 10px */
   --t-font-size-sm: 0.8125rem;  /* 13px */
   --t-font-size-base: 1rem;     /* 16px */
+  --t-font-size-md: 1.25rem;    /* 20px — intermediate step for h3/subheadings */
   --t-font-size-lg: 1.625rem;   /* 26px */
   --t-font-size-xl: 2.625rem;   /* 42px */
   --t-font-size-2xl: 4.25rem;   /* 68px */
@@ -171,8 +172,13 @@
 
   /* Layout */
   --yotb-content-max: 1200px;
-  --yotb-golden-major: 61.8%;
-  --yotb-golden-minor: 38.2%;
+  --yotb-golden-major: 1.618fr;
+  --yotb-golden-minor: 1fr;
+
+  /* Page Header Region — consistent height across all pages */
+  --page-header-padding-top: var(--t-spacing-xl);
+  --page-header-padding-bottom: var(--t-spacing-lg);
+  --page-header-min-height: 200px;
 
   /* ===========================================================================
      LAYOUT — Structural measurements
@@ -273,13 +279,13 @@ h1, h2, h3, h4, h5, h6, p {
  * Universal link hover effect: amber underline that sweeps in from left,
  * sweeps out to right. Uses transform-origin trick for bidirectional animation.
  */
-a:not([class*="button"]):not([class*="btn"]):not([class*="card"]):not([class*="Card"]):not([class*="nav"]):not([class*="Nav"]):not([class*="link"]):not([class*="Link"]):not([class*="logo"]):not([class*="Logo"]):not([class*="latest"]):not([class*="Latest"]) {
+a:not([class*="button"]):not([class*="btn"]):not([class*="card"]):not([class*="Card"]):not([class*="nav"]):not([class*="Nav"]):not([class*="link"]):not([class*="Link"]):not([class*="logo"]):not([class*="Logo"]):not([class*="latest"]):not([class*="Latest"]):not([class*="stat"]):not([class*="Stat"]) {
   position: relative;
   text-decoration: none;
   display: inline-block;
 }
 
-a:not([class*="button"]):not([class*="btn"]):not([class*="card"]):not([class*="Card"]):not([class*="nav"]):not([class*="Nav"]):not([class*="link"]):not([class*="Link"]):not([class*="logo"]):not([class*="Logo"]):not([class*="latest"]):not([class*="Latest"])::after {
+a:not([class*="button"]):not([class*="btn"]):not([class*="card"]):not([class*="Card"]):not([class*="nav"]):not([class*="Nav"]):not([class*="link"]):not([class*="Link"]):not([class*="logo"]):not([class*="Logo"]):not([class*="latest"]):not([class*="Latest"]):not([class*="stat"]):not([class*="Stat"])::after {
   content: '';
   position: absolute;
   left: 0;
@@ -292,8 +298,8 @@ a:not([class*="button"]):not([class*="btn"]):not([class*="card"]):not([class*="C
   transition: transform 0.4s var(--ease-out-expo);
 }
 
-a:not([class*="button"]):not([class*="btn"]):not([class*="card"]):not([class*="Card"]):not([class*="nav"]):not([class*="Nav"]):not([class*="link"]):not([class*="Link"]):not([class*="logo"]):not([class*="Logo"]):not([class*="latest"]):not([class*="Latest"]):hover::after,
-a:not([class*="button"]):not([class*="btn"]):not([class*="card"]):not([class*="Card"]):not([class*="nav"]):not([class*="Nav"]):not([class*="link"]):not([class*="Link"]):not([class*="logo"]):not([class*="Logo"]):not([class*="latest"]):not([class*="Latest"]):focus-visible::after {
+a:not([class*="button"]):not([class*="btn"]):not([class*="card"]):not([class*="Card"]):not([class*="nav"]):not([class*="Nav"]):not([class*="link"]):not([class*="Link"]):not([class*="logo"]):not([class*="Logo"]):not([class*="latest"]):not([class*="Latest"]):not([class*="stat"]):not([class*="Stat"]):hover::after,
+a:not([class*="button"]):not([class*="btn"]):not([class*="card"]):not([class*="Card"]):not([class*="nav"]):not([class*="Nav"]):not([class*="link"]):not([class*="Link"]):not([class*="logo"]):not([class*="Logo"]):not([class*="latest"]):not([class*="Latest"]):not([class*="stat"]):not([class*="Stat"]):focus-visible::after {
   transform: scaleX(1);
   transform-origin: left;
 }
@@ -321,4 +327,10 @@ a:not([class*="button"]):not([class*="btn"]):not([class*="card"]):not([class*="C
 .main-content {
   background: var(--bg-canvas);
   min-height: 100vh;
+}
+
+@media (max-width: 600px) {
+  .main-content {
+    min-height: auto;
+  }
 }

@@ -4,8 +4,7 @@
 import '../../styles/theme.css';
 import { SiteHeader } from '../../components/SiteHeader';
 import { SiteFooter } from '../../components/SiteFooter';
-import { DevlogCardGrid } from '../../components/DevlogCardGrid';
-import { ProjectCardGrid } from '../../components/ProjectCardGrid';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
 import { getCollection } from 'astro:content';
 
 export async function getStaticPaths() {
@@ -19,50 +18,22 @@ export async function getStaticPaths() {
 const project = Astro.props;
 const { Content } = await project.render();
 
-// Get all projects for related section
-const allProjects = await getCollection('projects');
-
-// Get related projects (next 3 projects, wrapping around)
-const currentIndex = allProjects.findIndex(p => p.slug === project.slug);
-const relatedProjects = [];
-for (let i = 1; i <= 3; i++) {
-  const nextIndex = (currentIndex + i) % allProjects.length;
-  relatedProjects.push(allProjects[nextIndex]);
-}
-
-// Get devlogs for this project (many-to-many: devlog can link to multiple projects)
+// Get devlogs for this project
 const projectDevlogs = (await getCollection('devlogs'))
-  .filter(d => !d.data.isDraft && d.data.projectSlugs?.includes(project.slug))
-  .sort((a, b) => b.data.weekNumber - a.data.weekNumber);
-
-// Prepare devlog data for grid component
-const devlogsData = projectDevlogs.map(d => ({
-  title: d.data.title,
-  description: d.data.description,
-  slug: d.slug,
-  weekNumber: d.data.weekNumber,
-  pubDate: d.data.pubDate,
-}));
-
-// Prepare related projects data for grid component
-const relatedProjectsData = relatedProjects.map(p => ({
-  title: p.data.title,
-  description: p.data.description,
-  slug: p.slug,
-  status: p.data.status,
-  tags: p.data.tags,
-}));
+  .filter(d => !d.data.isDraft && d.data.project === project.slug)
+  .sort((a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime());
 
 // Status display text
 const statusText = project.data.status === 'building' ? 'Building' :
                    project.data.status === 'launched' ? 'Live' : 'Planned';
 
-// Check if we have sidebar content (links, tech, features, stats)
+// Check if we have sidebar content (links, tech, features, stats, devlogs)
 const hasLinks = project.data.repoUrl || project.data.liveUrl;
 const hasTech = project.data.tags && project.data.tags.length > 0;
 const hasFeatures = project.data.features && project.data.features.length > 0;
 const hasStats = project.data.stats && project.data.stats.length > 0;
-const hasSidebar = hasLinks || hasTech || hasFeatures || hasStats;
+const hasDevlogs = projectDevlogs.length > 0;
+const hasSidebar = hasLinks || hasTech || hasFeatures || hasStats || hasDevlogs;
 ---
 
 <!doctype html>
@@ -78,18 +49,10 @@ const hasSidebar = hasLinks || hasTech || hasFeatures || hasStats;
   <body>
     <SiteHeader client:load variant="light" />
 
-    <!-- Breadcrumbs -->
-    <div class="breadcrumbs-section">
-      <div class="container">
-        <nav class="breadcrumbs" aria-label="Breadcrumb">
-          <a href="/">Home</a>
-          <span>/</span>
-          <a href="/projects/">Projects</a>
-          <span>/</span>
-          <strong>{project.data.title}</strong>
-        </nav>
-      </div>
-    </div>
+    <Breadcrumbs paths={[
+      { label: 'Projects', href: '/projects/' },
+      { label: project.data.title }
+    ]} />
 
     <main class="main-content">
       <!-- Project Hero -->
@@ -179,33 +142,32 @@ const hasSidebar = hasLinks || hasTech || hasFeatures || hasStats;
                     </ul>
                   </div>
                 )}
+                {/* Devlogs */}
+                {hasDevlogs && (
+                  <div class="sidebar-block">
+                    <div class="sidebar-label">Devlogs</div>
+                    <ul class="devlog-list">
+                      {projectDevlogs.map((devlog) => (
+                        <li>
+                          <time datetime={devlog.data.pubDate.toISOString()}>
+                            {devlog.data.pubDate.toLocaleDateString('en-US', {
+                              month: 'short',
+                              day: 'numeric',
+                              timeZone: 'UTC',
+                            })}
+                          </time>
+                          <a href={`/devlogs/${devlog.slug}/`}>{devlog.data.title}</a>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
               </aside>
             )}
           </div>
         </div>
       </section>
 
-      <!-- Devlog -->
-      {devlogsData.length > 0 && (
-        <section class="devlogs-section">
-          <div class="container">
-            <div class="section-label">
-              <span>Devlog</span>
-            </div>
-            <DevlogCardGrid client:visible devlogs={devlogsData} />
-          </div>
-        </section>
-      )}
-
-      <!-- Related Projects -->
-      <section class="related-section">
-        <div class="container">
-          <div class="section-label">
-            <span>Other Projects</span>
-          </div>
-          <ProjectCardGrid client:visible projects={relatedProjectsData} />
-        </div>
-      </section>
     </main>
 
     <SiteFooter />
@@ -220,44 +182,10 @@ const hasSidebar = hasLinks || hasTech || hasFeatures || hasStats;
   }
 
   .container {
+    width: 100%;
     max-width: var(--yotb-content-max);
     margin: 0 auto;
     padding: 0 var(--t-spacing-lg);
-  }
-
-  /* =============================================================================
-     Breadcrumbs
-     ============================================================================= */
-
-  .breadcrumbs-section {
-    padding: var(--t-spacing-md) 0;
-    background: var(--bg-canvas);
-  }
-
-  .breadcrumbs {
-    display: flex;
-    align-items: center;
-    gap: var(--t-spacing-sm);
-    font-size: var(--t-font-size-sm);
-  }
-
-  .breadcrumbs a {
-    color: var(--text-muted);
-    text-decoration: none;
-    transition: color 0.2s ease;
-  }
-
-  .breadcrumbs a:hover {
-    color: var(--text-primary);
-  }
-
-  .breadcrumbs span {
-    color: var(--text-muted);
-  }
-
-  .breadcrumbs strong {
-    color: var(--text-primary);
-    font-weight: 600;
   }
 
   /* =============================================================================
@@ -265,28 +193,15 @@ const hasSidebar = hasLinks || hasTech || hasFeatures || hasStats;
      ============================================================================= */
 
   .project-hero {
-    padding: var(--t-spacing-2xl) 0;
-    position: relative;
-    overflow: hidden;
-  }
-
-  .project-hero::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    right: 0;
-    width: 400px;
-    height: 400px;
-    background: rgba(46, 90, 60, 0.06);
-    clip-path: polygon(100% 0, 0 0, 100% 100%);
+    min-height: var(--page-header-min-height);
+    padding: var(--page-header-padding-top) 0 var(--page-header-padding-bottom);
+    display: flex;
+    align-items: flex-end;
   }
 
   .hero-content {
     display: flex;
     flex-direction: column;
-    gap: var(--t-spacing-md);
-    position: relative;
-    z-index: 1;
   }
 
   .project-status {
@@ -299,6 +214,7 @@ const hasSidebar = hasLinks || hasTech || hasFeatures || hasStats;
     letter-spacing: 0.05em;
     padding: 4px 8px;
     width: fit-content;
+    margin-bottom: var(--t-spacing-sm);
   }
 
   .project-status::before {
@@ -348,6 +264,7 @@ const hasSidebar = hasLinks || hasTech || hasFeatures || hasStats;
     line-height: var(--t-line-height-tight);
     letter-spacing: -0.02em;
     color: var(--text-primary);
+    margin: 0 0 4px;
   }
 
   .project-hero-description {
@@ -355,6 +272,7 @@ const hasSidebar = hasLinks || hasTech || hasFeatures || hasStats;
     font-weight: 450;
     color: var(--text-secondary);
     max-width: 55ch;
+    margin: 0;
   }
 
   .project-meta {
@@ -362,6 +280,7 @@ const hasSidebar = hasLinks || hasTech || hasFeatures || hasStats;
     gap: var(--t-spacing-lg);
     font-size: var(--t-font-size-sm);
     color: var(--text-muted);
+    margin-top: var(--t-spacing-md);
   }
 
   .project-meta-item {
@@ -430,7 +349,7 @@ const hasSidebar = hasLinks || hasTech || hasFeatures || hasStats;
   }
 
   .about-text :global(h3) {
-    font-size: var(--t-font-size-base);
+    font-size: var(--t-font-size-md);
     font-weight: 600;
     margin-top: var(--t-spacing-md);
     margin-bottom: var(--t-spacing-xs);
@@ -517,6 +436,37 @@ const hasSidebar = hasLinks || hasTech || hasFeatures || hasStats;
   .stats-list strong {
     color: var(--text-primary);
     font-weight: 600;
+  }
+
+  /* Devlog List */
+  .devlog-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .devlog-list li {
+    display: flex;
+    align-items: baseline;
+    gap: var(--t-spacing-sm);
+    margin-bottom: var(--t-spacing-xs);
+  }
+
+  .devlog-list li:last-child {
+    margin-bottom: 0;
+  }
+
+  .devlog-list time {
+    font-size: var(--t-font-size-xs);
+    color: var(--text-muted);
+    flex-shrink: 0;
+    min-width: 3.5ch;
+  }
+
+  .devlog-list a {
+    font-size: var(--t-font-size-sm);
+    font-weight: 500;
+    color: var(--text-primary);
   }
 
   /* Sidebar Links */

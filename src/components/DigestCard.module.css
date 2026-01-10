@@ -7,7 +7,7 @@
   cursor: pointer;
 }
 
-/* Corner accent - amber triangle on right */
+/* Corner accent - forest green triangle on right */
 .card::before {
   content: '';
   position: absolute;
@@ -15,13 +15,13 @@
   right: -1px;
   width: 100px;
   height: 100px;
-  background: rgba(180, 83, 9, 0.08);
+  background: rgba(46, 90, 60, 0.1);
   clip-path: polygon(100% 0, 0 0, 100% 100%);
   transition: all 0.3s ease;
 }
 
 .card:hover {
-  border-color: rgba(180, 83, 9, 0.4);
+  border-color: rgba(46, 90, 60, 0.4);
 }
 
 .card:hover::before {
@@ -35,7 +35,7 @@
   right: var(--t-spacing-sm);
   font-size: var(--t-font-size-lg);
   font-weight: 700;
-  color: var(--yotb-amber);
+  color: var(--p-forest-600);
   line-height: 1;
   z-index: 1;
 }
@@ -62,7 +62,7 @@
 }
 
 .card:hover .cardLink {
-  color: var(--yotb-amber);
+  color: var(--p-forest-600);
 }
 
 .excerpt {
@@ -84,10 +84,11 @@
   color: var(--text-muted);
 }
 
-.footerRight {
+.projects {
   display: flex;
-  align-items: center;
-  gap: var(--t-spacing-sm);
+  flex-wrap: wrap;
+  gap: var(--t-spacing-xs);
+  justify-content: flex-end;
 }
 
 .project {
