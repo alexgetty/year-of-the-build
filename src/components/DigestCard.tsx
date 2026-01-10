@@ -1,17 +1,21 @@
-import styles from './DevlogCard.module.css';
+import styles from './DigestCard.module.css';
 
 interface DigestCardProps {
   title: string;
   description: string;
   slug: string;
+  entryNumber: number;
   pubDate: Date;
+  projects?: { slug: string; title: string }[];
 }
 
 export function DigestCard({
   title,
   description,
   slug,
+  entryNumber,
   pubDate,
+  projects,
 }: DigestCardProps) {
   const formattedDate = pubDate.toLocaleDateString('en-US', {
     month: 'short',
@@ -22,7 +26,7 @@ export function DigestCard({
 
   return (
     <article className={styles.card}>
-      <span className={styles.number}>W</span>
+      <span className={styles.number}>{String(entryNumber).padStart(2, '0')}</span>
       <h3 className={styles.title}>
         <a href={`/digests/${slug}/`} className={styles.cardLink}>{title}</a>
       </h3>
@@ -31,9 +35,15 @@ export function DigestCard({
         <time className={styles.date} dateTime={pubDate.toISOString()}>
           {formattedDate}
         </time>
-        <div className={styles.footerRight}>
-          <span className={styles.project}>Weekly Digest</span>
-        </div>
+        {projects && projects.length > 0 && (
+          <div className={styles.projects}>
+            {projects.map((project) => (
+              <span key={project.slug} className={styles.project}>
+                {project.title}
+              </span>
+            ))}
+          </div>
+        )}
       </div>
     </article>
   );

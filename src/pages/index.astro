@@ -6,7 +6,7 @@ import { Hero } from '../components/Hero';
 import { SiteHeader } from '../components/SiteHeader';
 import { SiteFooter } from '../components/SiteFooter';
 import { DevlogCardGrid } from '../components/DevlogCardGrid';
-import { DigestCard } from '../components/DigestCard';
+import { DigestCardGrid } from '../components/DigestCardGrid';
 import { ProjectCardGrid } from '../components/ProjectCardGrid';
 import { ParallaxBackground } from '../components/ParallaxBackground';
 import ActivityGrid from '../components/ActivityGrid.astro';
@@ -22,9 +22,14 @@ const digests = (await getCollection('digests'))
   .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
 
 // Calculate entry numbers (oldest = 1, newest = highest)
-const entryNumberMap = new Map<string, number>();
+const devlogEntryNumberMap = new Map<string, number>();
 [...devlogs].reverse().forEach((post, index) => {
-  entryNumberMap.set(post.slug, index + 1);
+  devlogEntryNumberMap.set(post.slug, index + 1);
+});
+
+const digestEntryNumberMap = new Map<string, number>();
+[...digests].reverse().forEach((post, index) => {
+  digestEntryNumberMap.set(post.slug, index + 1);
 });
 
 const latestDevlog = devlogs[0] ? {
@@ -33,20 +38,42 @@ const latestDevlog = devlogs[0] ? {
   pubDate: devlogs[0].data.pubDate,
 } : null;
 
-const latestDigest = digests[0] ? {
-  title: digests[0].data.title,
-  description: digests[0].data.description,
-  slug: digests[0].slug,
-  pubDate: digests[0].data.pubDate,
-} : null;
-
 const allProjects = await getCollection('projects');
 
-// Project lookup for DevlogCard
+// Project lookup for resolving slugs to titles
 const projectMap = allProjects.reduce((acc, p) => {
   acc[p.slug] = { slug: p.slug, title: p.data.title.replace(/^Project \d+: /, '') };
   return acc;
 }, {} as Record<string, { slug: string; title: string }>);
+
+// Get projects covered in a digest's week (7 days ending on pubDate)
+function getDigestProjects(digestPubDate: Date) {
+  const endDate = new Date(digestPubDate);
+  const startDate = new Date(digestPubDate);
+  startDate.setDate(startDate.getDate() - 6); // 7 day window ending on pubDate
+
+  const projectSlugs = new Set<string>();
+  devlogs.forEach(devlog => {
+    const devlogDate = devlog.data.pubDate;
+    if (devlogDate >= startDate && devlogDate <= endDate && devlog.data.project) {
+      projectSlugs.add(devlog.data.project);
+    }
+  });
+
+  return Array.from(projectSlugs)
+    .map(slug => projectMap[slug])
+    .filter(Boolean);
+}
+
+// Prepare data for recent digests (up to 3)
+const recentDigestsData = digests.slice(0, 3).map(digest => ({
+  title: digest.data.title,
+  description: digest.data.description,
+  slug: digest.slug,
+  entryNumber: digestEntryNumberMap.get(digest.slug) ?? 1,
+  pubDate: digest.data.pubDate,
+  projects: getDigestProjects(digest.data.pubDate),
+}));
 
 function resolveProject(slug?: string) {
   if (!slug) return undefined;
@@ -59,7 +86,7 @@ const recentDevlogsData = devlogs.slice(0, 3).map(post => ({
   title: post.data.title,
   description: post.data.description,
   slug: post.slug,
-  entryNumber: entryNumberMap.get(post.slug) ?? 1,
+  entryNumber: devlogEntryNumberMap.get(post.slug) ?? 1,
   pubDate: post.data.pubDate,
   projects: resolveProject(post.data.project),
 }));
@@ -134,28 +161,22 @@ const projectsData = allProjects
         </div>
       </section>
 
-      <!-- Latest Digest -->
+      <!-- Latest Digests -->
       <section class="digests-section">
         <div class="container">
           <div class="section-header">
             <div class="section-label">
-              <span>Latest Digest</span>
+              <span>Latest Digests</span>
             </div>
             <a href="/digests/" class="view-all">View all</a>
           </div>
           <p class="section-description">{copy.digests.description}</p>
           <a href="https://yotb.beehiiv.com" class="section-cta">{copy.digests.cta}</a>
 
-          {latestDigest ? (
-            <DigestCard
-              client:visible
-              title={latestDigest.title}
-              description={latestDigest.description}
-              slug={latestDigest.slug}
-              pubDate={latestDigest.pubDate}
-            />
-          ) : (
+          {recentDigestsData.length === 0 ? (
             <p class="empty-state">{copy.empty("digests")}</p>
+          ) : (
+            <DigestCardGrid client:visible digests={recentDigestsData} />
           )}
         </div>
       </section>

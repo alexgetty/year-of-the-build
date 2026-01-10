@@ -1,0 +1,106 @@
+.card {
+  position: relative;
+  border: 1px solid rgba(120, 113, 108, 0.2);
+  padding: var(--t-spacing-lg);
+  padding-top: var(--t-spacing-xl);
+  overflow: hidden;
+  transition: all 0.2s ease;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+/* Corner accent - forest green triangle on right */
+.card::before {
+  content: '';
+  position: absolute;
+  top: -1px;
+  right: -1px;
+  width: 100px;
+  height: 100px;
+  background: rgba(46, 90, 60, 0.1);
+  clip-path: polygon(100% 0, 0 0, 100% 100%);
+  transition: all 0.3s ease;
+}
+
+.card:hover {
+  border-color: rgba(46, 90, 60, 0.4);
+}
+
+.card:hover::before {
+  width: 120px;
+  height: 120px;
+}
+
+.number {
+  position: absolute;
+  top: var(--t-spacing-sm);
+  right: var(--t-spacing-sm);
+  font-size: var(--t-font-size-lg);
+  font-weight: 700;
+  color: var(--p-forest-600);
+  line-height: 1;
+  z-index: 1;
+}
+
+.title {
+  font-size: var(--t-font-size-base);
+  font-weight: 600;
+  margin-bottom: var(--t-spacing-xs);
+  line-height: var(--t-line-height-tight);
+}
+
+.cardLink {
+  color: inherit;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+/* Stretch link to cover entire card */
+.cardLink::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+}
+
+.card:hover .cardLink {
+  color: var(--p-forest-600);
+}
+
+.excerpt {
+  font-size: var(--t-font-size-sm);
+  color: var(--text-secondary);
+  line-height: var(--t-line-height-normal);
+  flex: 1;
+}
+
+.footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--t-spacing-sm);
+  margin-top: auto;
+  padding-top: var(--t-spacing-sm);
+}
+
+.date {
+  font-size: var(--t-font-size-xs);
+  color: var(--text-muted);
+}
+
+.projects {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--t-spacing-xs);
+  justify-content: flex-end;
+}
+
+.project {
+  font-size: var(--t-font-size-xs);
+  font-weight: 600;
+  color: var(--text-secondary);
+  padding: 2px 8px;
+  background: rgba(28, 25, 23, 0.06);
+}
