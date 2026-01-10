@@ -102,6 +102,7 @@
   --t-font-size-xs: 0.625rem;   /* 10px */
   --t-font-size-sm: 0.8125rem;  /* 13px */
   --t-font-size-base: 1rem;     /* 16px */
+  --t-font-size-md: 1.25rem;    /* 20px — intermediate step for h3/subheadings */
   --t-font-size-lg: 1.625rem;   /* 26px */
   --t-font-size-xl: 2.625rem;   /* 42px */
   --t-font-size-2xl: 4.25rem;   /* 68px */

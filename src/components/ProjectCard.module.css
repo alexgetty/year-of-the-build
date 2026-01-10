@@ -68,9 +68,9 @@
 }
 
 .title {
-  font-size: var(--t-font-size-base);
+  font-size: var(--t-font-size-lg);
   font-weight: 600;
-  margin-bottom: var(--t-spacing-xs);
+  margin-bottom: var(--t-spacing-sm);
   line-height: var(--t-line-height-tight);
 }
 

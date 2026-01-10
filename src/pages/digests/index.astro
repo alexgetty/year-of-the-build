@@ -93,7 +93,7 @@ const months = Object.keys(groupedByMonth);
 
     <main class="main-content">
       <PageHeader
-        title="Weekly Digests"
+        title="Digests"
         description={copy.digests.description}
         cta={copy.digests.cta}
         ctaHref="https://yotb.beehiiv.com"
@@ -265,9 +265,11 @@ const months = Object.keys(groupedByMonth);
   }
 
   .month-title {
-    font-size: var(--t-font-size-base);
+    font-size: var(--t-font-size-xs);
     font-weight: 600;
-    color: var(--text-primary);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-muted);
   }
 
   .month-count {
