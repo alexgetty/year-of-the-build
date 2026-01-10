@@ -5,8 +5,6 @@ import '../../styles/theme.css';
 import { SiteHeader } from '../../components/SiteHeader';
 import { SiteFooter } from '../../components/SiteFooter';
 import Breadcrumbs from '../../components/Breadcrumbs.astro';
-import { DevlogCardGrid } from '../../components/DevlogCardGrid';
-import { ProjectCardGrid } from '../../components/ProjectCardGrid';
 import { getCollection } from 'astro:content';
 
 export async function getStaticPaths() {
@@ -20,38 +18,10 @@ export async function getStaticPaths() {
 const project = Astro.props;
 const { Content } = await project.render();
 
-// Get all projects for related section
-const allProjects = await getCollection('projects');
-
-// Get related projects (next 3 projects, wrapping around)
-const currentIndex = allProjects.findIndex(p => p.slug === project.slug);
-const relatedProjects = [];
-for (let i = 1; i <= 3; i++) {
-  const nextIndex = (currentIndex + i) % allProjects.length;
-  relatedProjects.push(allProjects[nextIndex]);
-}
-
 // Get devlogs for this project
 const projectDevlogs = (await getCollection('devlogs'))
   .filter(d => !d.data.isDraft && d.data.project === project.slug)
   .sort((a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime());
-
-// Prepare devlog data for grid component
-const devlogsData = projectDevlogs.map(d => ({
-  title: d.data.title,
-  description: d.data.description,
-  slug: d.slug,
-  pubDate: d.data.pubDate,
-}));
-
-// Prepare related projects data for grid component
-const relatedProjectsData = relatedProjects.map(p => ({
-  title: p.data.title,
-  description: p.data.description,
-  slug: p.slug,
-  status: p.data.status,
-  tags: p.data.tags,
-}));
 
 // Status display text
 const statusText = project.data.status === 'building' ? 'Building' :
@@ -198,27 +168,6 @@ const hasSidebar = hasLinks || hasTech || hasFeatures || hasStats || hasDevlogs;
         </div>
       </section>
 
-      <!-- Devlog -->
-      {devlogsData.length > 0 && (
-        <section class="devlogs-section">
-          <div class="container">
-            <div class="section-label">
-              <span>Devlog</span>
-            </div>
-            <DevlogCardGrid client:visible devlogs={devlogsData} />
-          </div>
-        </section>
-      )}
-
-      <!-- Related Projects -->
-      <section class="related-section">
-        <div class="container">
-          <div class="section-label">
-            <span>Other Projects</span>
-          </div>
-          <ProjectCardGrid client:visible projects={relatedProjectsData} />
-        </div>
-      </section>
     </main>
 
     <SiteFooter />

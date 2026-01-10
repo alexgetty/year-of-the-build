@@ -38,6 +38,14 @@ const project = projects.find(p => p.slug === post.data.project);
             timeZone: 'UTC',
           })}
         </time>
+        {project && (
+          <>
+            <span class="meta-separator">·</span>
+            <a href={`/projects/${project.slug}/`} class="project-link">
+              {project.data.title}
+            </a>
+          </>
+        )}
       </div>
       <h1>{post.data.title}</h1>
     </header>
@@ -99,6 +107,22 @@ const project = projects.find(p => p.slug === post.data.project);
   .meta time {
     font-size: var(--t-font-size-sm);
     color: var(--text-muted);
+  }
+
+  .meta-separator {
+    color: var(--text-muted);
+    opacity: 0.5;
+  }
+
+  .project-link {
+    font-size: var(--t-font-size-sm);
+    font-weight: 500;
+    color: var(--t-primary-600);
+    text-decoration: none;
+  }
+
+  .project-link:hover {
+    color: var(--t-primary-700);
   }
 
   h1 {
@@ -210,12 +234,16 @@ const project = projects.find(p => p.slug === post.data.project);
 
   /* Responsive */
   @media (max-width: 900px) {
+    article.article--with-sidebar {
+      max-width: 720px;
+    }
+
     .body--with-sidebar {
-      grid-template-columns: 1fr;
+      display: block;
     }
 
     .sidebar {
-      position: static;
+      display: none;
     }
   }
 

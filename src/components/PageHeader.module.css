@@ -74,7 +74,12 @@
 
 @media (max-width: 600px) {
   .header {
-    padding: var(--t-spacing-xl) 0 var(--t-spacing-md);
+    padding: var(--t-spacing-md) 0;
+    min-height: auto;
+  }
+
+  .container {
+    padding: 0 var(--t-spacing-md);
   }
 
   .title {
