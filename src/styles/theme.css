@@ -328,3 +328,9 @@ a:not([class*="button"]):not([class*="btn"]):not([class*="card"]):not([class*="C
   background: var(--bg-canvas);
   min-height: 100vh;
 }
+
+@media (max-width: 600px) {
+  .main-content {
+    min-height: auto;
+  }
+}
