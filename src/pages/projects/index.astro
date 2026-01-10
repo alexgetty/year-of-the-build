@@ -19,17 +19,6 @@ const projectsData = projects.map(project => ({
   status: project.data.status,
   tags: project.data.tags,
 }));
-
-const launchedCount = projects.filter(p => p.data.status === 'launched').length;
-const buildingCount = projects.filter(p => p.data.status === 'building').length;
-const planningCount = projects.filter(p => p.data.status === 'planning').length;
-const progressPercent = ((launchedCount / 12) * 100).toFixed(1);
-
-// Find current building project for progress bar text
-const buildingProject = projects.find(p => p.data.status === 'building');
-const currentMonthText = buildingProject
-  ? `Currently building: ${buildingProject.data.title.replace(/^Project \d+: /, '')}`
-  : 'Building in progress.';
 ---
 
 <!doctype html>
@@ -50,29 +39,6 @@ const currentMonthText = buildingProject
         title="Projects"
         description={copy.projects.description}
       />
-
-      <!-- Progress Section -->
-      <section class="progress-section">
-        <div class="container">
-          <div class="progress-card">
-            <div class="progress-inner">
-              <div class="progress-info">
-                <h3>Year Progress</h3>
-                <p>{launchedCount} of 12 projects shipped. {currentMonthText}</p>
-              </div>
-              <div class="progress-bar-container">
-                <div class="progress-bar">
-                  <div class="progress-fill" style={`width: ${progressPercent}%;`}></div>
-                </div>
-                <div class="progress-label">
-                  <span>{launchedCount} Shipped</span>
-                  <span>{progressPercent}%</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
 
       <!-- Projects Grid -->
       <section class="projects-section">
@@ -104,64 +70,6 @@ const currentMonthText = buildingProject
   }
 
   /* =============================================================================
-     Progress Section
-     ============================================================================= */
-
-  .progress-section {
-    padding: var(--t-spacing-lg) 0;
-    border-bottom: 1px solid var(--border-default);
-  }
-
-  .progress-card {
-    background: var(--bg-surface);
-    border: 1px solid var(--border-default);
-    padding: var(--t-spacing-lg);
-  }
-
-  .progress-inner {
-    display: grid;
-    grid-template-columns: var(--yotb-golden-major) var(--yotb-golden-minor);
-    gap: var(--t-spacing-lg);
-    align-items: center;
-  }
-
-  .progress-info h3 {
-    font-size: var(--t-font-size-base);
-    font-weight: 600;
-    margin-bottom: var(--t-spacing-xs);
-    color: var(--text-primary);
-  }
-
-  .progress-info p {
-    font-size: var(--t-font-size-sm);
-    color: var(--text-secondary);
-  }
-
-  .progress-bar-container {
-    display: flex;
-    flex-direction: column;
-    gap: var(--t-spacing-sm);
-  }
-
-  .progress-bar {
-    height: var(--t-spacing-xs);
-    background: var(--border-default);
-  }
-
-  .progress-fill {
-    height: 100%;
-    background: var(--t-primary-600);
-    transition: width 0.3s ease;
-  }
-
-  .progress-label {
-    display: flex;
-    justify-content: space-between;
-    font-size: var(--t-font-size-xs);
-    color: var(--text-muted);
-  }
-
-  /* =============================================================================
      Projects Grid
      ============================================================================= */
 
@@ -177,13 +85,6 @@ const currentMonthText = buildingProject
   /* =============================================================================
      Responsive
      ============================================================================= */
-
-  @media (max-width: 900px) {
-    .progress-inner {
-      grid-template-columns: 1fr;
-      gap: var(--t-spacing-md);
-    }
-  }
 
   @media (max-width: 600px) {
     .container {
