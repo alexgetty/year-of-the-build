@@ -1,7 +1,7 @@
 .card {
   position: relative;
   border: 1px solid rgba(120, 113, 108, 0.2);
-  padding: var(--t-spacing-lg);
+  padding: var(--t-spacing-md);
   transition: all 0.2s ease;
   cursor: pointer;
   display: flex;
@@ -17,6 +17,7 @@
 .status {
   display: inline-flex;
   align-items: center;
+  align-self: flex-start;
   gap: 6px;
   font-size: var(--t-font-size-xs);
   font-weight: 600;
@@ -70,7 +71,7 @@
 .title {
   font-size: var(--t-font-size-lg);
   font-weight: 600;
-  margin-bottom: var(--t-spacing-sm);
+  margin: 0 0 4px;
   line-height: var(--t-line-height-tight);
 }
 
@@ -96,14 +97,15 @@
   font-size: var(--t-font-size-sm);
   color: var(--text-secondary);
   line-height: var(--t-line-height-normal);
-  flex: 1;
+  margin: 0;
+  padding-bottom: var(--t-spacing-lg);
 }
 
 .tags {
   display: flex;
   flex-wrap: wrap;
   gap: var(--t-spacing-xs);
-  margin-top: var(--t-spacing-md);
+  margin-top: auto;
 }
 
 .tag {
