@@ -141,18 +141,18 @@ const projectsData = allProjects
             </div>
             <div class="intro-right">
               <div class="intro-stats">
-                <div class="stat">
+                <a href="/projects/" class="stat">
                   <span class="stat-number">{allProjects.length}</span>
                   <span class="stat-label">Projects</span>
-                </div>
-                <div class="stat">
+                </a>
+                <a href="/devlogs/" class="stat">
                   <span class="stat-number">{devlogs.length}</span>
                   <span class="stat-label">Devlogs</span>
-                </div>
-                <div class="stat">
+                </a>
+                <a href="/digests/" class="stat">
                   <span class="stat-number">{digests.length}</span>
                   <span class="stat-label">Digests</span>
-                </div>
+                </a>
               </div>
               <ActivityGrid username="alexgetty" />
             </div>
@@ -349,6 +349,17 @@ const projectsData = allProjects
     border: 1px solid var(--p-ink-200);
     padding: var(--t-spacing-sm) var(--t-spacing-md);
     min-width: 90px;
+    text-decoration: none;
+    transition: border-color 0.2s ease, background-color 0.2s ease;
+  }
+
+  .stat:hover {
+    border-color: var(--t-primary-400);
+    background: var(--p-ink-100);
+  }
+
+  .stat:hover .stat-number {
+    color: var(--t-primary-600);
   }
 
   .stat-number {
@@ -357,6 +368,7 @@ const projectsData = allProjects
     font-weight: 700;
     line-height: 1;
     color: var(--p-ink-950);
+    transition: color 0.2s ease;
   }
 
   .stat-label {
@@ -385,9 +397,21 @@ const projectsData = allProjects
     .intro-content {
       grid-template-columns: 1fr;
     }
+
+    .stat {
+      flex: 1;
+    }
   }
 
   @media (max-width: 600px) {
+    .main-content {
+      padding-bottom: var(--t-spacing-md);
+    }
+
+    .latest-section {
+      padding: var(--t-spacing-md) 0;
+    }
+
     .intro-headline {
       font-size: var(--t-font-size-lg);
     }

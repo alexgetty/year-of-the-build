@@ -279,13 +279,13 @@ h1, h2, h3, h4, h5, h6, p {
  * Universal link hover effect: amber underline that sweeps in from left,
  * sweeps out to right. Uses transform-origin trick for bidirectional animation.
  */
-a:not([class*="button"]):not([class*="btn"]):not([class*="card"]):not([class*="Card"]):not([class*="nav"]):not([class*="Nav"]):not([class*="link"]):not([class*="Link"]):not([class*="logo"]):not([class*="Logo"]):not([class*="latest"]):not([class*="Latest"]) {
+a:not([class*="button"]):not([class*="btn"]):not([class*="card"]):not([class*="Card"]):not([class*="nav"]):not([class*="Nav"]):not([class*="link"]):not([class*="Link"]):not([class*="logo"]):not([class*="Logo"]):not([class*="latest"]):not([class*="Latest"]):not([class*="stat"]):not([class*="Stat"]) {
   position: relative;
   text-decoration: none;
   display: inline-block;
 }
 
-a:not([class*="button"]):not([class*="btn"]):not([class*="card"]):not([class*="Card"]):not([class*="nav"]):not([class*="Nav"]):not([class*="link"]):not([class*="Link"]):not([class*="logo"]):not([class*="Logo"]):not([class*="latest"]):not([class*="Latest"])::after {
+a:not([class*="button"]):not([class*="btn"]):not([class*="card"]):not([class*="Card"]):not([class*="nav"]):not([class*="Nav"]):not([class*="link"]):not([class*="Link"]):not([class*="logo"]):not([class*="Logo"]):not([class*="latest"]):not([class*="Latest"]):not([class*="stat"]):not([class*="Stat"])::after {
   content: '';
   position: absolute;
   left: 0;
@@ -298,8 +298,8 @@ a:not([class*="button"]):not([class*="btn"]):not([class*="card"]):not([class*="C
   transition: transform 0.4s var(--ease-out-expo);
 }
 
-a:not([class*="button"]):not([class*="btn"]):not([class*="card"]):not([class*="Card"]):not([class*="nav"]):not([class*="Nav"]):not([class*="link"]):not([class*="Link"]):not([class*="logo"]):not([class*="Logo"]):not([class*="latest"]):not([class*="Latest"]):hover::after,
-a:not([class*="button"]):not([class*="btn"]):not([class*="card"]):not([class*="Card"]):not([class*="nav"]):not([class*="Nav"]):not([class*="link"]):not([class*="Link"]):not([class*="logo"]):not([class*="Logo"]):not([class*="latest"]):not([class*="Latest"]):focus-visible::after {
+a:not([class*="button"]):not([class*="btn"]):not([class*="card"]):not([class*="Card"]):not([class*="nav"]):not([class*="Nav"]):not([class*="link"]):not([class*="Link"]):not([class*="logo"]):not([class*="Logo"]):not([class*="latest"]):not([class*="Latest"]):not([class*="stat"]):not([class*="Stat"]):hover::after,
+a:not([class*="button"]):not([class*="btn"]):not([class*="card"]):not([class*="Card"]):not([class*="nav"]):not([class*="Nav"]):not([class*="link"]):not([class*="Link"]):not([class*="logo"]):not([class*="Logo"]):not([class*="latest"]):not([class*="Latest"]):not([class*="stat"]):not([class*="Stat"]):focus-visible::after {
   transform: scaleX(1);
   transform-origin: left;
 }
