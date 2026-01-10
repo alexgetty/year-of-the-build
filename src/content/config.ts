@@ -27,6 +27,7 @@ const projects = defineCollection({
     title: z.string(),
     description: z.string(),
     status: z.enum(['planning', 'building', 'launched', 'abandoned']).default('planning'),
+    featured: z.boolean().default(false),
     tags: z.array(z.string()).optional(),
     features: z.array(z.string()).optional(), // Key features list
     stats: z.array(z.object({

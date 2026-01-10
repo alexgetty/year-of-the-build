@@ -92,8 +92,7 @@ const recentDevlogsData = devlogs.slice(0, 3).map(post => ({
 }));
 
 const projectsData = allProjects
-  .filter(p => p.slug !== 'yotb') // Exclude YOTB meta-project from homepage
-  .slice(0, 4)
+  .filter(p => p.data.featured)
   .map(project => ({
     title: project.data.title,
     description: project.data.description,
@@ -143,7 +142,7 @@ const projectsData = allProjects
             <div class="intro-right">
               <div class="intro-stats">
                 <div class="stat">
-                  <span class="stat-number">{allProjects.filter(p => p.slug !== 'yotb').length}</span>
+                  <span class="stat-number">{allProjects.length}</span>
                   <span class="stat-label">Projects</span>
                 </div>
                 <div class="stat">
@@ -207,7 +206,7 @@ const projectsData = allProjects
         <div class="container">
           <div class="section-header">
             <div class="section-label">
-              <span>Projects</span>
+              <span>Featured Projects</span>
             </div>
             <a href="/projects/" class="view-all">View all</a>
           </div>
