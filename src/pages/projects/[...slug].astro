@@ -31,17 +31,16 @@ for (let i = 1; i <= 3; i++) {
   relatedProjects.push(allProjects[nextIndex]);
 }
 
-// Get devlogs for this project (many-to-many: devlog can link to multiple projects)
+// Get devlogs for this project
 const projectDevlogs = (await getCollection('devlogs'))
-  .filter(d => !d.data.isDraft && d.data.projectSlugs?.includes(project.slug))
-  .sort((a, b) => b.data.weekNumber - a.data.weekNumber);
+  .filter(d => !d.data.isDraft && d.data.project === project.slug)
+  .sort((a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime());
 
 // Prepare devlog data for grid component
 const devlogsData = projectDevlogs.map(d => ({
   title: d.data.title,
   description: d.data.description,
   slug: d.slug,
-  weekNumber: d.data.weekNumber,
   pubDate: d.data.pubDate,
 }));
 
@@ -58,12 +57,13 @@ const relatedProjectsData = relatedProjects.map(p => ({
 const statusText = project.data.status === 'building' ? 'Building' :
                    project.data.status === 'launched' ? 'Live' : 'Planned';
 
-// Check if we have sidebar content (links, tech, features, stats)
+// Check if we have sidebar content (links, tech, features, stats, devlogs)
 const hasLinks = project.data.repoUrl || project.data.liveUrl;
 const hasTech = project.data.tags && project.data.tags.length > 0;
 const hasFeatures = project.data.features && project.data.features.length > 0;
 const hasStats = project.data.stats && project.data.stats.length > 0;
-const hasSidebar = hasLinks || hasTech || hasFeatures || hasStats;
+const hasDevlogs = projectDevlogs.length > 0;
+const hasSidebar = hasLinks || hasTech || hasFeatures || hasStats || hasDevlogs;
 ---
 
 <!doctype html>
@@ -168,6 +168,26 @@ const hasSidebar = hasLinks || hasTech || hasFeatures || hasStats;
                     <ul class="stats-list">
                       {project.data.stats.map((stat: { value: string; label: string }) => (
                         <li><strong>{stat.value}</strong> {stat.label}</li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+                {/* Devlogs */}
+                {hasDevlogs && (
+                  <div class="sidebar-block">
+                    <div class="sidebar-label">Devlogs</div>
+                    <ul class="devlog-list">
+                      {projectDevlogs.map((devlog) => (
+                        <li>
+                          <time datetime={devlog.data.pubDate.toISOString()}>
+                            {devlog.data.pubDate.toLocaleDateString('en-US', {
+                              month: 'short',
+                              day: 'numeric',
+                              timeZone: 'UTC',
+                            })}
+                          </time>
+                          <a href={`/devlogs/${devlog.slug}/`}>{devlog.data.title}</a>
+                        </li>
                       ))}
                     </ul>
                   </div>
@@ -481,6 +501,37 @@ const hasSidebar = hasLinks || hasTech || hasFeatures || hasStats;
   .stats-list strong {
     color: var(--text-primary);
     font-weight: 600;
+  }
+
+  /* Devlog List */
+  .devlog-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .devlog-list li {
+    display: flex;
+    align-items: baseline;
+    gap: var(--t-spacing-sm);
+    margin-bottom: var(--t-spacing-xs);
+  }
+
+  .devlog-list li:last-child {
+    margin-bottom: 0;
+  }
+
+  .devlog-list time {
+    font-size: var(--t-font-size-xs);
+    color: var(--text-muted);
+    flex-shrink: 0;
+    min-width: 3.5ch;
+  }
+
+  .devlog-list a {
+    font-size: var(--t-font-size-sm);
+    font-weight: 500;
+    color: var(--text-primary);
   }
 
   /* Sidebar Links */

@@ -1,5 +1,6 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import { ProjectCard } from '../../components/ProjectCard';
 import { getCollection } from 'astro:content';
 
 export async function getStaticPaths() {
@@ -12,6 +13,10 @@ export async function getStaticPaths() {
 
 const post = Astro.props;
 const { Content } = await post.render();
+
+// Get the associated project
+const projects = await getCollection('projects');
+const project = projects.find(p => p.slug === post.data.project);
 ---
 
 <BaseLayout
@@ -22,7 +27,7 @@ const { Content } = await post.render();
     { label: post.data.title }
   ]}
 >
-  <article>
+  <article class={project ? 'article--with-sidebar' : ''}>
     <header>
       <div class="meta">
         <time datetime={post.data.pubDate.toISOString()}>
@@ -37,8 +42,25 @@ const { Content } = await post.render();
       <h1>{post.data.title}</h1>
     </header>
 
-    <div class="content">
-      <Content />
+    <div class={project ? 'body body--with-sidebar' : 'body'}>
+      <div class="content">
+        <Content />
+      </div>
+
+      {project && (
+        <aside class="sidebar">
+          <div class="sidebar-block">
+            <div class="sidebar-label">Project</div>
+            <ProjectCard
+              title={project.data.title}
+              description={project.data.description}
+              slug={project.slug}
+              status={project.data.status}
+              tags={project.data.tags}
+            />
+          </div>
+        </aside>
+      )}
     </div>
 
     <footer>
@@ -51,6 +73,10 @@ const { Content } = await post.render();
   article {
     max-width: 720px;
     padding-bottom: var(--t-spacing-2xl);
+  }
+
+  article.article--with-sidebar {
+    max-width: none;
   }
 
   header {
@@ -83,8 +109,19 @@ const { Content } = await post.render();
     margin: 0;
   }
 
-  .content {
+  /* Body layout */
+  .body {
     margin-bottom: var(--t-spacing-xl);
+  }
+
+  .body--with-sidebar {
+    display: grid;
+    grid-template-columns: var(--yotb-golden-major) var(--yotb-golden-minor);
+    gap: var(--t-spacing-xl);
+  }
+
+  .content {
+    min-width: 0; /* Prevent grid blowout */
   }
 
   .content :global(h2) {
@@ -149,6 +186,37 @@ const { Content } = await post.render();
     border: none;
     border-top: 1px solid var(--border-default);
     margin: var(--t-spacing-xl) 0;
+  }
+
+  /* Sidebar */
+  .sidebar {
+    align-self: start;
+    position: sticky;
+    top: calc(var(--header-height, 60px) + var(--t-spacing-lg));
+  }
+
+  .sidebar-block {
+    margin-bottom: var(--t-spacing-lg);
+  }
+
+  .sidebar-label {
+    font-size: var(--t-font-size-xs);
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: var(--t-spacing-sm);
+  }
+
+  /* Responsive */
+  @media (max-width: 900px) {
+    .body--with-sidebar {
+      grid-template-columns: 1fr;
+    }
+
+    .sidebar {
+      position: static;
+    }
   }
 
   footer {
