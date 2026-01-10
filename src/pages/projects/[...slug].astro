@@ -4,6 +4,7 @@
 import '../../styles/theme.css';
 import { SiteHeader } from '../../components/SiteHeader';
 import { SiteFooter } from '../../components/SiteFooter';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
 import { DevlogCardGrid } from '../../components/DevlogCardGrid';
 import { ProjectCardGrid } from '../../components/ProjectCardGrid';
 import { getCollection } from 'astro:content';
@@ -78,18 +79,10 @@ const hasSidebar = hasLinks || hasTech || hasFeatures || hasStats;
   <body>
     <SiteHeader client:load variant="light" />
 
-    <!-- Breadcrumbs -->
-    <div class="breadcrumbs-section">
-      <div class="container">
-        <nav class="breadcrumbs" aria-label="Breadcrumb">
-          <a href="/">Home</a>
-          <span>/</span>
-          <a href="/projects/">Projects</a>
-          <span>/</span>
-          <strong>{project.data.title}</strong>
-        </nav>
-      </div>
-    </div>
+    <Breadcrumbs paths={[
+      { label: 'Projects', href: '/projects/' },
+      { label: project.data.title }
+    ]} />
 
     <main class="main-content">
       <!-- Project Hero -->
@@ -226,48 +219,16 @@ const hasSidebar = hasLinks || hasTech || hasFeatures || hasStats;
   }
 
   /* =============================================================================
-     Breadcrumbs
-     ============================================================================= */
-
-  .breadcrumbs-section {
-    padding: var(--t-spacing-md) 0;
-    background: var(--bg-canvas);
-  }
-
-  .breadcrumbs {
-    display: flex;
-    align-items: center;
-    gap: var(--t-spacing-sm);
-    font-size: var(--t-font-size-sm);
-  }
-
-  .breadcrumbs a {
-    color: var(--text-muted);
-    text-decoration: none;
-    transition: color 0.2s ease;
-  }
-
-  .breadcrumbs a:hover {
-    color: var(--text-primary);
-  }
-
-  .breadcrumbs span {
-    color: var(--text-muted);
-  }
-
-  .breadcrumbs strong {
-    color: var(--text-primary);
-    font-weight: 600;
-  }
-
-  /* =============================================================================
      Project Hero
      ============================================================================= */
 
   .project-hero {
-    padding: var(--t-spacing-2xl) 0;
+    min-height: var(--page-header-min-height);
+    padding: var(--page-header-padding-top) 0 var(--page-header-padding-bottom);
     position: relative;
     overflow: hidden;
+    display: flex;
+    align-items: flex-end;
   }
 
   .project-hero::before {

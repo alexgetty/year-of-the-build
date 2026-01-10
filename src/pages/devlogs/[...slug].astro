@@ -14,7 +14,14 @@ const post = Astro.props;
 const { Content } = await post.render();
 ---
 
-<BaseLayout title={post.data.title} description={post.data.description}>
+<BaseLayout
+  title={post.data.title}
+  description={post.data.description}
+  breadcrumbs={[
+    { label: 'Devlogs', href: '/devlogs/' },
+    { label: post.data.title }
+  ]}
+>
   <article>
     <header>
       <div class="meta">
@@ -43,12 +50,17 @@ const { Content } = await post.render();
 <style>
   article {
     max-width: 720px;
+    padding-bottom: var(--t-spacing-2xl);
   }
 
   header {
-    margin-bottom: var(--t-spacing-xl);
-    padding-bottom: var(--t-spacing-lg);
+    min-height: var(--page-header-min-height);
+    padding: var(--page-header-padding-top) 0 var(--page-header-padding-bottom);
+    margin-bottom: var(--t-spacing-lg);
     border-bottom: 1px solid var(--border-default);
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
   }
 
   .meta {

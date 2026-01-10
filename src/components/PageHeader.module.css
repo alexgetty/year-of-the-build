@@ -5,11 +5,15 @@
 
 .header {
   position: relative;
-  padding: var(--t-spacing-2xl) 0 var(--t-spacing-xl);
+  min-height: var(--page-header-min-height);
+  padding: var(--page-header-padding-top) 0 var(--page-header-padding-bottom);
+  display: flex;
+  align-items: flex-end;
   overflow: hidden;
 }
 
 .container {
+  width: 100%;
   max-width: var(--yotb-content-max);
   margin: 0 auto;
   padding: 0 var(--t-spacing-lg);
@@ -84,7 +88,7 @@
 
 @media (max-width: 600px) {
   .header {
-    padding: var(--t-spacing-xl) 0;
+    padding: var(--t-spacing-xl) 0 var(--t-spacing-md);
   }
 
   .title {

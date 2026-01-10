@@ -5,6 +5,7 @@ import '../../styles/theme.css';
 import { SiteHeader } from '../../components/SiteHeader';
 import { SiteFooter } from '../../components/SiteFooter';
 import { PageHeader } from '../../components/PageHeader';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
 import { ProjectCardGrid } from '../../components/ProjectCardGrid';
 import { getCollection } from 'astro:content';
 import { copy } from '../../lib/copy';
@@ -33,6 +34,8 @@ const projectsData = projects.map(project => ({
   </head>
   <body>
     <SiteHeader client:load variant="light" />
+
+    <Breadcrumbs paths={[{ label: 'Projects' }]} />
 
     <main class="main-content">
       <PageHeader

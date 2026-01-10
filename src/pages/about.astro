@@ -5,6 +5,7 @@ import '../styles/theme.css';
 import { SiteHeader } from '../components/SiteHeader';
 import { SiteFooter } from '../components/SiteFooter';
 import { PageHeader } from '../components/PageHeader';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
 import { copy } from '../lib/copy';
 ---
 
@@ -20,6 +21,8 @@ import { copy } from '../lib/copy';
   </head>
   <body>
     <SiteHeader client:load variant="light" />
+
+    <Breadcrumbs paths={[{ label: 'About' }]} />
 
     <main class="main-content">
       <PageHeader

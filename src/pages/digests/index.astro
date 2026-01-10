@@ -5,6 +5,7 @@ import '../../styles/theme.css';
 import { SiteHeader } from '../../components/SiteHeader';
 import { SiteFooter } from '../../components/SiteFooter';
 import { PageHeader } from '../../components/PageHeader';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
 import { DigestTimeline } from '../../components/DigestTimeline';
 import { getCollection } from 'astro:content';
 import { copy } from '../../lib/copy';
@@ -90,6 +91,8 @@ const months = Object.keys(groupedByMonth);
   </head>
   <body>
     <SiteHeader client:load variant="light" />
+
+    <Breadcrumbs paths={[{ label: 'Digests' }]} />
 
     <main class="main-content">
       <PageHeader

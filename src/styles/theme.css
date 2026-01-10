@@ -175,6 +175,11 @@
   --yotb-golden-major: 1.618fr;
   --yotb-golden-minor: 1fr;
 
+  /* Page Header Region — consistent height across all pages */
+  --page-header-padding-top: var(--t-spacing-xl);
+  --page-header-padding-bottom: var(--t-spacing-lg);
+  --page-header-min-height: 200px;
+
   /* ===========================================================================
      LAYOUT — Structural measurements
      =========================================================================== */
