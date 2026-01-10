@@ -1,15 +1,13 @@
 /* =============================================================================
    PageHeader Component
-   Standardized page header with title, description, and decorative accent
+   Standardized page header with title and description
    ============================================================================= */
 
 .header {
-  position: relative;
   min-height: var(--page-header-min-height);
   padding: var(--page-header-padding-top) 0 var(--page-header-padding-bottom);
   display: flex;
   align-items: flex-end;
-  overflow: hidden;
 }
 
 .container {
@@ -70,18 +68,6 @@
   transform-origin: left;
 }
 
-/* Corner decoration - consistent with project hero */
-.decor {
-  position: absolute;
-  top: 0;
-  right: 0;
-  width: 200px;
-  height: 200px;
-  background: rgba(46, 90, 60, 0.06);
-  clip-path: polygon(100% 0, 0 0, 100% 100%);
-  pointer-events: none;
-}
-
 /* =============================================================================
    Responsive
    ============================================================================= */
@@ -97,10 +83,5 @@
 
   .description {
     font-size: var(--t-font-size-base);
-  }
-
-  .decor {
-    width: 120px;
-    height: 120px;
   }
 }

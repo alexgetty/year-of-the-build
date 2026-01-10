@@ -21,7 +21,6 @@ export function PageHeader({ title, description, cta, ctaHref }: PageHeaderProps
           )}
         </div>
       </div>
-      <div className={styles.decor} aria-hidden="true" />
     </header>
   );
 }

@@ -245,28 +245,13 @@ const hasSidebar = hasLinks || hasTech || hasFeatures || hasStats || hasDevlogs;
   .project-hero {
     min-height: var(--page-header-min-height);
     padding: var(--page-header-padding-top) 0 var(--page-header-padding-bottom);
-    position: relative;
-    overflow: hidden;
     display: flex;
     align-items: flex-end;
-  }
-
-  .project-hero::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    right: 0;
-    width: 400px;
-    height: 400px;
-    background: rgba(46, 90, 60, 0.06);
-    clip-path: polygon(100% 0, 0 0, 100% 100%);
   }
 
   .hero-content {
     display: flex;
     flex-direction: column;
-    position: relative;
-    z-index: 1;
   }
 
   .project-status {

@@ -7,7 +7,7 @@ export const copy = {
     cta: "Subscribe to get these in your inbox.",
   },
   devlogs: {
-    description: "Updates from the trenches. What worked, what broke, and everything in between.",
+    description: "Rolling devlogs detailing ongoing progress and challenges.",
   },
   projects: {
     description: "What's being built. Each project gets its own devlogs tracking progress from idea to launch.",
