@@ -21,6 +21,13 @@ const digests = defineCollection({
   }),
 });
 
+const pages = defineCollection({
+  type: 'content',
+  schema: z.object({
+    title: z.string(),
+  }),
+});
+
 const projects = defineCollection({
   type: 'content',
   schema: z.object({
@@ -40,4 +47,4 @@ const projects = defineCollection({
   }),
 });
 
-export const collections = { devlogs, digests, projects };
+export const collections = { devlogs, digests, pages, projects };

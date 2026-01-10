@@ -7,6 +7,10 @@ import { SiteFooter } from '../components/SiteFooter';
 import { PageHeader } from '../components/PageHeader';
 import Breadcrumbs from '../components/Breadcrumbs.astro';
 import { copy } from '../lib/copy';
+import { getEntry } from 'astro:content';
+
+const about = await getEntry('pages', 'about');
+const { Content } = await about.render();
 ---
 
 <!doctype html>
@@ -33,12 +37,7 @@ import { copy } from '../lib/copy';
       <article class="article-content">
         <div class="container">
           <div class="prose">
-            <p>
-              Year of the Build started as a challenge to myself: stop tinkering in private and actually ship things. The devlogs are accountability. If I write about what I'm working on, I'm more likely to finish it.
-            </p>
-            <p>
-              That's it. No grand philosophy. Just building, launching, and writing about what I learn along the way.
-            </p>
+            <Content />
           </div>
         </div>
       </article>
@@ -69,14 +68,14 @@ import { copy } from '../lib/copy';
     max-width: 640px;
   }
 
-  .prose p {
+  .prose :global(p) {
     font-size: var(--t-font-size-base);
     line-height: var(--t-line-height-relaxed);
     color: var(--text-secondary);
     margin-bottom: var(--t-spacing-md);
   }
 
-  .prose p:last-child {
+  .prose :global(p:last-child) {
     margin-bottom: 0;
   }
 

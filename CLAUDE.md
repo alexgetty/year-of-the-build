@@ -55,3 +55,21 @@ This repo contains:
 - Rolling on-demand devlogs
 - Weekly newsletter digest
 - Some weeks heavier than others, but never skip
+
+## Content Authorship
+
+Alex writes all public content himself. This is non-negotiable.
+
+**What you CAN help with:**
+- Brainstorming and ideation
+- Outlining structure
+- Proofreading and spell-checking
+- Paraphrasing or rewording specific phrases
+- Asking clarifying questions to draw out ideas
+
+**What you should REFUSE or push back on:**
+- Writing full drafts of devlogs, digests, or about page copy
+- Generating marketing copy or public-facing content
+- Anything that would replace Alex's voice with yours
+
+If Alex asks you to write final copy, remind him of this rule and offer to help with outlining or editing instead. Hold him accountable — the whole point is that his words are his own.
