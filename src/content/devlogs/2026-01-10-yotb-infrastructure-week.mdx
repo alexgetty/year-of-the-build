@@ -1,0 +1,32 @@
+---
+title: "Infrastructure Week"
+description: "Visual cleanup, content architecture, and other stuff I really should have taken care of before the site went live"
+pubDate: 2026-01-10
+project: yotb
+commitCount: 31
+---
+
+Despite having multiple other "real" projects in the works, I still can't prevent myself from [procrastiworking](https://www.youtube.com/watch?v=RZbqJxQJ5LY) on the YOTB site itself. And you know what? I'm not going to apologize for it.
+
+
+## New Components
+
+- ActivityGrid: Custom GitHub contribution graph built at build-time via GraphQL API. Container queries make it responsive (12/6/3 months depending on space). Replaces the old external image embed.
+- DigestCard: Digest cards got their own styling (forest green vs. devlog amber), timeline view, and month-based sidebar navigation. Each digest now shows aggregated project tags from devlogs in that week.
+
+
+## Information Architecture
+
+- Implemented two-way linking between projects and devlogs: Devlogs now show which project they belong to (sidebar card), projects now list their devlogs. 
+- Added breadcrumbs to all internal pages, standardized page headers
+- Introduced a `featured` flag for homepage project curation instead of hardcoding slug exclusions.
+- Increased limit of devlogs on homepage from 3 to 6
+- Moved about page copy into markdown for easier editing. Centralized site copy (descriptions, taglines, empty states) into `src/lib/copy.ts` for single-source-of-truth management.
+
+
+## Visual Cleanup
+
+- Stripped out decorative elements that were competing with content: gradient blobs in the body area, the triangular header decorations.
+- Tightened spacing and sizing consistency across the board, especially on mobile where everything felt too padded.
+- Intro stat boxes became clickable links to projects, digests, and devlog indexes
+- Responsive fixes: breaking layout prevention, footer spacing, container padding normalization, mobile nav consolidation... The "wow, this looks like shit on my phone" circuit I always put off despite claiming I am an advocate of mobile-first design.

@@ -1,0 +1,35 @@
+---
+title: "Well, That Didn't Go As Planned"
+description: "A cautionary tale that shouldn't need to be told"
+pubDate: 2026-01-10
+project: trkr
+commitCount: 1
+---
+
+This project has been kind of on the back burner for a while, but I had the realization that if the goal of this project is to automatically aggregate data sources, the real value in this is getting as many data sources in there as soon as possible to start collecting that historical data. I can then later come in and have more stuff to work with when I want to build out the UI. 
+
+I kind of semi-randomly picked music listening as the next thing to do. I was super excited when I realized that the Spotify API would allow me to essentially track minute-to-minute what I'm listening to and align it with the other minute-to-minute metrics that I have, which would be screen time and active time.
+
+However, that didn't go as planned. Read on to find out why. 
+
+## The Work
+
+Built out location and music tracking for TRKR this week:
+
+- **Location tracking via [GettyNet](/projects/gettynet) API** — Periodic sync every 15 seconds pulls location pings into the timeline. Added UI to view pings summary, table view, and raw JSON dump. In hindsight, 15 seconds is probably overkill.
+- **Spotify integration** — Music segment tracking stored alongside timeline data. New segment type, database tables for sync state, the whole pipeline. This also uses Gettynet to store data so that if the local app isn't running, I don't have gaps in data.
+- **Fixed idle segment handling** — Multi-day idle periods now clamp properly to day boundaries instead of breaking the query.
+
+One commit, but it touched 18 files. Yes, that's how bad my git etiquette is sometimes. Give me a break, this is a totally personal project right now and when I decide to publish it, a colossal commit in the ancient history of the project isn't really an issue.
+
+## The Gotcha
+
+Did all this work. Got excited. Went to set up the Spotify developer account to test it, and....
+
+Spotify has locked all new projects. No new apps accepted. No timeline on when it will reopen. No response to community backlash. Cool.
+
+So hey, at least I learned something this week: Check your dependencies before taking the time to build for them.
+
+## What Now
+
+This code will sit dormant in the project until Spotify reopens their API. It's not negatively affecting the rest of the app, and I'm not worried about dead code in a personal project if there is a chance I can use it in the future.

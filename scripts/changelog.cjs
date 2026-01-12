@@ -84,6 +84,7 @@ function isGitRepo(dir) {
 function getCommits(repoPath, { daysBack, since, until }) {
   const gitArgs = [
     'log',
+    '--all',
     '--date=format:%Y-%m-%d',
     '--pretty=format:%h|%ad|%s|%b|--COMMIT_END--'
   ];
@@ -272,8 +273,9 @@ function main() {
 
   const { markdown, totalCommits } = generateMarkdown(projectsData, queryOptions);
 
-  // Output filename with today's date and optional project name
-  const today = new Date().toISOString().split('T')[0];
+  // Output filename with today's date (local) and optional project name
+  const now = new Date();
+  const today = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
   const suffix = options.project ? `-${options.project.toLowerCase()}` : '';
   const outputPath = path.join(DRAFTS_DIR, `commits-${today}${suffix}.md`);
 

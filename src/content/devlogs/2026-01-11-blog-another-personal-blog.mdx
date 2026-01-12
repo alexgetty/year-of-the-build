@@ -1,0 +1,30 @@
+---
+title: "I've struck quartz and obsidian"
+description: "Whew, another blog, just what the internet needed!"
+pubDate: 2026-01-11
+project: blog
+commitCount: 15
+---
+
+## The Setup
+
+I am a pretty prolific personal note taker (currently making the switch from Notion to Obsidian, but that's not the point). As much as I like to **think by writing** I have never had a strong practice of sharing what I write.
+
+What better time to start when I already just started an ambitious devlog with multiple concurrent projects?
+
+## Design Decisions
+
+Considering this is going to be a writing blog, I wanted a super minimal, type-driven design system. It's quite similar to the blog of [Steph Ango](https://stephango.com/), the founder of Obsidian. This was initially an accidental convergence, but after stumbling across his article about how he organizes his Obsidian vault and seeing how similar it was, I leaned into it.
+
+Dark/Light mode may seem like over-engineering, but for a site where people are going to be reading, I wanted to make sure they could do so in the theme that feels most comfortable. But don't worry, I certainly did over-engineer other parts of this project.
+
+## The Fun (Over-Engineered) Stuff
+
+- **Implicit hub pages**: Broken wikilinks automatically become hub pages that aggregate backlinks. Write [[some-concept]] even if that page doesn't exist yet—Quartz generates a hub page showing everything that links to it, but only if there is more than one instance of the link. This means I can proactively link topics without them polluting the early days, then automatically have posts link together once connections are made. Pretty sweet.
+- **Full-page graph**: D3 force-directed visualization at /graph. Configurable physics, node filtering, hover effects, fullscreen toggle. Totally useless for a blog with sparse content, but will provide a really cool evolving visualization of all the content I generate.
+
+## Subtle Polish
+
+- **Expanded click areas**: Footnote citations use <sup> and are displayed relatively small to not interrupt the reader's flow. This posed a problem as the links did not meet WCAG clickable area standards, so these links have invisible pseudo-elements that expand the clickable area without jacking up the layout.
+- **Character decorations**: Using a mono-space font, I couldn't help but add some terminal-inspired decorations using some of the uniquely designed characters.
+- **Breadcrumb as header**: To maintain the minimal visual while still adhering to accessibility standards. Section page headers correctly use an H1 tag, but are displayed as a breadcrumb, providing linked context, correct page structure, and minimal visuals. Details pages that still have their sections breadcrumb omits the header tag from the breadcrumb so they still have the correct structure while maintaining consistency.

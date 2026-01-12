@@ -1,0 +1,43 @@
+---
+title: "TITLE"
+description: "DESCRIPTION"
+pubDate: 2026-01-12
+isDraft: false
+---
+
+{/* INTRO - Alex writes this */}
+
+## Mythical
+
+Two devlogs this week (we have a winner, folks!) that chronicle the epic story arc from "I should probably test this" to "Damn it, the tests found problems I now have to fix."
+
+First half of the week was bug fixes from beta testers (infinite redirect loops, onboarding skipping steps, calendar disconnection failures), dead code cleanup from the rapid MVP build, and the growing realization that proper testing couldn't wait any longer. The app works, but building features on shaky foundations is how tech debt compounds.
+
+So: Playwright-based E2E framework with docker-compose for isolated testing. Mocked Google Calendar API because real OAuth in tests was a nightmare I eventually had to ragequit before I found a creative way to destroy my computer. Restructured CI to run fast checks on all branches, full test suite only on PRs to main. 38 tests passing across 5 suites—onboarding, event types, booking flows, double-booking prevention, smoke tests. 23 still to write.
+
+And yes, the tests correctly identified a booking-calendar sync integrity bug. Low severity during soft launch, but it needs fixing before real users show up. The system works exactly as intended... unfortunately.
+
+## YOTB
+
+31 commits of site work that really should have happened before launch. Built a custom GitHub-style activity grid that pulls contribution data at build time via GraphQL—responsive down to 3-month view on mobile. Digests got their own visual treatment (forest green vs. devlog amber) with timeline navigation.
+
+Information architecture got attention: two-way linking between projects and devlogs, breadcrumbs on all internal pages, a `featured` flag for homepage curation instead of hardcoded exclusions. Moved copy into centralized modules so there's one place to update descriptions and taglines.
+
+Visual cleanup meant stripping out decorative elements (gradient blobs, triangular header bits) that were competing with content. Tightened spacing across the board, especially mobile where everything felt over-padded. The "wow this looks bad on my phone" fixes I always put off despite claiming to be a mobile-first advocate.
+
+## TRKR
+
+Location tracking now syncs every 15 seconds via GettyNet API (definitely overkill, will probably bump to 1m). Built the full Spotify integration pipeline—music segments stored alongside timeline data, new database tables for sync state, UI for viewing listening history.
+
+Then discovered Spotify has locked all new developer projects. No new apps accepted. No timeline. No response to community backlash. Booooo! Lesson learned the hard way: check API availability before building for it.
+
+## Blog
+
+New project: a personal writing blog built on Quartz. Minimal, type-driven design inspired by Steph Ango's aesthetic. Dark/light mode because reading comfort matters.
+
+The over-engineered fun bits: implicit hub pages where broken wikilinks automatically become aggregation pages once multiple posts reference the same concept. A full-page D3 force-directed graph visualization that's currently useless with sparse content but will show connections as the writing accumulates.
+
+
+## What's Next?
+- Finish the boring stuff
+- Start building the fun stuff
