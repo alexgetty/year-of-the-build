@@ -1,0 +1,67 @@
+---
+title: "TITLE"
+description: "DESCRIPTION"
+pubDate: 2026-01-10
+project: trkr
+isDraft: false
+---
+
+{/* COMMIT SUMMARY (12 commits, Dec 29 2025 - Dec 31 2025) */}
+
+## Work Done
+
+### Initial Setup
+- Electron app scaffold with React and TypeScript
+- Screen time tracking via macOS knowledgeC.db
+- D3.js charts for daily/app breakdown visualization
+- Journal persistence with YAML frontmatter and markdown content
+- Zustand state management
+- DMG packaging for macOS distribution
+
+### Idle Detection
+- Idle detection service polling powerMonitor every 5s with 60s threshold
+- SQLite storage for idle periods
+- HourlyActivityChart showing 24h stacked bars with per-app breakdown
+
+### Data Visualization
+- Refactored app breakdown from horizontal bar to donut/ring chart
+- Interactive tooltips showing app name and duration on hover
+- Size variants (sm/md/lg) for flexible usage
+- GitHub-style contribution grid showing year of activity
+
+### UI/UX
+- Midnight dark mode theme
+- Custom frameless window with draggable header and traffic lights
+- Menu bar tray mode (close hides to tray, click toggles window)
+- Dashboard and sidebar toggle buttons
+
+### Google Fit Integration
+- OAuth service with BrowserWindow auth flow and token refresh
+- Background sync service (30 min interval)
+- Settings dialog with Connect/Disconnect
+- Tabbed JournalDetail: Journal, Fit, Screen Time tabs
+- Moved credentials to runtime config (fixes built app not having .env access)
+
+### Unified Timeline Architecture
+- New timeline.json stores all time-based metrics as segments
+- Segment types: screen, active, idle with exact timestamps
+- DayTimeline: dual-track view showing screen and activity in parallel
+- ContributionGrid color interpolates based on screen:activity ratio
+- Metrics stored in JSON files, database only for auth tokens and settings
+
+### Sleep Tracking
+- Sleep inference algorithm from gaps in screen/activity data
+- Three-tier activity classification to filter noise
+- Timeline visualization shows sleep as blue overlay
+- Interactive editing: drag to create, resize, move, delete
+- Settings UI for sleep onset buffer configuration
+
+### Day View Restructure
+- Overview tab: donut chart + timeline + stats
+- Journal tab: focused writing with summary + editor
+- Data tab: bento dashboard with clickable cards and drill-down views
+
+### Dev Mode
+- Skip knowledgeC.db access, use cached data for fast iteration
+- Bypass permission checks in dev mode
+

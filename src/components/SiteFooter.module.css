@@ -154,6 +154,10 @@
   color: var(--p-ink-500);
 }
 
+.meta a {
+  color: var(--p-ink-500);
+}
+
 /* Responsive */
 @media (max-width: 600px) {
   .newsletter {

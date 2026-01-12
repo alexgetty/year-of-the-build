@@ -8,7 +8,7 @@
     "build": "astro build",
     "preview": "astro preview",
     "astro": "astro",
-    "changelog": "node scripts/changelog.js"
+    "changelog": "node scripts/changelog.cjs"
   },
   "author": "Alex Getty",
   "license": "ISC",

@@ -1,6 +1,11 @@
 {
   "projects": [
-    { "name": "YOTB", "path": "." }
+    { "name": "YOTB", "path": "." },
+    { "name": "Mythical", "path": "../mythical" },
+    { "name": "TRKR", "path": "../trkr" },
+    { "name": "Blogs", "path": "../blogs" },
+    { "name": "GettyNet", "path": "../gettynet" },
+    { "name": "ta-done", "path": "../ta-done" }
   ],
   "daysBack": 30
 }

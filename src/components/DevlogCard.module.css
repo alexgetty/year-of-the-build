@@ -5,6 +5,9 @@
   overflow: hidden;
   transition: all 0.2s ease;
   cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
 }
 
 /* Corner accent - amber triangle on right */
@@ -77,6 +80,7 @@
   align-items: center;
   justify-content: space-between;
   gap: var(--t-spacing-sm);
+  margin-top: auto;
 }
 
 .date {

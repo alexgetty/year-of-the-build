@@ -82,7 +82,7 @@ function resolveProject(slug?: string) {
 }
 
 // Prepare data for grid components
-const recentDevlogsData = devlogs.slice(0, 3).map(post => ({
+const recentDevlogsData = devlogs.slice(0, 6).map(post => ({
   title: post.data.title,
   description: post.data.description,
   slug: post.slug,
@@ -206,7 +206,7 @@ const projectsData = allProjects
             <a href="/projects/" class="view-all">View all</a>
           </div>
           <p class="section-tagline">{copy.projects.description}</p>
-          <ProjectCardGrid client:visible projects={projectsData} columns={4} />
+          <ProjectCardGrid client:visible projects={projectsData} columns={3} />
         </div>
       </section>
 

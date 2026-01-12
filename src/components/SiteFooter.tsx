@@ -47,7 +47,7 @@ export const SiteFooter: FC<SiteFooterProps> = ({
         {/* Footer Info */}
         <div className={styles.info}>
           <div className={styles.brand}>YOTB</div>
-          <div className={styles.meta}>Alex Getty 2026</div>
+          <div className={styles.meta}><a href="https://alexgetty.co" target="_blank">Alex Getty</a> 2026</div>
         </div>
       </div>
     </footer>
