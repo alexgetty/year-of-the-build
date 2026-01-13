@@ -4,8 +4,15 @@
 import '../../styles/theme.css';
 import { SiteHeader } from '../../components/SiteHeader';
 import { SiteFooter } from '../../components/SiteFooter';
+import { Lightbox } from '../../components/Lightbox/Lightbox';
 import Breadcrumbs from '../../components/Breadcrumbs.astro';
 import { getCollection } from 'astro:content';
+
+// Get all devlog images at build time
+const allDevlogImages = import.meta.glob<{ default: ImageMetadata }>(
+  '/public/images/devlogs/*.{png,jpg,jpeg,webp,gif}',
+  { eager: true }
+);
 
 export async function getStaticPaths() {
   const projects = await getCollection('projects');
@@ -22,6 +29,32 @@ const { Content } = await project.render();
 const projectDevlogs = (await getCollection('devlogs'))
   .filter(d => !d.data.isDraft && d.data.project === project.slug)
   .sort((a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime());
+
+// Get all images from devlogs for this project
+const projectImages: { src: string; alt: string; devlogSlug: string; devlogTitle: string; date: Date }[] = [];
+for (const devlog of projectDevlogs) {
+  const dateStr = devlog.data.pubDate.toISOString().split('T')[0];
+
+  // Find images matching this devlog's date
+  for (const [path, _module] of Object.entries(allDevlogImages)) {
+    const filename = path.split('/').pop() || '';
+    if (filename.startsWith(dateStr)) {
+      // Generate alt text from filename (remove date prefix and extension)
+      const altText = filename
+        .replace(/^\d{4}-\d{2}-\d{2}-/, '')
+        .replace(/\.[^.]+$/, '')
+        .replace(/-/g, ' ');
+      projectImages.push({
+        src: `/images/devlogs/${filename}`,
+        alt: altText,
+        devlogSlug: devlog.slug,
+        devlogTitle: devlog.data.title,
+        date: devlog.data.pubDate,
+      });
+    }
+  }
+}
+const hasGallery = projectImages.length > 0;
 
 // Status display text
 const statusText = project.data.status === 'building' ? 'Building' :
@@ -168,8 +201,36 @@ const hasSidebar = hasLinks || hasTech || hasFeatures || hasStats || hasDevlogs;
         </div>
       </section>
 
+      {/* Gallery Section */}
+      {hasGallery && (
+        <section class="gallery-section">
+          <div class="container">
+            <div class="section-label">
+              <span>Gallery</span>
+            </div>
+            <div class="gallery-grid">
+              {projectImages.map((image) => (
+                <button
+                  class="gallery-item"
+                  data-lightbox-trigger
+                  data-src={image.src}
+                  data-alt={image.alt}
+                  aria-label={`View ${image.alt} in lightbox`}
+                >
+                  <img src={image.src} alt={image.alt} loading="lazy" />
+                  <div class="gallery-item-overlay">
+                    <span class="gallery-item-title">{image.alt}</span>
+                  </div>
+                </button>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+
     </main>
 
+    <Lightbox client:load />
     <SiteFooter />
   </body>
 </html>
@@ -541,4 +602,92 @@ const hasSidebar = hasLinks || hasTech || hasFeatures || hasStats || hasDevlogs;
       font-size: var(--t-font-size-xl);
     }
   }
+
+  /* =============================================================================
+     Gallery Section
+     ============================================================================= */
+
+  .gallery-section {
+    border-top: 1px solid var(--border-default);
+  }
+
+  .gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: var(--t-spacing-md);
+  }
+
+  .gallery-item {
+    position: relative;
+    aspect-ratio: 16 / 10;
+    overflow: hidden;
+    border: 1px solid var(--border-default);
+    border-radius: var(--t-radius-md);
+    cursor: pointer;
+    background: var(--bg-surface);
+    padding: 0;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .gallery-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  }
+
+  .gallery-item:focus-visible {
+    outline: 2px solid var(--t-primary-600);
+    outline-offset: 2px;
+  }
+
+  .gallery-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+  }
+
+  .gallery-item:hover img {
+    transform: scale(1.05);
+  }
+
+  .gallery-item-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.7) 0%, transparent 50%);
+    opacity: 0;
+    transition: opacity 0.2s ease;
+    display: flex;
+    align-items: flex-end;
+    padding: var(--t-spacing-md);
+  }
+
+  .gallery-item:hover .gallery-item-overlay {
+    opacity: 1;
+  }
+
+  .gallery-item-title {
+    color: white;
+    font-size: var(--t-font-size-sm);
+    font-weight: 500;
+    text-transform: capitalize;
+  }
+
+  @media (max-width: 600px) {
+    .gallery-grid {
+      grid-template-columns: 1fr;
+    }
+  }
 </style>
+
+<script>
+  // Wire up gallery items to lightbox
+  document.querySelectorAll('[data-lightbox-trigger]').forEach((button) => {
+    button.addEventListener('click', () => {
+      const src = button.getAttribute('data-src');
+      const alt = button.getAttribute('data-alt');
+      window.dispatchEvent(new CustomEvent('lightbox:open', {
+        detail: { src, alt }
+      }));
+    });
+  });
+</script>

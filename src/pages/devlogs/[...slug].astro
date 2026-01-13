@@ -1,6 +1,8 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import { ProjectCard } from '../../components/ProjectCard';
+import { Lightbox } from '../../components/Lightbox/Lightbox';
+import SidebarFigures from '../../components/SidebarFigures.astro';
 import { getCollection } from 'astro:content';
 
 export async function getStaticPaths() {
@@ -67,6 +69,7 @@ const project = projects.find(p => p.slug === post.data.project);
               tags={project.data.tags}
             />
           </div>
+          <SidebarFigures />
         </aside>
       )}
     </div>
@@ -75,6 +78,7 @@ const project = projects.find(p => p.slug === post.data.project);
       <a href="/devlogs/">&larr; Back to all devlogs</a>
     </footer>
   </article>
+  <Lightbox client:load />
 </BaseLayout>
 
 <style>

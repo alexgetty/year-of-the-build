@@ -1,0 +1,48 @@
+/**
+ * Figure styles
+ *
+ * Inline figure with optional caption.
+ * Hover effect signals clickability for lightbox.
+ */
+
+.figure {
+  margin: 0;
+  max-width: 100%;
+}
+
+.imageWrapper {
+  cursor: pointer;
+  overflow: hidden;
+  border-radius: var(--t-radius-md);
+  border: 1px solid var(--border-default);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.imageWrapper:hover {
+  border-color: var(--t-primary-400);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.imageWrapper:focus-visible {
+  outline: 2px solid var(--color-focus-ring);
+  outline-offset: 2px;
+}
+
+.image {
+  display: block;
+  width: 100%;
+  height: auto;
+  transition: transform 0.3s var(--ease-out-expo), filter 0.3s ease;
+}
+
+.imageWrapper:hover .image {
+  transform: scale(1.02);
+  filter: brightness(1.02);
+}
+
+.caption {
+  margin-top: var(--t-spacing-xs);
+  font-size: var(--t-font-size-sm);
+  color: var(--text-muted);
+  line-height: var(--t-line-height-normal);
+}

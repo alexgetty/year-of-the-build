@@ -1,0 +1,51 @@
+---
+title: "You've gotta clean the sheets before you make your bed"
+description: "Component extraction, CSS refactoring, and the satisfaction of deleting code."
+pubDate: 2026-01-12
+project: personal-blog
+commitCount: 7
+---
+
+import { Figure } from '../../components/Figure/Figure';
+
+Yesterday's devlog covered the fun stuff—implicit hub pages, graph visualizations, the flashy features. Today was about paying down the technical debt I left in my wake before it compounds.
+
+## Component Extraction
+
+Pulled four reusable patterns out of scattered implementations:
+
+- **PostListItem**: The date/title/tags row that appears in condensed posts, folder contents, and tag pages. Was copy-pasted with slight variations everywhere.
+- **TagLink**: The `#topic` rendering with consistent styling to replace five different implementations.
+- **TopicsList**: Comma-separated tag lists for topic clouds and tag indexes.
+- **SectionHeader**: Conditional h2/span labels with optional links. Another pattern that kept getting reinvented.
+
+Not exciting, but now there's one source of truth instead of six.
+
+## I reverse frankensteined my CSS
+
+- Replaced 117 margin/padding reset declarations
+- Consolidated 5+ duplicated unstyled-link patterns
+- Removed every `!important` flag by fixing specificity properly. No wonder I slept horribly last night.
+- Deleted ~300 lines of duplicated or dead CSS
+- Extracted the 228-line inline SiteHeader CSS to its own file. I really don't like Obsidian's approach to css
+
+The codebase actually got smaller while gaining structure.
+
+## Polish
+
+Small stuff that rounds out the day:
+- Fixed graph hover bug where label backgrounds weren't scaling with text
+- Reordered homepage sections (Latest post before Topics now)
+- Made post list items fully clickable—date and title in one link, not separate
+
+## Next
+
+I guess I actually have to start writing content now, huh?
+
+<Figure
+  src="/images/devlogs/2026-01-12-Blog-Homepage.png"
+  alt="Blog homepage screenshot"
+  caption="The new homepage design"
+  placement="sidebar"
+  client:visible
+/>

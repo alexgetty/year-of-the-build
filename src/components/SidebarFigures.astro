@@ -1,0 +1,22 @@
+---
+/**
+ * SidebarFigures
+ *
+ * Portal container for Figure components with placement="sidebar".
+ * Figures are rendered into this container via React portal.
+ */
+---
+
+<div id="sidebar-figures" class="sidebar-figures"></div>
+
+<style>
+  .sidebar-figures {
+    display: flex;
+    flex-direction: column;
+    gap: var(--t-spacing-md);
+  }
+
+  .sidebar-figures:empty {
+    display: none;
+  }
+</style>

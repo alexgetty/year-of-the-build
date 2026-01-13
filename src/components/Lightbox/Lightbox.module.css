@@ -1,0 +1,135 @@
+/**
+ * Lightbox styles
+ *
+ * Full-screen overlay with centered image.
+ * z-index set above header (1000+).
+ */
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 2000;
+  background: rgba(10, 10, 10, 0.92);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--t-spacing-lg);
+}
+
+.closeButton {
+  position: absolute;
+  top: var(--t-spacing-md);
+  right: var(--t-spacing-md);
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: none;
+  color: var(--yotb-light);
+  cursor: pointer;
+  border-radius: var(--t-radius-md);
+  transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+.closeButton:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.closeButton:focus-visible {
+  outline: 2px solid var(--yotb-light);
+  outline-offset: 2px;
+}
+
+.closeButton:active {
+  transform: scale(0.95);
+}
+
+.content {
+  max-width: 90vw;
+  max-height: 90vh;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.image {
+  max-width: 100%;
+  max-height: calc(90vh - 60px); /* Leave room for caption */
+  object-fit: contain;
+  border-radius: var(--t-radius-md);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+}
+
+.caption {
+  margin-top: var(--t-spacing-md);
+  font-size: var(--t-font-size-sm);
+  color: var(--yotb-light);
+  opacity: 0.8;
+  text-align: center;
+  max-width: 60ch;
+  display: flex;
+  align-items: center;
+  gap: var(--t-spacing-md);
+}
+
+.counter {
+  opacity: 0.6;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Navigation buttons */
+.navButton {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.1);
+  border: none;
+  color: var(--yotb-light);
+  cursor: pointer;
+  border-radius: var(--t-radius-md);
+  transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+.navButton:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.navButton:focus-visible {
+  outline: 2px solid var(--yotb-light);
+  outline-offset: 2px;
+}
+
+.navButton:active {
+  transform: translateY(-50%) scale(0.95);
+}
+
+.navPrev {
+  left: var(--t-spacing-md);
+}
+
+.navNext {
+  right: var(--t-spacing-md);
+}
+
+@media (max-width: 600px) {
+  .navButton {
+    width: 40px;
+    height: 40px;
+  }
+
+  .navPrev {
+    left: var(--t-spacing-xs);
+  }
+
+  .navNext {
+    right: var(--t-spacing-xs);
+  }
+}
