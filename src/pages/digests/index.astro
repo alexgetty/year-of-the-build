@@ -77,6 +77,22 @@ const groupedByMonth = digests.reduce((acc, post) => {
 }, {} as Record<string, typeof digests>);
 
 const months = Object.keys(groupedByMonth);
+
+// Get unique projects that appear in any digest (for filter dropdown)
+const allDigestProjects = new Set<string>();
+digests.forEach(digest => {
+  const projects = getDigestProjects(digest.data.pubDate);
+  projects.forEach(p => allDigestProjects.add(p.slug));
+});
+const projectsWithDigests = Array.from(allDigestProjects)
+  .map(slug => projectMap[slug])
+  .filter(Boolean)
+  .sort((a, b) => a.title.localeCompare(b.title));
+
+// Build digest -> projects mapping for client-side filtering
+const digestProjectsMap = Object.fromEntries(
+  digests.map(d => [d.slug, getDigestProjects(d.data.pubDate).map(p => p.slug)])
+);
 ---
 
 <!doctype html>
@@ -101,6 +117,26 @@ const months = Object.keys(groupedByMonth);
         cta={copy.digests.cta}
         ctaHref="https://yotb.beehiiv.com"
       />
+
+      <!-- Filter Bar -->
+      {projectsWithDigests.length > 1 && (
+        <section class="filter-bar">
+          <div class="container">
+            <div class="filter-group">
+              <label for="project-filter" class="filter-label">Filter by project</label>
+              <select id="project-filter" class="filter-select">
+                <option value="">All projects</option>
+                {projectsWithDigests.map(p => (
+                  <option value={p.slug}>{p.title}</option>
+                ))}
+              </select>
+            </div>
+            <button id="clear-filter" class="clear-filter" style="display: none;">
+              Clear filter
+            </button>
+          </div>
+        </section>
+      )}
 
       <!-- Timeline Section -->
       <section class="timeline-section">
@@ -317,34 +353,214 @@ const months = Object.keys(groupedByMonth);
     }
   }
 
+  /* =============================================================================
+     Filter Bar
+     ============================================================================= */
+
+  .filter-bar {
+    border-bottom: 1px solid var(--border-default);
+    padding: var(--t-spacing-md) 0;
+  }
+
+  .filter-bar .container {
+    display: flex;
+    align-items: center;
+    gap: var(--t-spacing-md);
+  }
+
+  .filter-group {
+    display: flex;
+    align-items: center;
+    gap: var(--t-spacing-sm);
+  }
+
+  .filter-label {
+    font-size: var(--t-font-size-sm);
+    font-weight: 500;
+    color: var(--text-muted);
+  }
+
+  .filter-select {
+    font-size: var(--t-font-size-sm);
+    font-weight: 500;
+    color: var(--text-primary);
+    background: var(--bg-canvas);
+    border: 1px solid var(--border-default);
+    padding: var(--t-spacing-xs) var(--t-spacing-sm);
+    border-radius: var(--t-radius-sm);
+    cursor: pointer;
+    min-width: 160px;
+  }
+
+  .filter-select:hover {
+    border-color: var(--text-muted);
+  }
+
+  .filter-select:focus {
+    outline: none;
+    border-color: var(--t-primary-600);
+  }
+
+  .clear-filter {
+    font-size: var(--t-font-size-xs);
+    font-weight: 500;
+    color: var(--text-muted);
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: var(--t-spacing-xs);
+  }
+
+  .clear-filter:hover {
+    color: var(--text-primary);
+  }
+
+  /* Filter active state */
+  .filter-active .month-group {
+    display: none;
+  }
+
+  .filter-active .month-group.has-matches {
+    display: block;
+  }
+
+  .filter-active [data-digest-item] {
+    display: none;
+  }
+
+  .filter-active [data-digest-item].filter-match {
+    display: block;
+  }
+
 </style>
 
+<script is:inline define:vars={{ digestProjectsMap }}>
+  // Digest slug -> project slugs mapping
+  window.digestProjectsMap = digestProjectsMap;
+</script>
+
 <script>
-  // Highlight active month in navigation based on scroll position
   document.addEventListener('DOMContentLoaded', () => {
+    // ==========================================================================
+    // Month Navigation (scroll highlighting)
+    // ==========================================================================
     const monthGroups = document.querySelectorAll('.month-group');
     const monthLinks = document.querySelectorAll('.month-link');
 
-    if (monthGroups.length === 0 || monthLinks.length === 0) return;
+    if (monthGroups.length > 0 && monthLinks.length > 0) {
+      const observerOptions = {
+        rootMargin: '-20% 0px -70% 0px'
+      };
 
-    const observerOptions = {
-      rootMargin: '-20% 0px -70% 0px'
-    };
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            const id = entry.target.id;
+            monthLinks.forEach(link => {
+              link.classList.remove('active');
+              if (link.getAttribute('href') === '#' + id) {
+                link.classList.add('active');
+              }
+            });
+          }
+        });
+      }, observerOptions);
 
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          const id = entry.target.id;
-          monthLinks.forEach(link => {
-            link.classList.remove('active');
-            if (link.getAttribute('href') === '#' + id) {
-              link.classList.add('active');
-            }
-          });
+      monthGroups.forEach(group => observer.observe(group));
+    }
+
+    // ==========================================================================
+    // Project Filter
+    // ==========================================================================
+    const filterSelect = document.getElementById('project-filter') as HTMLSelectElement;
+    const clearButton = document.getElementById('clear-filter');
+    const timelineSection = document.querySelector('.timeline-section');
+    const digestProjectsMap = (window as any).digestProjectsMap || {};
+
+    if (!filterSelect || !timelineSection) return;
+
+    // Get all digest items and tag them with data attributes
+    const digestItems = timelineSection.querySelectorAll('[class*="item"]');
+    digestItems.forEach(item => {
+      const link = item.querySelector('a[href^="/digests/"]');
+      if (link) {
+        const href = link.getAttribute('href') || '';
+        const match = href.match(/\/digests\/([^/]+)/);
+        if (match) {
+          const slug = match[1];
+          const projectSlugs = digestProjectsMap[slug];
+          if (projectSlugs) {
+            item.setAttribute('data-digest-item', slug);
+            item.setAttribute('data-projects', projectSlugs.join(','));
+          }
+        }
+      }
+    });
+
+    function applyFilter(projectSlug: string) {
+      if (!projectSlug) {
+        // Clear filter
+        timelineSection.classList.remove('filter-active');
+        monthGroups.forEach(group => group.classList.remove('has-matches'));
+        digestItems.forEach(item => item.classList.remove('filter-match'));
+        if (clearButton) clearButton.style.display = 'none';
+
+        // Update URL
+        const url = new URL(window.location.href);
+        url.searchParams.delete('project');
+        window.history.replaceState({}, '', url.toString());
+        return;
+      }
+
+      // Apply filter
+      timelineSection.classList.add('filter-active');
+      if (clearButton) clearButton.style.display = 'block';
+
+      // Mark matching items (digests that include this project)
+      digestItems.forEach(item => {
+        const projects = item.getAttribute('data-projects')?.split(',') || [];
+        if (projects.includes(projectSlug)) {
+          item.classList.add('filter-match');
+        } else {
+          item.classList.remove('filter-match');
         }
       });
-    }, observerOptions);
 
-    monthGroups.forEach(group => observer.observe(group));
+      // Show month groups that have matches
+      monthGroups.forEach(group => {
+        const hasMatch = group.querySelector('[data-digest-item].filter-match');
+        if (hasMatch) {
+          group.classList.add('has-matches');
+        } else {
+          group.classList.remove('has-matches');
+        }
+      });
+
+      // Update URL
+      const url = new URL(window.location.href);
+      url.searchParams.set('project', projectSlug);
+      window.history.replaceState({}, '', url.toString());
+    }
+
+    // Handle filter change
+    filterSelect.addEventListener('change', () => {
+      applyFilter(filterSelect.value);
+    });
+
+    // Handle clear button
+    if (clearButton) {
+      clearButton.addEventListener('click', () => {
+        filterSelect.value = '';
+        applyFilter('');
+      });
+    }
+
+    // Apply filter from URL on load
+    const urlParams = new URLSearchParams(window.location.search);
+    const projectParam = urlParams.get('project');
+    if (projectParam) {
+      filterSelect.value = projectParam;
+      applyFilter(projectParam);
+    }
   });
 </script>

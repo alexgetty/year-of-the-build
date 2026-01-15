@@ -1,9 +1,11 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import { ProjectCard } from '../../components/ProjectCard';
+import { DigestCard } from '../../components/DigestCard';
 import { Lightbox } from '../../components/Lightbox/Lightbox';
 import SidebarFigures from '../../components/SidebarFigures.astro';
 import { getCollection } from 'astro:content';
+import { findDigestForDate, getDevlogsForDigest } from '../../lib/digest-utils';
 
 export async function getStaticPaths() {
   const devlogs = await getCollection('devlogs');
@@ -17,8 +19,32 @@ const post = Astro.props;
 const { Content } = await post.render();
 
 // Get the associated project
-const projects = await getCollection('projects');
-const project = projects.find(p => p.slug === post.data.project);
+const allProjects = await getCollection('projects');
+const project = allProjects.find(p => p.slug === post.data.project);
+
+// Get the digest this devlog appears in
+const allDigests = (await getCollection('digests'))
+  .filter(d => !d.data.isDraft)
+  .sort((a, b) => a.data.pubDate.getTime() - b.data.pubDate.getTime());
+const containingDigest = findDigestForDate(post.data.pubDate, allDigests);
+
+// Calculate digest entry number and projects if we have a containing digest
+let digestEntryNumber = 1;
+let digestProjects: { slug: string; title: string }[] = [];
+if (containingDigest) {
+  digestEntryNumber = allDigests.findIndex(d => d.slug === containingDigest.slug) + 1;
+
+  // Get projects covered by this digest
+  const allDevlogs = (await getCollection('devlogs')).filter(d => !d.data.isDraft);
+  const digestDevlogs = getDevlogsForDigest(containingDigest.data.pubDate, allDevlogs);
+  const projectSlugs = [...new Set(digestDevlogs.map(d => d.data.project))];
+  digestProjects = projectSlugs
+    .map(slug => {
+      const p = allProjects.find(proj => proj.slug === slug);
+      return p ? { slug: p.slug, title: p.data.title } : null;
+    })
+    .filter((p): p is { slug: string; title: string } => p !== null);
+}
 ---
 
 <BaseLayout
@@ -69,6 +95,19 @@ const project = projects.find(p => p.slug === post.data.project);
               tags={project.data.tags}
             />
           </div>
+          {containingDigest && (
+            <div class="sidebar-block">
+              <div class="sidebar-label">Appears In</div>
+              <DigestCard
+                title={containingDigest.data.title}
+                description={containingDigest.data.description}
+                slug={containingDigest.slug}
+                entryNumber={digestEntryNumber}
+                pubDate={containingDigest.data.pubDate}
+                projects={digestProjects}
+              />
+            </div>
+          )}
           <SidebarFigures />
         </aside>
       )}

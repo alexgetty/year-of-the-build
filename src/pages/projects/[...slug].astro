@@ -7,6 +7,7 @@ import { SiteFooter } from '../../components/SiteFooter';
 import { Lightbox } from '../../components/Lightbox/Lightbox';
 import Breadcrumbs from '../../components/Breadcrumbs.astro';
 import { getCollection } from 'astro:content';
+import { getDigestsForProject } from '../../lib/digest-utils';
 
 // Get all devlog images at build time
 const allDevlogImages = import.meta.glob<{ default: ImageMetadata }>(
@@ -56,17 +57,24 @@ for (const devlog of projectDevlogs) {
 }
 const hasGallery = projectImages.length > 0;
 
+// Get digests that cover this project
+const allDigests = (await getCollection('digests')).filter(d => !d.data.isDraft);
+const allDevlogs = (await getCollection('devlogs')).filter(d => !d.data.isDraft);
+const projectDigests = getDigestsForProject(project.slug, allDevlogs, allDigests)
+  .sort((a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime());
+
 // Status display text
 const statusText = project.data.status === 'building' ? 'Building' :
                    project.data.status === 'launched' ? 'Live' : 'Planned';
 
-// Check if we have sidebar content (links, tech, features, stats, devlogs)
+// Check if we have sidebar content (links, tech, features, stats, devlogs, digests)
 const hasLinks = project.data.repoUrl || project.data.liveUrl;
 const hasTech = project.data.tags && project.data.tags.length > 0;
 const hasFeatures = project.data.features && project.data.features.length > 0;
 const hasStats = project.data.stats && project.data.stats.length > 0;
 const hasDevlogs = projectDevlogs.length > 0;
-const hasSidebar = hasLinks || hasTech || hasFeatures || hasStats || hasDevlogs;
+const hasDigests = projectDigests.length > 0;
+const hasSidebar = hasLinks || hasTech || hasFeatures || hasStats || hasDevlogs || hasDigests;
 ---
 
 <!doctype html>
@@ -175,12 +183,37 @@ const hasSidebar = hasLinks || hasTech || hasFeatures || hasStats || hasDevlogs;
                     </ul>
                   </div>
                 )}
+                {/* Weekly Digests */}
+                {hasDigests && (
+                  <div class="sidebar-block">
+                    <div class="sidebar-label">Weekly Digests</div>
+                    <ul class="digest-list">
+                      {projectDigests.slice(0, 3).map((digest) => (
+                        <li>
+                          <time datetime={digest.data.pubDate.toISOString()}>
+                            {digest.data.pubDate.toLocaleDateString('en-US', {
+                              month: 'short',
+                              day: 'numeric',
+                              timeZone: 'UTC',
+                            })}
+                          </time>
+                          <a href={`/digests/${digest.slug}/`}>{digest.data.title}</a>
+                        </li>
+                      ))}
+                    </ul>
+                    {projectDigests.length > 3 && (
+                      <a href={`/digests/?project=${project.slug}`} class="view-all-link">
+                        View all {projectDigests.length} digests &rarr;
+                      </a>
+                    )}
+                  </div>
+                )}
                 {/* Devlogs */}
                 {hasDevlogs && (
                   <div class="sidebar-block">
                     <div class="sidebar-label">Devlogs</div>
                     <ul class="devlog-list">
-                      {projectDevlogs.map((devlog) => (
+                      {projectDevlogs.slice(0, 5).map((devlog) => (
                         <li>
                           <time datetime={devlog.data.pubDate.toISOString()}>
                             {devlog.data.pubDate.toLocaleDateString('en-US', {
@@ -193,6 +226,11 @@ const hasSidebar = hasLinks || hasTech || hasFeatures || hasStats || hasDevlogs;
                         </li>
                       ))}
                     </ul>
+                    {projectDevlogs.length > 5 && (
+                      <a href={`/devlogs/?project=${project.slug}`} class="view-all-link">
+                        View all {projectDevlogs.length} devlogs &rarr;
+                      </a>
+                    )}
                   </div>
                 )}
               </aside>
@@ -528,6 +566,53 @@ const hasSidebar = hasLinks || hasTech || hasFeatures || hasStats || hasDevlogs;
     font-size: var(--t-font-size-sm);
     font-weight: 500;
     color: var(--text-primary);
+  }
+
+  .digest-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .digest-list li {
+    display: flex;
+    align-items: baseline;
+    gap: var(--t-spacing-sm);
+    margin-bottom: var(--t-spacing-xs);
+  }
+
+  .digest-list li:last-child {
+    margin-bottom: 0;
+  }
+
+  .digest-list time {
+    font-size: var(--t-font-size-xs);
+    color: var(--text-muted);
+    flex-shrink: 0;
+    min-width: 3.5ch;
+  }
+
+  .digest-list a {
+    font-size: var(--t-font-size-sm);
+    font-weight: 500;
+    color: var(--text-primary);
+  }
+
+  .digest-list a:hover {
+    color: var(--t-primary-600);
+  }
+
+  .view-all-link {
+    display: block;
+    margin-top: var(--t-spacing-sm);
+    font-size: var(--t-font-size-xs);
+    font-weight: 500;
+    color: var(--text-muted);
+    text-decoration: none;
+  }
+
+  .view-all-link:hover {
+    color: var(--t-primary-600);
   }
 
   /* Sidebar Links */

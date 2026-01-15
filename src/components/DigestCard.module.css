@@ -29,15 +29,18 @@
   height: 120px;
 }
 
-.number {
-  position: absolute;
-  top: var(--t-spacing-sm);
-  right: var(--t-spacing-sm);
-  font-size: var(--t-font-size-lg);
-  font-weight: 700;
-  color: var(--p-forest-600);
-  line-height: 1;
-  z-index: 1;
+.badge {
+  display: inline-flex;
+  align-items: center;
+  align-self: flex-start;
+  font-size: var(--t-font-size-xs);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 4px 8px;
+  margin-bottom: var(--t-spacing-sm);
+  background: var(--p-forest-600);
+  color: var(--yotb-light);
 }
 
 .title {

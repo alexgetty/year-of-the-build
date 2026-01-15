@@ -4,13 +4,12 @@
 
 .hero {
   position: relative;
-  min-height: max(95vh, 500px);
-  max-height: 900px;
-  height: 95vh;
+  min-height: min(95vh, 900px);
   background: var(--yotb-void);
   overflow: hidden;
   display: flex;
-  align-items: center;
+  flex-direction: column;
+  padding-top: var(--t-spacing-2xl);
 }
 
 /* =============================================================================
@@ -176,16 +175,16 @@
    ============================================================================= */
 
 .bottomBar {
-  position: absolute;
-  bottom: var(--t-spacing-xl);
-  left: var(--t-spacing-lg);
-  right: var(--t-spacing-lg);
+  position: relative;
   z-index: 10;
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: flex-end;
+  gap: var(--t-spacing-md);
   max-width: var(--yotb-content-max);
-  margin: 0 auto;
+  width: 100%;
+  margin: auto auto 0;
+  padding: 0 var(--t-spacing-lg) 48px;
 }
 
 /* Latest devlog */
@@ -282,11 +281,22 @@
    Responsive
    ============================================================================= */
 
+@media (max-width: 900px) {
+  .bottomBar {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .latest {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--t-spacing-xs);
+  }
+}
+
 @media (max-width: 600px) {
   .hero {
-    min-height: max(75vh, 450px);
-    max-height: 700px;
-    height: 75vh;
+    min-height: min(75vh, 700px);
   }
 
   .shapeDiamond,
@@ -300,17 +310,6 @@
   }
 
   .bottomBar {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: var(--t-spacing-md);
-    bottom: var(--t-spacing-lg);
-    left: var(--t-spacing-md);
-    right: var(--t-spacing-md);
-  }
-
-  .latest {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: var(--t-spacing-xs);
+    padding: 0 var(--t-spacing-md) 48px;
   }
 }

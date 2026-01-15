@@ -26,7 +26,7 @@ export function DigestCard({
 
   return (
     <article className={styles.card}>
-      <span className={styles.number}>{String(entryNumber).padStart(2, '0')}</span>
+      <span className={styles.badge}>Weekly Digest</span>
       <h3 className={styles.title}>
         <a href={`/digests/${slug}/`} className={styles.cardLink}>{title}</a>
       </h3>

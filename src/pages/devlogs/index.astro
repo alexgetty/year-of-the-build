@@ -21,6 +21,12 @@ const projectMap = allProjects.reduce((acc, p) => {
   return acc;
 }, {} as Record<string, { slug: string; title: string }>);
 
+// Get unique projects that have devlogs (for filter dropdown)
+const projectsWithDevlogs = [...new Set(devlogs.map(d => d.data.project))]
+  .map(slug => projectMap[slug])
+  .filter(Boolean)
+  .sort((a, b) => a.title.localeCompare(b.title));
+
 // Helper to resolve project slug to project object
 function resolveProject(slug?: string) {
   if (!slug) return undefined;
@@ -44,6 +50,7 @@ function prepareDevlogData(posts: typeof devlogs) {
     entryNumber: entryNumberMap.get(post.slug) ?? 1,
     pubDate: post.data.pubDate,
     projects: resolveProject(post.data.project),
+    projectSlug: post.data.project, // For filtering
   }));
 }
 
@@ -62,6 +69,11 @@ const groupedByMonth = devlogs.reduce((acc, post) => {
 }, {} as Record<string, typeof devlogs>);
 
 const months = Object.keys(groupedByMonth);
+
+// Build slug -> projectSlug mapping for client-side filtering
+const devlogProjectMap = Object.fromEntries(
+  devlogs.map(d => [d.slug, d.data.project])
+);
 ---
 
 <!doctype html>
@@ -84,6 +96,26 @@ const months = Object.keys(groupedByMonth);
         title="Devlogs"
         description={copy.devlogs.description}
       />
+
+      <!-- Filter Bar -->
+      {projectsWithDevlogs.length > 1 && (
+        <section class="filter-bar">
+          <div class="container">
+            <div class="filter-group">
+              <label for="project-filter" class="filter-label">Filter by project</label>
+              <select id="project-filter" class="filter-select">
+                <option value="">All projects</option>
+                {projectsWithDevlogs.map(p => (
+                  <option value={p.slug}>{p.title}</option>
+                ))}
+              </select>
+            </div>
+            <button id="clear-filter" class="clear-filter" style="display: none;">
+              Clear filter
+            </button>
+          </div>
+        </section>
+      )}
 
       <!-- Timeline Section -->
       <section class="timeline-section">
@@ -300,34 +332,213 @@ const months = Object.keys(groupedByMonth);
     }
   }
 
+  /* =============================================================================
+     Filter Bar
+     ============================================================================= */
+
+  .filter-bar {
+    border-bottom: 1px solid var(--border-default);
+    padding: var(--t-spacing-md) 0;
+  }
+
+  .filter-bar .container {
+    display: flex;
+    align-items: center;
+    gap: var(--t-spacing-md);
+  }
+
+  .filter-group {
+    display: flex;
+    align-items: center;
+    gap: var(--t-spacing-sm);
+  }
+
+  .filter-label {
+    font-size: var(--t-font-size-sm);
+    font-weight: 500;
+    color: var(--text-muted);
+  }
+
+  .filter-select {
+    font-size: var(--t-font-size-sm);
+    font-weight: 500;
+    color: var(--text-primary);
+    background: var(--bg-canvas);
+    border: 1px solid var(--border-default);
+    padding: var(--t-spacing-xs) var(--t-spacing-sm);
+    border-radius: var(--t-radius-sm);
+    cursor: pointer;
+    min-width: 160px;
+  }
+
+  .filter-select:hover {
+    border-color: var(--text-muted);
+  }
+
+  .filter-select:focus {
+    outline: none;
+    border-color: var(--t-primary-600);
+  }
+
+  .clear-filter {
+    font-size: var(--t-font-size-xs);
+    font-weight: 500;
+    color: var(--text-muted);
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: var(--t-spacing-xs);
+  }
+
+  .clear-filter:hover {
+    color: var(--text-primary);
+  }
+
+  /* Filter active state */
+  .filter-active .month-group {
+    display: none;
+  }
+
+  .filter-active .month-group.has-matches {
+    display: block;
+  }
+
+  .filter-active [data-devlog-item] {
+    display: none;
+  }
+
+  .filter-active [data-devlog-item].filter-match {
+    display: block;
+  }
+
 </style>
 
+<script is:inline define:vars={{ devlogProjectMap }}>
+  // Devlog slug -> project slug mapping
+  window.devlogProjectMap = devlogProjectMap;
+</script>
+
 <script>
-  // Highlight active month in navigation based on scroll position
   document.addEventListener('DOMContentLoaded', () => {
+    // ==========================================================================
+    // Month Navigation (scroll highlighting)
+    // ==========================================================================
     const monthGroups = document.querySelectorAll('.month-group');
     const monthLinks = document.querySelectorAll('.month-link');
 
-    if (monthGroups.length === 0 || monthLinks.length === 0) return;
+    if (monthGroups.length > 0 && monthLinks.length > 0) {
+      const observerOptions = {
+        rootMargin: '-20% 0px -70% 0px'
+      };
 
-    const observerOptions = {
-      rootMargin: '-20% 0px -70% 0px'
-    };
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            const id = entry.target.id;
+            monthLinks.forEach(link => {
+              link.classList.remove('active');
+              if (link.getAttribute('href') === '#' + id) {
+                link.classList.add('active');
+              }
+            });
+          }
+        });
+      }, observerOptions);
 
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          const id = entry.target.id;
-          monthLinks.forEach(link => {
-            link.classList.remove('active');
-            if (link.getAttribute('href') === '#' + id) {
-              link.classList.add('active');
-            }
-          });
+      monthGroups.forEach(group => observer.observe(group));
+    }
+
+    // ==========================================================================
+    // Project Filter
+    // ==========================================================================
+    const filterSelect = document.getElementById('project-filter') as HTMLSelectElement;
+    const clearButton = document.getElementById('clear-filter');
+    const timelineSection = document.querySelector('.timeline-section');
+    const devlogProjectMap = (window as any).devlogProjectMap || {};
+
+    if (!filterSelect || !timelineSection) return;
+
+    // Get all devlog items and tag them with data attributes
+    const devlogItems = timelineSection.querySelectorAll('[class*="item"]');
+    devlogItems.forEach(item => {
+      const link = item.querySelector('a[href^="/devlogs/"]');
+      if (link) {
+        const href = link.getAttribute('href') || '';
+        const match = href.match(/\/devlogs\/([^/]+)/);
+        if (match) {
+          const slug = match[1];
+          const projectSlug = devlogProjectMap[slug];
+          if (projectSlug) {
+            item.setAttribute('data-devlog-item', slug);
+            item.setAttribute('data-project', projectSlug);
+          }
+        }
+      }
+    });
+
+    function applyFilter(projectSlug: string) {
+      if (!projectSlug) {
+        // Clear filter
+        timelineSection.classList.remove('filter-active');
+        monthGroups.forEach(group => group.classList.remove('has-matches'));
+        devlogItems.forEach(item => item.classList.remove('filter-match'));
+        if (clearButton) clearButton.style.display = 'none';
+
+        // Update URL
+        const url = new URL(window.location.href);
+        url.searchParams.delete('project');
+        window.history.replaceState({}, '', url.toString());
+        return;
+      }
+
+      // Apply filter
+      timelineSection.classList.add('filter-active');
+      if (clearButton) clearButton.style.display = 'block';
+
+      // Mark matching items
+      devlogItems.forEach(item => {
+        if (item.getAttribute('data-project') === projectSlug) {
+          item.classList.add('filter-match');
+        } else {
+          item.classList.remove('filter-match');
         }
       });
-    }, observerOptions);
 
-    monthGroups.forEach(group => observer.observe(group));
+      // Show month groups that have matches
+      monthGroups.forEach(group => {
+        const hasMatch = group.querySelector('[data-devlog-item].filter-match');
+        if (hasMatch) {
+          group.classList.add('has-matches');
+        } else {
+          group.classList.remove('has-matches');
+        }
+      });
+
+      // Update URL
+      const url = new URL(window.location.href);
+      url.searchParams.set('project', projectSlug);
+      window.history.replaceState({}, '', url.toString());
+    }
+
+    // Handle filter change
+    filterSelect.addEventListener('change', () => {
+      applyFilter(filterSelect.value);
+    });
+
+    // Handle clear button
+    if (clearButton) {
+      clearButton.addEventListener('click', () => {
+        filterSelect.value = '';
+        applyFilter('');
+      });
+    }
+
+    // Apply filter from URL on load
+    const urlParams = new URLSearchParams(window.location.search);
+    const projectParam = urlParams.get('project');
+    if (projectParam) {
+      filterSelect.value = projectParam;
+      applyFilter(projectParam);
+    }
   });
 </script>

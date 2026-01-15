@@ -1,6 +1,7 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import { getCollection } from 'astro:content';
+import { getDevlogsForDigest } from '../../lib/digest-utils';
 
 export async function getStaticPaths() {
   const digests = await getCollection('digests');
@@ -19,6 +20,31 @@ const formattedDate = post.data.pubDate.toLocaleDateString('en-US', {
   day: 'numeric',
   timeZone: 'UTC',
 });
+
+// Get devlogs for this digest's week
+const allDevlogs = (await getCollection('devlogs'))
+  .filter(d => !d.data.isDraft)
+  .sort((a, b) => a.data.pubDate.getTime() - b.data.pubDate.getTime());
+
+const allProjects = await getCollection('projects');
+const weekDevlogs = getDevlogsForDigest(post.data.pubDate, allDevlogs);
+
+// Build sidebar items with project info
+const devlogItems = weekDevlogs.map(devlog => {
+  const project = allProjects.find(p => p.slug === devlog.data.project);
+  return {
+    slug: devlog.slug,
+    title: devlog.data.title,
+    weekday: devlog.data.pubDate.toLocaleDateString('en-US', {
+      weekday: 'short',
+      timeZone: 'UTC',
+    }),
+    projectTitle: project?.data.title,
+    projectSlug: project?.slug,
+  };
+});
+
+const hasSidebar = weekDevlogs.length > 0;
 ---
 
 <BaseLayout
@@ -29,7 +55,7 @@ const formattedDate = post.data.pubDate.toLocaleDateString('en-US', {
     { label: post.data.title }
   ]}
 >
-  <article>
+  <article class={hasSidebar ? 'article--with-sidebar' : ''}>
     <header>
       <div class="meta">
         <time datetime={post.data.pubDate.toISOString()}>
@@ -40,8 +66,31 @@ const formattedDate = post.data.pubDate.toLocaleDateString('en-US', {
       <h1>{post.data.title}</h1>
     </header>
 
-    <div class="content">
-      <Content />
+    <div class={hasSidebar ? 'body body--with-sidebar' : 'body'}>
+      <div class="content">
+        <Content />
+      </div>
+
+      {hasSidebar && (
+        <aside class="sidebar">
+          <div class="sidebar-block">
+            <div class="sidebar-label">This Week's Devlogs</div>
+            <ul class="devlog-list">
+              {devlogItems.map((item) => (
+                <li>
+                  <span class="devlog-day">{item.weekday}</span>
+                  <a href={`/devlogs/${item.slug}/`}>{item.title}</a>
+                  {item.projectTitle && (
+                    <a href={`/projects/${item.projectSlug}/`} class="project-badge">
+                      {item.projectTitle}
+                    </a>
+                  )}
+                </li>
+              ))}
+            </ul>
+          </div>
+        </aside>
+      )}
     </div>
 
     <footer>
@@ -54,6 +103,10 @@ const formattedDate = post.data.pubDate.toLocaleDateString('en-US', {
   article {
     max-width: 720px;
     padding-bottom: var(--t-spacing-2xl);
+  }
+
+  article.article--with-sidebar {
+    max-width: none;
   }
 
   header {
@@ -97,8 +150,19 @@ const formattedDate = post.data.pubDate.toLocaleDateString('en-US', {
     margin: 0;
   }
 
-  .content {
+  /* Body layout */
+  .body {
     margin-bottom: var(--t-spacing-xl);
+  }
+
+  .body--with-sidebar {
+    display: grid;
+    grid-template-columns: var(--yotb-golden-major) var(--yotb-golden-minor);
+    gap: var(--t-spacing-xl);
+  }
+
+  .content {
+    min-width: 0;
   }
 
   .content :global(h2) {
@@ -163,6 +227,92 @@ const formattedDate = post.data.pubDate.toLocaleDateString('en-US', {
     border: none;
     border-top: 1px solid var(--border-default);
     margin: var(--t-spacing-xl) 0;
+  }
+
+  /* Sidebar */
+  .sidebar {
+    align-self: start;
+    position: sticky;
+    top: calc(var(--header-height, 60px) + var(--t-spacing-lg));
+  }
+
+  .sidebar-block {
+    margin-bottom: var(--t-spacing-lg);
+  }
+
+  .sidebar-label {
+    font-size: var(--t-font-size-xs);
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: var(--t-spacing-sm);
+  }
+
+  .devlog-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .devlog-list li {
+    display: flex;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: var(--t-spacing-xs);
+    margin-bottom: var(--t-spacing-sm);
+  }
+
+  .devlog-list li:last-child {
+    margin-bottom: 0;
+  }
+
+  .devlog-day {
+    font-size: var(--t-font-size-xs);
+    color: var(--text-muted);
+    min-width: 2.5rem;
+    flex-shrink: 0;
+  }
+
+  .devlog-list a {
+    font-size: var(--t-font-size-sm);
+    font-weight: 500;
+    color: var(--text-primary);
+    text-decoration: none;
+  }
+
+  .devlog-list a:hover {
+    color: var(--t-primary-600);
+  }
+
+  .project-badge {
+    font-size: var(--t-font-size-xs);
+    font-weight: 500;
+    color: var(--text-secondary);
+    background: rgba(28, 25, 23, 0.06);
+    padding: 1px 6px;
+    text-decoration: none;
+    margin-left: auto;
+  }
+
+  .project-badge:hover {
+    background: rgba(28, 25, 23, 0.1);
+    color: var(--text-primary);
+  }
+
+  /* Responsive */
+  @media (max-width: 900px) {
+    article.article--with-sidebar {
+      max-width: 720px;
+    }
+
+    .body--with-sidebar {
+      display: block;
+    }
+
+    .sidebar {
+      display: none;
+    }
   }
 
   footer {
