@@ -189,13 +189,20 @@
 
 /* Latest devlog */
 .latest {
+  position: relative;
   display: flex;
   align-items: center;
   gap: var(--t-spacing-sm);
-  padding: var(--t-spacing-sm) var(--t-spacing-md);
-  margin: calc(-1 * var(--t-spacing-sm)) calc(-1 * var(--t-spacing-md));
+  width: fit-content;
   text-decoration: none;
   color: var(--yotb-light);
+}
+
+/* Expanded tap target without affecting layout */
+.latest::after {
+  content: '';
+  position: absolute;
+  inset: calc(-1 * var(--t-spacing-sm)) calc(-1 * var(--t-spacing-md));
 }
 
 .latestLabel {
@@ -288,9 +295,36 @@
   }
 
   .latest {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: var(--t-spacing-xs);
+    flex-wrap: wrap;
+    align-items: baseline;
+    column-gap: var(--t-spacing-xs);
+    row-gap: 2px;
+  }
+
+  .latestLabel {
+    order: 1;
+    margin-right: 0;
+  }
+
+  .latestLabel::after {
+    content: '·';
+    margin-left: var(--t-spacing-sm);
+  }
+
+  .latestDate {
+    order: 2;
+  }
+
+  .latest::before {
+    content: '';
+    order: 3;
+    flex-basis: 100%;
+    height: 0;
+  }
+
+  .latestTitle {
+    order: 4;
+    margin-right: 0;
   }
 }
 
