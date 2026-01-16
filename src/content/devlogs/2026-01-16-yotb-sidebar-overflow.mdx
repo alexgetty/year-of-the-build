@@ -1,0 +1,30 @@
+---
+title: "Sidebar Overflow"
+description: "Cross-content linking, Figure components, and keeping the sidebars from getting out of hand"
+pubDate: 2026-01-16
+project: yotb
+commitCount: 8
+---
+
+## I just don't feel connected to you...
+
+Every piece of content on this site relates to other pieces. Devlogs belong to projects. Digests aggregate devlogs from a week accross projects. Projects accumulate devlogs over time. Navigating these relationships meant going back to index pages and hunting. But, just like the Hive in Pluribus, there's been a joining.
+
+Built out bidirectional linking across all content types:
+- Project pages now show their devlogs and any digests that mention them
+- Devlog sidebars show which digest they appear in
+- Digest sidebars list the week's devlogs with project tags
+
+But, as our current economic systems have shown us, unrestricted growth within a finite space leads to problems. As content grows, showing everything becomes scroll hell, so like any sane creator, I implemented limits. Projects now cap at 5 devlogs + 3 digests with "View all" links. It's probably a bit preemtive given the amount of content, but I want to get this site in a place where I don't have to keep coming back an updating it.
+
+
+## Let there be light(box)
+
+New MDX component for images with sidebar placement. Drop a `<Figure>` in content, set `placement="sidebar"`, and it renders in the margin via React portal. Falls back to inline on mobile.
+
+Also added a Lightbox for galleries—click to expand, keyboard nav, the works. Project pages auto-populate with images from their associated devlogs (matched by file prefix). Nice to have project galleries without manually curating them.
+
+
+## Hero Mobile Fix
+
+The "latest devlog" block in the hero had a layout bug on mobile—link stretched full width, positioning hacks piled on positioning hacks. Frickin' embarrassing.
