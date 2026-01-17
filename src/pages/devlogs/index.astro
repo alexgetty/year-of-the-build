@@ -69,11 +69,6 @@ const groupedByMonth = devlogs.reduce((acc, post) => {
 }, {} as Record<string, typeof devlogs>);
 
 const months = Object.keys(groupedByMonth);
-
-// Build slug -> projectSlug mapping for client-side filtering
-const devlogProjectMap = Object.fromEntries(
-  devlogs.map(d => [d.slug, d.data.project])
-);
 ---
 
 <!doctype html>
@@ -360,12 +355,16 @@ const devlogProjectMap = Object.fromEntries(
   }
 
   .filter-select {
+    appearance: none;
     font-size: var(--t-font-size-sm);
     font-weight: 500;
     color: var(--text-primary);
     background: var(--bg-canvas);
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23666' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right var(--t-spacing-xs) center;
     border: 1px solid var(--border-default);
-    padding: var(--t-spacing-xs) var(--t-spacing-sm);
+    padding: var(--t-spacing-xs) var(--t-spacing-lg) var(--t-spacing-xs) var(--t-spacing-xs);
     border-radius: var(--t-radius-sm);
     cursor: pointer;
     min-width: 160px;
@@ -394,7 +393,7 @@ const devlogProjectMap = Object.fromEntries(
     color: var(--text-primary);
   }
 
-  /* Filter active state */
+  /* Filter active state - :global needed for React-rendered elements */
   .filter-active .month-group {
     display: none;
   }
@@ -403,20 +402,15 @@ const devlogProjectMap = Object.fromEntries(
     display: block;
   }
 
-  .filter-active [data-devlog-item] {
+  .filter-active :global([data-project]) {
     display: none;
   }
 
-  .filter-active [data-devlog-item].filter-match {
+  .filter-active :global([data-project].filter-match) {
     display: block;
   }
 
 </style>
-
-<script is:inline define:vars={{ devlogProjectMap }}>
-  // Devlog slug -> project slug mapping
-  window.devlogProjectMap = devlogProjectMap;
-</script>
 
 <script>
   document.addEventListener('DOMContentLoaded', () => {
@@ -454,29 +448,15 @@ const devlogProjectMap = Object.fromEntries(
     const filterSelect = document.getElementById('project-filter') as HTMLSelectElement;
     const clearButton = document.getElementById('clear-filter');
     const timelineSection = document.querySelector('.timeline-section');
-    const devlogProjectMap = (window as any).devlogProjectMap || {};
 
     if (!filterSelect || !timelineSection) return;
 
-    // Get all devlog items and tag them with data attributes
-    const devlogItems = timelineSection.querySelectorAll('[class*="item"]');
-    devlogItems.forEach(item => {
-      const link = item.querySelector('a[href^="/devlogs/"]');
-      if (link) {
-        const href = link.getAttribute('href') || '';
-        const match = href.match(/\/devlogs\/([^/]+)/);
-        if (match) {
-          const slug = match[1];
-          const projectSlug = devlogProjectMap[slug];
-          if (projectSlug) {
-            item.setAttribute('data-devlog-item', slug);
-            item.setAttribute('data-project', projectSlug);
-          }
-        }
-      }
-    });
-
     function applyFilter(projectSlug: string) {
+      // Items have data-project attribute set by React component
+      const devlogItems = timelineSection.querySelectorAll('[data-project]');
+      const projects = Array.from(devlogItems).map(el => el.getAttribute('data-project'));
+      console.log('Filter:', projectSlug, 'Items found:', devlogItems.length, 'Projects:', projects);
+
       if (!projectSlug) {
         // Clear filter
         timelineSection.classList.remove('filter-active');
@@ -496,17 +476,22 @@ const devlogProjectMap = Object.fromEntries(
       if (clearButton) clearButton.style.display = 'block';
 
       // Mark matching items
+      let matchCount = 0;
       devlogItems.forEach(item => {
-        if (item.getAttribute('data-project') === projectSlug) {
+        const itemProject = item.getAttribute('data-project');
+        const isMatch = itemProject === projectSlug;
+        if (isMatch) {
+          matchCount++;
           item.classList.add('filter-match');
         } else {
           item.classList.remove('filter-match');
         }
       });
+      console.log('Matches:', matchCount, 'filter-active on section:', timelineSection.classList.contains('filter-active'));
 
       // Show month groups that have matches
       monthGroups.forEach(group => {
-        const hasMatch = group.querySelector('[data-devlog-item].filter-match');
+        const hasMatch = group.querySelector('[data-project].filter-match');
         if (hasMatch) {
           group.classList.add('has-matches');
         } else {
@@ -533,12 +518,21 @@ const devlogProjectMap = Object.fromEntries(
       });
     }
 
-    // Apply filter from URL on load
+    // Apply filter from URL on load - wait for React hydration
     const urlParams = new URLSearchParams(window.location.search);
     const projectParam = urlParams.get('project');
     if (projectParam) {
       filterSelect.value = projectParam;
-      applyFilter(projectParam);
+      // Wait for React to render items with data-project attributes
+      const checkForItems = () => {
+        const items = timelineSection.querySelectorAll('[data-project]');
+        if (items.length > 0) {
+          applyFilter(projectParam);
+        } else {
+          requestAnimationFrame(checkForItems);
+        }
+      };
+      checkForItems();
     }
   });
 </script>

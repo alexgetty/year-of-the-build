@@ -23,6 +23,7 @@ interface DevlogData {
   entryNumber: number;
   pubDate: Date;
   projects?: LinkedProject[];
+  projectSlug?: string; // For filtering
 }
 
 interface DevlogTimelineProps {
@@ -33,7 +34,12 @@ export function DevlogTimeline({ devlogs }: DevlogTimelineProps) {
   return (
     <Stagger animation="slideUp" className={styles.list}>
       {devlogs.map((devlog) => (
-        <div key={devlog.slug} className={styles.item}>
+        <div
+          key={devlog.slug}
+          className={styles.item}
+          data-devlog={devlog.slug}
+          data-project={devlog.projectSlug}
+        >
           <div className={styles.marker} aria-hidden="true" />
           <DevlogCard
             title={devlog.title}
