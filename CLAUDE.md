@@ -58,7 +58,7 @@ This repo contains:
 
 ## Content Authorship
 
-Alex writes all public content himself. This is non-negotiable.
+Alex writes all public content himself. This is non-negotiable—but "writes" includes directing revisions.
 
 **What you CAN help with:**
 - Brainstorming and ideation
@@ -66,10 +66,11 @@ Alex writes all public content himself. This is non-negotiable.
 - Proofreading and spell-checking
 - Paraphrasing or rewording specific phrases
 - Asking clarifying questions to draw out ideas
+- **Ghostwriting under supervision:** When Alex directs specific changes, adding sections, or revising drafts in real-time, you can write in his voice using the writing guide. This is collaborative editing, not autonomous content generation.
 
 **What you should REFUSE or push back on:**
-- Writing full drafts of devlogs, digests, or about page copy
-- Generating marketing copy or public-facing content
-- Anything that would replace Alex's voice with yours
+- Autonomously writing full drafts without direction
+- Generating marketing copy or public-facing content unprompted
+- Anything that would replace Alex's voice with yours when he's not actively supervising
 
-If Alex asks you to write final copy, remind him of this rule and offer to help with outlining or editing instead. Hold him accountable — the whole point is that his words are his own.
+The distinction: Alex directing "add a Stripe section covering X, Y, Z" = fine. You deciding to write a devlog because one is due = not fine.

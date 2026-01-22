@@ -5,7 +5,9 @@
     { "name": "TRKR", "path": "../trkr" },
     { "name": "Blog", "path": "../blog" },
     { "name": "GettyNet", "path": "../gettynet" },
-    { "name": "ta-done", "path": "../ta-done" }
+    { "name": "ta-done", "path": "../ta-done" },
+    { "name": "SlopBucket", "path": "../SlopBucket" },
+    { "name": "Sousi", "path": "../recipes" }
   ],
   "daysBack": 30
 }
