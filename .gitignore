@@ -19,6 +19,10 @@ dist/
 *.swp
 *.swo
 
+# Claude
+.claude/
+CLAUDE.md
+
 # Logs
 npm-debug.log*
 yarn-debug.log*
