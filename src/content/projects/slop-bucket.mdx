@@ -4,7 +4,7 @@ description: "Satirical news for the misinformation age"
 status: "launched"
 featured: false
 liveUrl: "https://slopbucket.blog"
-tags: ["Satire", "HTML/CSS", "90s Web Aesthetic"]
+tags: ["Satire", "11ty", "90s Web Aesthetic", "NewsAPI", "Procedural Generation"]
 features:
   - "Satirical news articles mocking misinformation culture"
   - "90s OS browser chrome aesthetic"
@@ -27,6 +27,6 @@ The core is a procedural generator that randomizes dimensions to produce article
 - **Logical fallacies:** strawmen, survivorship bias, false equivalence, appeal to authority, etc.
 - **Constraints:** required phrases, emotional beats, perspective voices.
 
-The math: 300 subjects × 69 archetypes × 99 constraints × 34 fallacies × 19 formats ≈ 15 billion unique combinations. Plenty of slop to go around. But now that I have 15 billion, it doesn't feel like enough. So, I also built a trending headlines pipeline that scrapes NewsAPI for headlines and identifies topical subjects, extracts satirizable angles, and feeds them into the generator. The headlines that get written have their new variables added to the generator, constantly feeding the beast.
+The math: 300 subjects × 69 archetypes × 99 constraints × 34 fallacies × 19 formats ≈ 15 billion unique combinations. Plenty of slop to go around. But now that I have 15 billion, it doesn't feel like enough. So, I also built a trending headlines pipeline that scrapes NewsAPI for headlines and identifies topical subjects, extracts satirizable angles, and feeds them into the generator. The headlines that I choose and write for have their new variables added to the generator, constantly feeding the beast.
 
-The site itself is basic Eleventy with a 90s OS browser chrome aesthetic, deployed via GitHub Pages.
+The site itself is basic Eleventy static site with a 90s OS browser chrome aesthetic, deployed via GitHub Pages.
