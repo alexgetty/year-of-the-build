@@ -1,0 +1,44 @@
+---
+title: "15 Billion Ways to Be Wrong"
+description: "SlopBucket goes from concept to live site with a satirical content generator capable of 15 billion unique prompt combinations."
+pubDate: 2026-01-19
+project: slop-bucket
+commitCount: 5
+---
+
+## Oops I built a website
+
+I kinda... accidentally built a satirical news generator. I was generating a few fake articles to populate my personal blog to test the design, and some of the spoof articles that Claude Code generated for me actually made me laugh out loud. Then, I had an idea, and it ended up distracting me for a few days.
+
+The idea: Satirize the misinformation tactics that media uses to capture your attention. Use humor (or my attempt at it) to educate readers to the real tactics used to shove "fake news" down your throat and up into your brain (don't ask about the logistics of that).
+
+How it works: a generator randomizes combinations of various dimensions to produce "infinite" variations of absurd premises for articles.
+- formats (listicle, explainer, open letter)
+- archetypes (the LinkedIn Lunatic, the Reply Guy, the Podcast Bro)
+- subjects (crypto, therapy speak, hustle culture)
+- logical fallacies (survivorship bias, false equivalence, appeal to authority)
+- constraints (required phrases, emotional beats, perspective voices)
+
+The Math: 300 subjects × 69 archetypes × 99 constraints × 34 fallacies × 19 formats ≈ 15 billion unique combinations for internet slop. But that's not all.
+
+
+## Trending Headlines Pipeline
+
+I want this to be topical (and hope to catch some keyword searches for trending news...) so I built a news scraper so that I can automatically add relevant, topical stuff to my generator.
+1. Scrapes NewsAPI for actual trending topics
+2. Claude extracts satirizable keywords, then "pitches" a few satirical headlines based on a set of rules I wrote.
+3. I select one promising headline, and it adds the relevant new items to the graph.
+4. The generator uses a modular writing guide to construct a fully dynamic writing prompt for the combination of items randomly selected.
+5. I get to work using the prompt to write a dumb article. Claude helps a bit, but there's no way this writing process could even be partially automated. LLMs sense of humor is... off.
+
+## Site Launch
+- Organized content into canonical sections (news, opinion, tech, life-culture, etc.).
+- Basic Eleventy static site with a 90s OS browser chrome aesthetic.
+- GitHub Pages deployment with automated workflow. 
+
+
+## Visitor Counter
+
+Added a hit counter that POSTs to the GettyNet Firebase endpoint. LocalStorage-based deduplication prevents counting the same browser within a 2-hour window. Degrades gracefully on API failure. Because what's a 90s aesthetic without a visitor counter? And the most 90s thing about this counter? It's broken. Getting an error hitting my own API, and I just haven't fixed it yet.
+
+

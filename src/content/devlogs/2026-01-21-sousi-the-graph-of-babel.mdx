@@ -1,0 +1,43 @@
+---
+title: "The Graph of Babel"
+description: "Prototyping a food knowledge graph in Obsidian + python scripts"
+pubDate: 2026-01-21
+project: sousi
+commitCount: 5
+---
+
+## Why This Exists
+
+So, before Mythical was even an idea in my head, there was another project that originally got me excited about building this year. I spent like 2 weeks feverishly researching and putting together what I think is a pretty solid business plan.
+
+Then, I immediately realized that what I'd need to build to actually deliver the core product was... ambitious. Like, well-funded companies have died trying to do it. I'm not totally sure I could compete with that. So I immediately pivoted to something not nearly as interesting, but that I knew I could build myself... Mythical.
+
+But I'm done avoiding this just because it's hard. Time to start breaking it down _because it's hard_. I figured markdown and graph view in Obsidian would be enough to at least start teasing out the idea.
+
+
+
+## The Data Model
+
+Spent way too long on this, but it matters. Everything flows from `schema/data-model.yaml`:
+
+- **Recipes** — ingredients, required equipment, prep + cook instructions. Recipes can be composed and nested, so a sauce or slaw or salsa can be made separate or swapped out and the new sub-recipe's ingredients and estimated times are aggregated.
+- **Ingredients** — discrete elements of a recipe, eventually with nutrition, allergy, pairings, etc. Hoping to leverage some existing open-source and open-license sources for pulling ingredient data.
+- **Techniques** — action verbs (mince, sear, fold) with required equipment. Techniques can be linked to specific steps in the recipes prep or instructions.
+- **Modifiers** — ingredient states, NOT actions (fresh, dried, boneless, frozen). One bug I still need to work out: some modifier and technique overlap. "minced garlic" could be from a jar (an atomic ingredient) or "minced garlic" could be implementing the "mince" technique on "fresh garlic" the ingredient. Trying to develop a flexible fallback here, but my prototyping environment is starting to strain.
+- **Restrictions** — allergens, ethical, religious, health, or preference. Abstracting all of these into a singular system, composed with the diet system, allows for a high level of customization for users.
+- **Cuisines** — history, techniques, ingredients, dishes, influences. It takes a while to do the research and synthesis for this, so I'll need to continue building these out over time.
+- **Diet** — the application of none, one, or many restrictions, as well as quantitative limits or goals on certain macros. Diets can be strictly imposed, like a severe allergy, or lightly suggested, such as the common/uncommon ingredients for a regional cuisine.
+
+
+## Import Pipeline
+
+Here's the thing... manually transcribing recipes is soul-crushing, so I built an import script. Feed it a URL, it scrapes the page, structures the data, and outputs YAML for review. The key here is "review". A script is going to crash and burn more times than it succeeds when you are dealing with the chaotic markup of the world wide web.
+
+Here's the other thing... manually reviewing scraped recipes is gut-punching, so I built a Claude skill that runs the import script then reviews the output, making corrections and logging all issues found so the aggregated logs can be used to build a better importer later.
+
+To be clear: I am not scraping recipes to copy them into my product. I'm filling my graph with mock data to better build out a robust data model, then they will be removed, because they aren't needed. My plan for Sousi is to combine a dense knowledge graph of ingredients, techniques, cuisines, etc to build a generation engine that can factor in nuanced requirements to create original recipes. AI can contextualize the user's needs and interact with them, while the graph ensures the LLM doesn't feed the user super glue or, you know, something they don't like or don't have time to make.
+
+
+## What's Next
+
+- Learn how to build an actual knowledge graph, because my prototype can't scale any more without dead-end work.

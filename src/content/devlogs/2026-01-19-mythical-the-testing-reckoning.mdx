@@ -1,0 +1,41 @@
+---
+title: "The Testing Reckoning"
+description: "E2E test infrastructure, booking-calendar sync integrity, Stripe billing fixes, and performance work."
+pubDate: 2026-01-19
+project: mythical
+commitCount: 27
+---
+
+## E2E Test Infrastructure
+
+FINALLY finished building out Playwright-based E2E testing framework. This was a much bigger endeavor than I originally thought. If I had known, I wouldn't have done it yet, but it's probably for the best...
+- Docker-compose setup for isolated test environment.
+- CI pipeline restructured: fast tests (lint, types, unit) run on all branches, full suite only on PRs to main for deployment.
+- Added test coverage for onboarding flows, event type management, booking flows, error states.
+- Switched to running deterministically with single worker mode. Multiples in parallel were causing problems with data mutations between tests.
+
+## Booking-Calendar Sync Integrity
+
+Fixed a critical data integrity bug: Bookings were being marked as confirmed even when Google Calendar sync failed silently. Guests thought they had a booking, host's calendar showed nothing. Good thing I don't actually have any users yet. This would have been a rare bug, but a terrible user experience when it did happen, so it was a high priority.
+
+The Solution: If calendar sync fails, the pending booking gets removed and the API returns a 503. Frontend now shows smart retry UI - transient errors (network blips) get a retry button with max 2 attempts, persistent errors (host auth failures) show "contact support" immediately.
+
+
+## Theme Pre-Caching
+
+The host dashboard was freezing when users switched to animated background themes. Root cause: canvas rendering was blocking the main thread at runtime. I set up backgrounds to "warm up" with a few hundred frames to avoid awkward "cold-start" states on some of the themes.
+
+The Solution: I kind of stumbled into pre-generating background start states. Themes are now rendered once via a Playwright-based cache generator, stored as JSON, and loaded on demand. To be honest, I don't know if this is actually a solution. Animated themes were all built one-off, so this pre-caching fixed the freezing UI issue, broke a lot of the animations. I either need to remake them all using the same engine, or come up with a different idea.
+
+
+## Stripe Billing Fixes
+
+Embarrassing one here. Turns out the billing page was lying to users—hardcoded "$3/month" regardless of what they actually paid. Coupons? Ignored. Annual billing? Still showed monthly. Patron features after purchase? Not showing up because the UI wasn't actually checking Stripe.
+
+The deeper issue: checkout was creating duplicate Stripe customers for the same email. Every time someone hit the payment flow, new customer record. Messy.
+
+Fixed both. Billing now pulls real data from Stripe—actual interval, actual amount, actual upcoming invoice with discounts applied. And checkout uses `getOrCreateCustomer` like it should have from day one. Added 27 tests to make sure I don't break this again.
+
+## Other Fixes
+- Availability loading: Fixed infinite spinner after creating availability, added proper cache headers to prevent stale data
+- Prototype cleanup: Ripped out old unused code, added auto-redirect to signup when signing in with non-existent account
