@@ -13,24 +13,20 @@ features:
 
 ## About Slop Bucket
 
-[PLACEHOLDER: Why you're building this. What itch does it scratch? What made you want to make fun of the information landscape?]
+I was testing my personal blog's design with fake articles when Claude generated something that actually made me laugh out loud. A few days of "just one more thing" later, I had a satirical news site. Oops..
 
-### The Pitch
+But for real, this does align with one of my themes for this year's builds: combatting misinformation. Misinformation tactics are everywhere, and most people can't name them. Slop Bucket uses humor (or my attempt at it) to make those tactics visible. Every article is absurd on purpose, but we dissect WHY it's absurd in the post-article "Sloptopsy". Each article includes a breakdown of the misinformation tactics used: the logical fallacies, the emotional manipulation, the rhetorical sleight of hand. Satire that teaches you to spot the real thing.
 
-The name makes everyone assume AI slop. The content says otherwise.
-
-Slop Bucket is satirical news played completely straight—the gravitas is the joke. We're holding a mirror up to thought leadership, dead journalism, and the hot take economy, making it absurd enough that people might notice how absurd it already is.
-
-[PLACEHOLDER: Expand on what makes this different from other satire sites. The Onion comparison? The 90s aesthetic angle?]
 
 ### The Build
 
-[PLACEHOLDER: Tech stack details. Static HTML/CSS to start? The prompt generator system with archetypes, subjects, and constraints?]
+The core is a procedural generator that randomizes dimensions to produce article prompts for me:
+- **Formats:** listicle, explainer, open letter, etc.
+- **Archetypes:** the LinkedIn Lunatic, the Reply Guy, the Podcast Bro, the Trad Wife, etc.
+- **Subjects:** crypto, therapy speak, hustle culture, Gandalf, etc
+- **Logical fallacies:** strawmen, survivorship bias, false equivalence, appeal to authority, etc.
+- **Constraints:** required phrases, emotional beats, perspective voices.
 
-### What's Working
+The math: 300 subjects × 69 archetypes × 99 constraints × 34 fallacies × 19 formats ≈ 15 billion unique combinations. Plenty of slop to go around. But now that I have 15 billion, it doesn't feel like enough. So, I also built a trending headlines pipeline that scrapes NewsAPI for headlines and identifies topical subjects, extracts satirizable angles, and feeds them into the generator. The headlines that get written have their new variables added to the generator, constantly feeding the beast.
 
-[PLACEHOLDER: Early wins. The headline generator? The aesthetic direction? Anything that's clicked?]
-
-### What's Next
-
-[PLACEHOLDER: Roadmap. Launch timeline? Stretch goals like draggable windows, easter eggs in the OS layer?]
+The site itself is basic Eleventy with a 90s OS browser chrome aesthetic, deployed via GitHub Pages.
