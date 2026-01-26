@@ -8,7 +8,8 @@
     "build": "astro build",
     "preview": "astro preview",
     "astro": "astro",
-    "changelog": "node scripts/changelog.cjs"
+    "changelog": "node scripts/changelog.cjs",
+    "lint:emdash": "node scripts/no-emdash.cjs"
   },
   "author": "Alex Getty",
   "license": "ISC",

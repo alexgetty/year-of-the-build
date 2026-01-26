@@ -11,21 +11,58 @@ import { getCollection } from 'astro:content';
 import { copy } from '../../lib/copy';
 
 const projects = await getCollection('projects');
+const devlogs = await getCollection('devlogs');
 
-// Sort by status: launched first, then building
-const statusOrder = { launched: 0, building: 1 };
-const sortedProjects = [...projects].sort((a, b) =>
-  (statusOrder[a.data.status] ?? 99) - (statusOrder[b.data.status] ?? 99)
-);
+// Build a map of project slug -> latest devlog date
+const latestDevlogByProject = new Map<string, Date>();
+for (const devlog of devlogs) {
+  const projectSlug = devlog.data.project;
+  const pubDate = new Date(devlog.data.pubDate);
+  const existing = latestDevlogByProject.get(projectSlug);
+  if (!existing || pubDate > existing) {
+    latestDevlogByProject.set(projectSlug, pubDate);
+  }
+}
+
+// Determine if a building project is stale (no devlog ever, or none in 2 weeks)
+const TWO_WEEKS_MS = 14 * 24 * 60 * 60 * 1000;
+const now = Date.now();
+
+function getDisplayStatus(status: string, lastDevlog: Date | undefined): string {
+  // Only building/planning can go stale
+  if (status !== 'building' && status !== 'planning') return status;
+  if (!lastDevlog) return 'stale';
+  if (now - lastDevlog.getTime() > TWO_WEEKS_MS) return 'stale';
+  return status;
+}
+
+// Sort: launched first, then all in-progress (building/planning/stale) by latest devlog
+const sortedProjects = [...projects].sort((a, b) => {
+  const aLaunched = a.data.status === 'launched';
+  const bLaunched = b.data.status === 'launched';
+
+  // Launched projects come first
+  if (aLaunched && !bLaunched) return -1;
+  if (!aLaunched && bLaunched) return 1;
+
+  // Within same tier, sort by latest devlog (most recent first)
+  const aDate = latestDevlogByProject.get(a.slug)?.getTime() ?? 0;
+  const bDate = latestDevlogByProject.get(b.slug)?.getTime() ?? 0;
+  return bDate - aDate;
+});
 
 // Prepare project data for grid component
-const projectsData = sortedProjects.map(project => ({
-  title: project.data.title,
-  description: project.data.description,
-  slug: project.slug,
-  status: project.data.status,
-  tags: project.data.tags,
-}));
+const projectsData = sortedProjects.map(project => {
+  const lastDevlog = latestDevlogByProject.get(project.slug);
+  return {
+    title: project.data.title,
+    description: project.data.description,
+    slug: project.slug,
+    status: getDisplayStatus(project.data.status, lastDevlog),
+    tags: project.data.tags,
+    lastUpdated: lastDevlog?.toISOString(),
+  };
+});
 ---
 
 <!doctype html>

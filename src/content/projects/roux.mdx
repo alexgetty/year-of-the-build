@@ -1,0 +1,39 @@
+---
+title: "Roux"
+description: "A Graph Programming Interface for knowledge bases."
+status: "launched"
+featured: true
+tags: ["TypeScript", "MCP", "SQLite", "GraphQL-inspired", "Obsidian", "Transformers.js"]
+features:
+  - "Semantic search via local embeddings"
+  - "Graph traversal and pathfinding"
+  - "Wiki-link extraction and relationship mapping"
+  - "MCP server for AI co-authoring"
+  - "File watching with live sync"
+  - "Zero lock-in, files stay as plain markdown"
+---
+
+Roux turns a folder of interconnected markdown files into a queryable knowledge graph. It's the bridge between human-editable notes (like an Obsidian vault) and AI-powered semantic operations. And that's just the 3-day proof of concept.
+
+### The Architecture
+
+Provider-based design with a central orchestration hub:
+
+- **GraphCore** routes requests to pluggable providers (store, embedding, vector, LLM)
+- **DocStore** reads markdown, extracts frontmatter and wiki-links, builds the graph
+- **TransformersEmbeddingProvider** generates embeddings locally (no external API calls)
+- **MCP Server** exposes 10 tools for search, traversal, CRUD, and hub detection
+
+SQLite caches derived data only. Delete the cache, rebuild from source files. No migration anxiety.
+
+### Design Decisions Worth Noting
+
+**Local embeddings by default.** Uses transformers.js to generate vectors without calling OpenAI or any external service. Privacy-first, works offline.
+
+**IDs from file paths.** Node IDs derive from relative paths (lowercase), enabling Obsidian compatibility. Future: frontmatter-based ID overrides for migration scenarios.
+
+**Graceful degradation everywhere.** Missing providers don't crash the system. Features just become unavailable. Partial functionality beats total failure.
+
+### What's Next
+
+MVP is complete. Now it needs real-world usage to find the sharp edges. Planned: alternative storage backends (Neo4j, FalkorDB), REST API, non-markdown format support.

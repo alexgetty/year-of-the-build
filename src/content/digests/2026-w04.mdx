@@ -1,0 +1,37 @@
+---
+title: "The Project Explosion"
+description: "My god, it's full of graphs."
+pubDate: 2026-01-25
+isDraft: false
+---
+
+This week the project count exploded. But there is a method to this madness: knowledge graphs everywhere.
+
+## Roux
+
+After realizing I needed the same knowledge graph tooling in multiple projects, it was clear I needed to drop everything and build a platform. Why not use any of the existing stuff out there? This is the year of the build, not the year of the integrations. Three days from empty repo to npm-ready package: A fully modular "Graph Programming Interface" with a data layer that supports obsidian-compatible local md files with SQLite graph caching, MCP server with 10 tools, ~800 tests at 100% coverage. Currently using V0.1 on Eldhrímnir, the Dataverse, and a few other Obsidian vaults and knowledge bases.
+
+
+## Eldhrímnir
+
+The food knowledge graph that will power Sousi took shape. Started with data modeling in YAML and an import pipeline for scraping recipes, then migrated to Roux as the backend. Ingredient families now have parent-child inheritance, restriction hierarchies walk the full taxonomy chain (Chicken → Poultry → Meat), and recipe imports require human review.
+
+## Dataverse
+
+This has been a recurring pet project for over a decade now. A 2d particle physics engine obsession that has built art generators, single cellular life simulations, games, etc. This latest iteration is an artificial life simulation. Research-first approach covering genetic encoding, morphological development, and emergence mechanics. No code yet, just a growing Obsidian + Roux graph of concepts and design decisions.
+
+## Slop Bucket
+
+Launched with 15 billion possible satire article combinations and immediately started measuring whether anyone reads past the headlines. Added more sophisticated headline keyword trackers. Visitor counter is still broken.
+
+## YOTB
+
+New project pages and sorted the projects index by launch status.
+
+## GettyNet & Mythical
+
+Intentional off weeks. GettyNet is stable, Mythical is breathing after last week's testing marathon. Not every project needs commits every week.
+
+## What's Next
+
+Roux needs testing, and it'll get it now that it's being used in half my active projects. Eldhrímnir needs more recipes and ingredients to fully test out the schema. I'll upgrade to a better graph db once I know what I'm doing. And at some point I should probably get back to Mythical's Pro Tier.

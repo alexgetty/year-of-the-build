@@ -30,11 +30,11 @@ The Solution: I kind of stumbled into pre-generating background start states. Th
 
 ## Stripe Billing Fixes
 
-Embarrassing one here. Turns out the billing page was lying to users—hardcoded "$3/month" regardless of what they actually paid. Coupons? Ignored. Annual billing? Still showed monthly. Patron features after purchase? Not showing up because the UI wasn't actually checking Stripe.
+Embarrassing one here. Turns out the billing page was lying to users. Hardcoded "$3/month" regardless of what they actually paid. Coupons? Ignored. Annual billing? Still showed monthly. Patron features after purchase? Not showing up because the UI wasn't actually checking Stripe.
 
 The deeper issue: checkout was creating duplicate Stripe customers for the same email. Every time someone hit the payment flow, new customer record. Messy.
 
-Fixed both. Billing now pulls real data from Stripe—actual interval, actual amount, actual upcoming invoice with discounts applied. And checkout uses `getOrCreateCustomer` like it should have from day one. Added 27 tests to make sure I don't break this again.
+Fixed both. Billing now pulls real data from Stripe: actual interval, actual amount, actual upcoming invoice with discounts applied. And checkout uses `getOrCreateCustomer` like it should have from day one. Added 27 tests to make sure I don't break this again.
 
 ## Other Fixes
 - Availability loading: Fixed infinite spinner after creating availability, added proper cache headers to prevent stale data

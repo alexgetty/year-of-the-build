@@ -20,13 +20,13 @@ But I'm done avoiding this just because it's hard. Time to start breaking it dow
 
 Spent way too long on this, but it matters. Everything flows from `schema/data-model.yaml`:
 
-- **Recipes** — ingredients, required equipment, prep + cook instructions. Recipes can be composed and nested, so a sauce or slaw or salsa can be made separate or swapped out and the new sub-recipe's ingredients and estimated times are aggregated.
-- **Ingredients** — discrete elements of a recipe, eventually with nutrition, allergy, pairings, etc. Hoping to leverage some existing open-source and open-license sources for pulling ingredient data.
-- **Techniques** — action verbs (mince, sear, fold) with required equipment. Techniques can be linked to specific steps in the recipes prep or instructions.
-- **Modifiers** — ingredient states, NOT actions (fresh, dried, boneless, frozen). One bug I still need to work out: some modifier and technique overlap. "minced garlic" could be from a jar (an atomic ingredient) or "minced garlic" could be implementing the "mince" technique on "fresh garlic" the ingredient. Trying to develop a flexible fallback here, but my prototyping environment is starting to strain.
-- **Restrictions** — allergens, ethical, religious, health, or preference. Abstracting all of these into a singular system, composed with the diet system, allows for a high level of customization for users.
-- **Cuisines** — history, techniques, ingredients, dishes, influences. It takes a while to do the research and synthesis for this, so I'll need to continue building these out over time.
-- **Diet** — the application of none, one, or many restrictions, as well as quantitative limits or goals on certain macros. Diets can be strictly imposed, like a severe allergy, or lightly suggested, such as the common/uncommon ingredients for a regional cuisine.
+- **Recipes**: ingredients, required equipment, prep + cook instructions. Recipes can be composed and nested, so a sauce or slaw or salsa can be made separate or swapped out and the new sub-recipe's ingredients and estimated times are aggregated.
+- **Ingredients**: discrete elements of a recipe, eventually with nutrition, allergy, pairings, etc. Hoping to leverage some existing open-source and open-license sources for pulling ingredient data.
+- **Techniques**: action verbs (mince, sear, fold) with required equipment. Techniques can be linked to specific steps in the recipes prep or instructions.
+- **Modifiers**: ingredient states, NOT actions (fresh, dried, boneless, frozen). One bug I still need to work out: some modifier and technique overlap. "minced garlic" could be from a jar (an atomic ingredient) or "minced garlic" could be implementing the "mince" technique on "fresh garlic" the ingredient. Trying to develop a flexible fallback here, but my prototyping environment is starting to strain.
+- **Restrictions**: allergens, ethical, religious, health, or preference. Abstracting all of these into a singular system, composed with the diet system, allows for a high level of customization for users.
+- **Cuisines**: history, techniques, ingredients, dishes, influences. It takes a while to do the research and synthesis for this, so I'll need to continue building these out over time.
+- **Diet**: the application of none, one, or many restrictions, as well as quantitative limits or goals on certain macros. Diets can be strictly imposed, like a severe allergy, or lightly suggested, such as the common/uncommon ingredients for a regional cuisine.
 
 
 ## Import Pipeline

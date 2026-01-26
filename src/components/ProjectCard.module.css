@@ -13,18 +13,29 @@
   border-color: rgba(46, 90, 60, 0.4);
 }
 
+/* Top row with status and updated date */
+.topRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: var(--t-spacing-sm);
+}
+
+.updated {
+  font-size: var(--t-font-size-xs);
+  color: var(--text-muted);
+}
+
 /* Status badges */
 .status {
   display: inline-flex;
   align-items: center;
-  align-self: flex-start;
   gap: 6px;
   font-size: var(--t-font-size-xs);
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.05em;
   padding: 4px 8px;
-  margin-bottom: var(--t-spacing-sm);
 }
 
 .status::before {
@@ -60,12 +71,22 @@
 }
 
 .status-planning {
-  background: rgba(28, 25, 23, 0.08);
-  color: var(--text-secondary);
+  background: #78716c;
+  color: var(--yotb-light);
 }
 
 .status-planning::before {
+  background: var(--yotb-light);
+}
+
+.status-stale {
+  background: rgba(120, 113, 108, 0.15);
+  color: var(--text-muted);
+}
+
+.status-stale::before {
   background: var(--text-muted);
+  opacity: 0.6;
 }
 
 .title {

@@ -15,8 +15,9 @@ interface ProjectData {
   title: string;
   description: string;
   slug: string;
-  status: 'planning' | 'building' | 'launched' | 'abandoned';
+  status: 'planning' | 'building' | 'launched' | 'abandoned' | 'stale';
   tags?: string[];
+  lastUpdated?: string;
 }
 
 interface ProjectCardGridProps {
@@ -38,6 +39,7 @@ export function ProjectCardGrid({ projects, columns = 3 }: ProjectCardGridProps)
           slug={project.slug}
           status={project.status}
           tags={project.tags}
+          lastUpdated={project.lastUpdated}
         />
       ))}
     </Stagger>

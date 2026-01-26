@@ -1,0 +1,35 @@
+---
+title: "Speedrunning a Knowledge Graph Platform"
+description: "From empty repo to npm-ready package in three days."
+pubDate: 2026-01-25
+project: roux
+commitCount: 34
+---
+
+Nearly 800 tests, 100% coverage, 34 commits, and some poultry in a food graph.
+
+## Documentation First
+
+Wrote docs before code. Architecture decisions, provider interfaces, MCP schemas. All in markdown where mistakes are cheap. By implementation time, the system was already designed.
+
+The key abstraction: GraphCore as orchestration hub. Every provider (storage, embeddings, vectors) plugs in through clean interfaces. Swap DocStore for Neo4j? Same API. Swap Transformers.js for OpenAI? Same API.
+
+## SQLite Everything
+
+DocStore caches nodes, embeddings, and centrality in SQLite. File watcher syncs Obsidian edits in under 2 seconds. Wiki-links resolve to full paths automatically.
+
+Vector search is brute-force cosine similarity. For <200 nodes, this is fine. The architecture supports real vector DBs later.
+
+## MCP Server
+
+Ten tools: semantic search, graph traversal, CRUD, tag filtering. All with input validation, bounded output, and content truncation by context.
+
+The big win: metadata-only responses by default. Search results dropped from ~16k tokens to ~2k. Claude doesn't need full documents to answer "what's related to X."
+
+## Red Team Everything
+
+Every phase ended with an audit. Flaky watcher tests got rewritten with callback synchronization instead of polling. 10 runs, zero flakes.
+
+## What's Next
+
+npm-ready but not published. Need to battle-test on a real vault and write end-user docs.

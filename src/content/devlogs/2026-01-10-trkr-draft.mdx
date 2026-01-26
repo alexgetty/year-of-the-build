@@ -16,9 +16,9 @@ However, that didn't go as planned. Read on to find out why.
 
 Built out location and music tracking for TRKR this week:
 
-- **Location tracking via [GettyNet](/projects/gettynet) API** — Periodic sync every 15 seconds pulls location pings into the timeline. Added UI to view pings summary, table view, and raw JSON dump. In hindsight, 15 seconds is probably overkill.
-- **Spotify integration** — Music segment tracking stored alongside timeline data. New segment type, database tables for sync state, the whole pipeline. This also uses Gettynet to store data so that if the local app isn't running, I don't have gaps in data.
-- **Fixed idle segment handling** — Multi-day idle periods now clamp properly to day boundaries instead of breaking the query.
+- **Location tracking via [GettyNet](/projects/gettynet) API**: Periodic sync every 15 seconds pulls location pings into the timeline. Added UI to view pings summary, table view, and raw JSON dump. In hindsight, 15 seconds is probably overkill.
+- **Spotify integration**: Music segment tracking stored alongside timeline data. New segment type, database tables for sync state, the whole pipeline. This also uses Gettynet to store data so that if the local app isn't running, I don't have gaps in data.
+- **Fixed idle segment handling**: Multi-day idle periods now clamp properly to day boundaries instead of breaking the query.
 
 One commit, but it touched 18 files. Yes, that's how bad my git etiquette is sometimes. Give me a break, this is a totally personal project right now and when I decide to publish it, a colossal commit in the ancient history of the project isn't really an issue.
 

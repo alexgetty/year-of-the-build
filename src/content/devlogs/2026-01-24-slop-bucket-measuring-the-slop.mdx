@@ -1,0 +1,33 @@
+---
+title: "Measuring the Slop"
+description: "Adding analytics to understand how readers engage with satirical content, plus internal linking for authentic SEO parody."
+pubDate: 2026-01-24
+project: slop-bucket
+commitCount: 6
+---
+
+## Now I Can See You Reading
+
+A satirical news site without analytics is like a comedian performing to an empty room. You think you're funny, but you have no proof. So I wired up PostHog to track the things that actually matter: Are people scrolling past the headline? Do they make it to the Sloptopsy (the educational breakdown at the end of each article)?
+
+The scroll depth tracking fires at 25%, 50%, 75%, and 100% milestones. If someone bails at 50%, that's useful information. If they make it to the Sloptopsy but don't expand it, that's also useful. The whole point of this project is media literacy education wrapped in satire. If nobody's reading the educational part, the satire is just... noise.
+
+Environment-based configuration keeps tracking code out of local development. No analytics without explicit setup, which means I can test locally without polluting my own data.
+
+
+## The SEO Parody Writes Itself
+
+Real content farms obsessively interlink their articles. Every piece references three others, creating these self-referential citation loops that exist purely for search engines. It's a manipulative pattern, which makes it perfect for satire.
+
+The generator now has a 50% chance per prompt to include an internal article reference. It picks a random published piece, extracts a quotable section, and formats a proper slug. The result: articles that cite each other the same way real slop does, except the citations lead to more satire about the same manipulation tactics.
+
+This is the kind of feature that's funny because it's accurate. The mimicry is the commentary.
+
+
+## Twelve More Ways to Waste Your Time
+
+Batch published a dozen articles across the week. A biohacker eliminating screen time by eliminating children. A deep dive into whether screaming at volunteer coaches produces more CEOs than Harvard. An analysis of home renovation as decentralization theater.
+
+The generator's subject graph keeps growing. Dark matter, prediction markets, tariffs. Each new subject adds another multiplier to the combination space. Still hovering around 15 billion unique prompts, though that number gets harder to calculate as the constraints get more nuanced.
+
+The pipeline is smoother now. Trending headlines skill prints articles for review instead of auto-saving, which prevents junk from cluttering the drafts folder. Small quality-of-life fixes that add up over dozens of articles.

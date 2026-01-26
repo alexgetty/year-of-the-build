@@ -1,0 +1,36 @@
+---
+title: "Primordial Research"
+description: "Introducing an artificial life simulation and the research rabbit hole that preceded any code."
+pubDate: 2026-01-25
+project: dataverse
+---
+
+Dataverse is an artificial life simulation. The goal: create a substrate where entities can emerge, evolve, and exhibit genuinely surprising behaviors. Not scripted creatures following my rules, but self-organizing systems that discover their own strategies for survival and reproduction.
+
+No code exists yet. This first phase has been entirely about documentation and research. Figuring out what to build before building it.
+
+## The Documentation-First Approach
+
+I've been assembling a knowledge base in Obsidian covering the foundational concepts. Particles, entities, genomes, development mechanics, membranes, energy systems. Each concept links to others, building up a web of dependencies and design decisions.
+
+The decisions matter more than the concepts. Twelve of them so far, each with explicit rationale and tracked dependencies:
+- Four-symbol genetic alphabet (simplicity wins)
+- Template-based addressing for signals
+- CPPN vs L-Systems for morphological encoding (spoiler: neither alone is adequate)
+- Closure under mutation requirements
+
+That last one, closure under mutation, is the kind of thing that sounds academic until you realize it determines whether your simulation can actually evolve or just randomly break.
+
+## The Research Rabbit Hole
+
+I've been processing research reports on genetic encoding, culminating in a decision to use a 4-layer NEAT+CPPN architecture. The research covered encoding locality (why locality trumps compactness), graph grammars for modular structures, damage tolerance mechanisms, and speciation for protecting innovations.
+
+Reference material keeps expanding: Karl Sims' 1994 paper on evolved virtual creatures, physical reservoir computing, Integrated Information Theory, philosophy of mind from panpsychism to functionalism. The Obsidian graph is getting dense.
+
+The research workflow now has structure: inbox for incoming reports, outbox for generated research prompts, archives for processed material. Four new research prompts are queued up covering graph grammar locality, minimum viable entities, body-brain separation, and damage tolerance in gene regulatory networks.
+
+## What's Next
+
+Still in research mode. The documentation needs to reach a critical mass where the implementation path becomes obvious, or at least defensible. There's a reason I'm reading about Integrated Information Theory and Landauer's principle before writing a single line of simulation code.
+
+The knowledge graph grows denser every day. The codebase remains empty. This is fine.

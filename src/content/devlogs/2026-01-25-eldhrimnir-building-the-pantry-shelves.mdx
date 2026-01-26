@@ -1,0 +1,27 @@
+---
+title: "Building the Pantry Shelves"
+description: "Ingredient families, restriction inheritance, and a recipe import pipeline that actually works."
+pubDate: 2026-01-25
+project: eldhrimnir
+commitCount: 7
+---
+
+First week with Eldhrímnir focused on getting the data model right before filling the vault with recipes.
+
+## Ingredient Taxonomy
+
+Built out ingredient families with parent-child inheritance. Olive Oil spawns Extra Virgin and Light variants. Rice branches into Long-Grain, Jasmine, Short-Grain. Each child inherits category and storage from its parent unless overridden.
+
+The interesting bit: restriction inheritance. Restrictions now have parents too. Poultry inherits from Meat. When checking if a recipe contains meat, the system walks both the ingredient chain (Chicken Breast → Chicken → Poultry) and the restriction chain (Poultry → Meat). Fractal inheritance.
+
+## Recipe Import Pipeline
+
+Created a parser script that extracts recipes from URLs with LLM-assisted review. Mandatory review step. No recipe goes into the vault without human verification. The parser handles time calculation, equipment inference, and technique detection, but the LLM catches what regex can't.
+
+Added three recipes this week: Blackened Salmon Tacos, Mango Slaw, Taco Salad. Each pulled in supporting ingredients, equipment, techniques, and modifiers.
+
+## Schema Evolution
+
+Migrated allergens to restrictions (more general). Added versioning fields to recipes (version, based_on, from_review) for tracking iterations. Ingredients gained parent, produced_by, and smoke_point fields. Techniques now track input/output for chaining.
+
+Found a Roux bug along the way: YAML arrays in frontmatter don't survive MCP update_node calls. Workaround is direct file edits for now.

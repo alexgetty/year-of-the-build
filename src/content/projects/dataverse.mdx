@@ -1,0 +1,42 @@
+---
+title: "Dataverse"
+description: "A simulation engine for artificial abiogenesis."
+status: "planning"
+featured: true
+tags: ["Rust", "WebAssembly", "TypeScript", "WebGL", "ECS", "Artificial Life"]
+features:
+  - "Configurable physics laws as JSON"
+  - "Deterministic simulation (same seed = identical results)"
+  - "Compound particles with nested internal worlds"
+  - "Parallel universe experimentation"
+  - "Emergence measurement and parameter search"
+  - "WebGL rendering for millions of particles"
+---
+
+Dataverse is a research platform for studying artificial abiogenesis. Can life-like phenomena emerge from simple physics rules in a digital universe?
+
+### The Research Question
+
+Create a system where simple particles interact according to configurable laws. Particles form links, gain energy, transmute into other types. Given enough time and the right parameters, do complex structures emerge? Do they exhibit agency, metabolism, reproduction, evolution?
+
+And crucially: can we automatically search parameter space to find configurations that generate interesting emergent behavior?
+
+### The Architecture
+
+**Rust core compiled to WebAssembly** for performance. The hecs ECS handles millions of particles. Fixed-point math (not floats) guarantees determinism across platforms. Same seed produces identical simulation on any machine.
+
+**TypeScript shell** for orchestration, UI, and experiment management. WebGL with instanced rendering handles visualization.
+
+**Laws as data.** Physics rules are JSON configs, not hardcoded behavior. This enables parameter sweeps across thousands of universe configurations.
+
+### Compound Particles
+
+The weird part: particles can contain internal worlds. A particle isn't just a point with properties. It can be a container for a nested simulation. This enables hierarchical complexity. Neurons could literally be particles, allowing evolution of both structure and behavior through the same physics.
+
+### Current State
+
+Deep in the planning phase. 150+ documentation files organized as a Zettelkasten. Architecture defined, implementation phases mapped out, research papers processed into design decisions. No running code yet. This is deliberate. The theory needs to be solid before writing a line of Rust.
+
+### What I'm Reading
+
+Abiogenesis theory, autopoiesis, assembly theory, integrated information theory, neuroevolution. The goal is building something that could actually teach us about how complexity emerges from simplicity. Not just a pretty particle toy.

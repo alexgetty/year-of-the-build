@@ -1,0 +1,48 @@
+---
+title: "Eldhrimnir"
+description: "A food knowledge graph for intelligent meal planning."
+status: "building"
+featured: false
+tags: ["TypeScript", "Roux", "MCP", "SQLite", "Obsidian", "Transformers.js"]
+features:
+  - "Semantic recipe and ingredient search"
+  - "Graph-based relationship modeling"
+  - "Computed diet compatibility from ingredients"
+  - "Recipe variation system with modifiers"
+  - "Nutrition aggregation"
+  - "Time estimation (active vs. passive)"
+---
+
+Eldhrímnir is a food knowledge graph, the data layer that powers intelligent meal planning and cooking assistance. Named after the cauldron in Norse mythology where all meat boils, it's designed to be the comprehensive source of truth for recipes, ingredients, techniques, and their relationships.
+
+### The Ecosystem
+
+This sits in a stack:
+- **Roux** provides the foundational graph toolkit
+- **Eldhrímnir** (this project) is the food-domain knowledge graph
+- **Sousi** is the AI meal planner that consumes this data
+
+### The Model
+
+Entities: recipes, ingredients, techniques, equipment, restrictions, cuisines, skill levels, diets, modifiers, actions. Relationships encode what ingredients recipes use, what techniques they require, what equipment is needed, what dietary restrictions apply.
+
+The interesting part: **diet compatibility is computed, not declared.** Recipes don't have a `diet` field. Instead, compatibility flows up from ingredients at query time. A recipe is vegan if all its ingredients are vegan. No manual tagging, no sync issues.
+
+### The Variation System
+
+Rather than duplicate recipes for every dietary or equipment constraint, modifiers define programmatic transformations:
+
+- `[[add]]`: Include new ingredient
+- `[[sub]]`: Substitute one for another
+- `[[remove]]`: Eliminate entirely
+- `[[reduce]]` / `[[increase]]`: Adjust quantity
+
+One base recipe can serve dozens of variations without forking the data.
+
+### Preps vs. Instructions
+
+Recipes distinguish between **preparations** (storable transformations: chopped vegetables, mixed sauces, marinades) and **instructions** (committed actions: once you crack an egg or start cooking, you're locked in). The boundary is storability. This enables smarter meal prep planning. What can I do Sunday that makes Wednesday's dinner faster?
+
+### Current State
+
+Prototype phase, using Obsidian as a visual database to test the data model. Reveals what needs human declaration vs. what should be computed. Roux handles the graph operations via MCP.

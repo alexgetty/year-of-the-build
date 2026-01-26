@@ -18,7 +18,7 @@ launchDate: 2026-01-01
 liveUrl: "https://mythical.app"
 ---
 
-  Mythical is a scheduling app that lives inside your Google Calendar. No new dashboard to learn, no complex workflows—just connect and start accepting bookings.
+  Mythical is a scheduling app that lives inside your Google Calendar. No new dashboard to learn, no complex workflows. Just connect and start accepting bookings.
 
   ### The Pitch
   Calendly charges $10/month for features most people don't need while gatekeeping ones they do. Mythical offers unlimited calendars (from any account), event types, and bookings for free.
@@ -39,6 +39,6 @@ liveUrl: "https://mythical.app"
 
   ### Lasting Legacy: Optimistic UI
   I wanted Mythical to feel smooth and responsive. Loading times kill conversion. Jagged reloads break flow.
-  Every interaction in Mythical is optimistic by default. Click a button, see the result. The API call happens in the background—if it fails, we roll back and tell you.
-  This wasn't a performance optimization bolted on later, it was a foundational rule from day one: **assume success, handle failure gracefully**. The pattern forced better architecture decisions—local state that can roll back, API responses designed for reconciliation, UI that lets the user get on with it.
-  The discipline required to build this way—and the quality of experience it produces—became the primary inspiration for [the Construct](/projects/the-construct), a design system and component library that bakes optimistic UI and motion into its DNA. While Mythical itself isn't built on this system (yet), I plan to use it as the UI layer for as many of this year's projects as I can.
+  Every interaction in Mythical is optimistic by default. Click a button, see the result. The API call happens in the background. If it fails, we roll back and tell you.
+  This wasn't a performance optimization bolted on later, it was a foundational rule from day one: **assume success, handle failure gracefully**. The pattern forced better architecture decisions. Local state that can roll back, API responses designed for reconciliation, UI that lets the user get on with it.
+  The discipline required to build this way (and the quality of experience it produces) became the primary inspiration for [the Construct](/projects/the-construct), a design system and component library that bakes optimistic UI and motion into its DNA. While Mythical itself isn't built on this system (yet), I plan to use it as the UI layer for as many of this year's projects as I can.

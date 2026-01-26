@@ -65,7 +65,7 @@ const projectDigests = getDigestsForProject(project.slug, allDevlogs, allDigests
 
 // Status display text
 const statusText = project.data.status === 'building' ? 'Building' :
-                   project.data.status === 'launched' ? 'Live' : 'Planned';
+                   project.data.status === 'launched' ? 'Live' : 'Planning';
 
 // Check if we have sidebar content (links, tech, features, stats, devlogs, digests)
 const hasLinks = project.data.repoUrl || project.data.liveUrl;
@@ -349,12 +349,12 @@ const hasSidebar = hasLinks || hasTech || hasFeatures || hasStats || hasDevlogs 
   }
 
   .status-planning {
-    background: rgba(28, 25, 23, 0.08);
-    color: var(--text-secondary);
+    background: #78716c;
+    color: var(--yotb-light);
   }
 
   .status-planning::before {
-    background: var(--text-muted);
+    background: var(--yotb-light);
   }
 
   .project-hero-title {
