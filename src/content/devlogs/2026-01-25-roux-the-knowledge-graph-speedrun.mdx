@@ -18,7 +18,7 @@ The key abstraction: GraphCore as orchestration hub. Every provider (storage, em
 
 DocStore caches nodes, embeddings, and centrality in SQLite. File watcher syncs Obsidian edits in under 2 seconds. Wiki-links resolve to full paths automatically.
 
-Vector search is brute-force cosine similarity. For <200 nodes, this is fine. The architecture supports real vector DBs later.
+Vector search is brute-force cosine similarity. For fewer than 200 nodes, this is fine. The architecture supports real vector DBs later.
 
 ## MCP Server
 
